@@ -1,7 +1,15 @@
-import wasMod from "./87f112ed4a41cc6c.wasm"
+import wasmFile from "./87f112ed4a41cc6c.wasm";
 
 var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key2, value) => key2 in obj ? __defProp(obj, key2, { enumerable: true, configurable: true, writable: true, value }) : obj[key2] = value;
+var __defNormalProp = (obj, key2, value) =>
+  key2 in obj
+    ? __defProp(obj, key2, {
+        enumerable: true,
+        configurable: true,
+        writable: true,
+        value,
+      })
+    : (obj[key2] = value);
 var __publicField = (obj, key2, value) => {
   __defNormalProp(obj, typeof key2 !== "symbol" ? key2 + "" : key2, value);
   return value;
@@ -14,110 +22,149 @@ var _a, _b, _c, _d, _e, _f;
  *  Copyright (c) 2022 Michael Mclaughlin <M8ch88l@gmail.com>
  *  MIT Licence
  */
-var EXP_LIMIT = 9e15, MAX_DIGITS = 1e9, NUMERALS = "0123456789abcdef", LN10 = "2.3025850929940456840179914546843642076011014886287729760333279009675726096773524802359972050895982983419677840422862486334095254650828067566662873690987816894829072083255546808437998948262331985283935053089653777326288461633662222876982198867465436674744042432743651550489343149393914796194044002221051017141748003688084012647080685567743216228355220114804663715659121373450747856947683463616792101806445070648000277502684916746550586856935673420670581136429224554405758925724208241314695689016758940256776311356919292033376587141660230105703089634572075440370847469940168269282808481184289314848524948644871927809676271275775397027668605952496716674183485704422507197965004714951050492214776567636938662976979522110718264549734772662425709429322582798502585509785265383207606726317164309505995087807523710333101197857547331541421808427543863591778117054309827482385045648019095610299291824318237525357709750539565187697510374970888692180205189339507238539205144634197265287286965110862571492198849978748873771345686209167058", PI = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665213841469519415116094330572703657595919530921861173819326117931051185480744623799627495673518857527248912279381830119491298336733624406566430860213949463952247371907021798609437027705392171762931767523846748184676694051320005681271452635608277857713427577896091736371787214684409012249534301465495853710507922796892589235420199561121290219608640344181598136297747713099605187072113499999983729780499510597317328160963185950244594553469083026425223082533446850352619311881710100031378387528865875332083814206171776691473035982534904287554687311595628638823537875937519577818577805321712268066130019278766111959092164201989380952572010654858632789", DEFAULTS = {
-  // These values must be integers within the stated ranges (inclusive).
-  // Most of these values can be changed at run-time using the `Decimal.config` method.
-  // The maximum number of significant digits of the result of a calculation or base conversion.
-  // E.g. `Decimal.config({ precision: 20 });`
-  precision: 20,
-  // 1 to MAX_DIGITS
-  // The rounding mode used when rounding to `precision`.
-  //
-  // ROUND_UP         0 Away from zero.
-  // ROUND_DOWN       1 Towards zero.
-  // ROUND_CEIL       2 Towards +Infinity.
-  // ROUND_FLOOR      3 Towards -Infinity.
-  // ROUND_HALF_UP    4 Towards nearest neighbour. If equidistant, up.
-  // ROUND_HALF_DOWN  5 Towards nearest neighbour. If equidistant, down.
-  // ROUND_HALF_EVEN  6 Towards nearest neighbour. If equidistant, towards even neighbour.
-  // ROUND_HALF_CEIL  7 Towards nearest neighbour. If equidistant, towards +Infinity.
-  // ROUND_HALF_FLOOR 8 Towards nearest neighbour. If equidistant, towards -Infinity.
-  //
-  // E.g.
-  // `Decimal.rounding = 4;`
-  // `Decimal.rounding = Decimal.ROUND_HALF_UP;`
-  rounding: 4,
-  // 0 to 8
-  // The modulo mode used when calculating the modulus: a mod n.
-  // The quotient (q = a / n) is calculated according to the corresponding rounding mode.
-  // The remainder (r) is calculated as: r = a - n * q.
-  //
-  // UP         0 The remainder is positive if the dividend is negative, else is negative.
-  // DOWN       1 The remainder has the same sign as the dividend (JavaScript %).
-  // FLOOR      3 The remainder has the same sign as the divisor (Python %).
-  // HALF_EVEN  6 The IEEE 754 remainder function.
-  // EUCLID     9 Euclidian division. q = sign(n) * floor(a / abs(n)). Always positive.
-  //
-  // Truncated division (1), floored division (3), the IEEE 754 remainder (6), and Euclidian
-  // division (9) are commonly used for the modulus operation. The other rounding modes can also
-  // be used, but they may not give useful results.
-  modulo: 1,
-  // 0 to 9
-  // The exponent value at and beneath which `toString` returns exponential notation.
-  // JavaScript numbers: -7
-  toExpNeg: -7,
-  // 0 to -EXP_LIMIT
-  // The exponent value at and above which `toString` returns exponential notation.
-  // JavaScript numbers: 21
-  toExpPos: 21,
-  // 0 to EXP_LIMIT
-  // The minimum exponent value, beneath which underflow to zero occurs.
-  // JavaScript numbers: -324  (5e-324)
-  minE: -EXP_LIMIT,
-  // -1 to -EXP_LIMIT
-  // The maximum exponent value, above which overflow to Infinity occurs.
-  // JavaScript numbers: 308  (1.7976931348623157e+308)
-  maxE: EXP_LIMIT,
-  // 1 to EXP_LIMIT
-  // Whether to use cryptographically-secure random number generation, if available.
-  crypto: false
-  // true/false
-}, inexact, quadrant, external = true, decimalError = "[DecimalError] ", invalidArgument = decimalError + "Invalid argument: ", precisionLimitExceeded = decimalError + "Precision limit exceeded", cryptoUnavailable = decimalError + "crypto unavailable", tag = "[object Decimal]", mathfloor = Math.floor, mathpow = Math.pow, isBinary = /^0b([01]+(\.[01]*)?|\.[01]+)(p[+-]?\d+)?$/i, isHex = /^0x([0-9a-f]+(\.[0-9a-f]*)?|\.[0-9a-f]+)(p[+-]?\d+)?$/i, isOctal = /^0o([0-7]+(\.[0-7]*)?|\.[0-7]+)(p[+-]?\d+)?$/i, isDecimal = /^(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i, BASE = 1e7, LOG_BASE = 7, MAX_SAFE_INTEGER = 9007199254740991, LN10_PRECISION = LN10.length - 1, PI_PRECISION = PI.length - 1, P$1 = { toStringTag: tag };
-P$1.absoluteValue = P$1.abs = function() {
+var EXP_LIMIT = 9e15,
+  MAX_DIGITS = 1e9,
+  NUMERALS = "0123456789abcdef",
+  LN10 =
+    "2.3025850929940456840179914546843642076011014886287729760333279009675726096773524802359972050895982983419677840422862486334095254650828067566662873690987816894829072083255546808437998948262331985283935053089653777326288461633662222876982198867465436674744042432743651550489343149393914796194044002221051017141748003688084012647080685567743216228355220114804663715659121373450747856947683463616792101806445070648000277502684916746550586856935673420670581136429224554405758925724208241314695689016758940256776311356919292033376587141660230105703089634572075440370847469940168269282808481184289314848524948644871927809676271275775397027668605952496716674183485704422507197965004714951050492214776567636938662976979522110718264549734772662425709429322582798502585509785265383207606726317164309505995087807523710333101197857547331541421808427543863591778117054309827482385045648019095610299291824318237525357709750539565187697510374970888692180205189339507238539205144634197265287286965110862571492198849978748873771345686209167058",
+  PI =
+    "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665213841469519415116094330572703657595919530921861173819326117931051185480744623799627495673518857527248912279381830119491298336733624406566430860213949463952247371907021798609437027705392171762931767523846748184676694051320005681271452635608277857713427577896091736371787214684409012249534301465495853710507922796892589235420199561121290219608640344181598136297747713099605187072113499999983729780499510597317328160963185950244594553469083026425223082533446850352619311881710100031378387528865875332083814206171776691473035982534904287554687311595628638823537875937519577818577805321712268066130019278766111959092164201989380952572010654858632789",
+  DEFAULTS = {
+    // These values must be integers within the stated ranges (inclusive).
+    // Most of these values can be changed at run-time using the `Decimal.config` method.
+    // The maximum number of significant digits of the result of a calculation or base conversion.
+    // E.g. `Decimal.config({ precision: 20 });`
+    precision: 20,
+    // 1 to MAX_DIGITS
+    // The rounding mode used when rounding to `precision`.
+    //
+    // ROUND_UP         0 Away from zero.
+    // ROUND_DOWN       1 Towards zero.
+    // ROUND_CEIL       2 Towards +Infinity.
+    // ROUND_FLOOR      3 Towards -Infinity.
+    // ROUND_HALF_UP    4 Towards nearest neighbour. If equidistant, up.
+    // ROUND_HALF_DOWN  5 Towards nearest neighbour. If equidistant, down.
+    // ROUND_HALF_EVEN  6 Towards nearest neighbour. If equidistant, towards even neighbour.
+    // ROUND_HALF_CEIL  7 Towards nearest neighbour. If equidistant, towards +Infinity.
+    // ROUND_HALF_FLOOR 8 Towards nearest neighbour. If equidistant, towards -Infinity.
+    //
+    // E.g.
+    // `Decimal.rounding = 4;`
+    // `Decimal.rounding = Decimal.ROUND_HALF_UP;`
+    rounding: 4,
+    // 0 to 8
+    // The modulo mode used when calculating the modulus: a mod n.
+    // The quotient (q = a / n) is calculated according to the corresponding rounding mode.
+    // The remainder (r) is calculated as: r = a - n * q.
+    //
+    // UP         0 The remainder is positive if the dividend is negative, else is negative.
+    // DOWN       1 The remainder has the same sign as the dividend (JavaScript %).
+    // FLOOR      3 The remainder has the same sign as the divisor (Python %).
+    // HALF_EVEN  6 The IEEE 754 remainder function.
+    // EUCLID     9 Euclidian division. q = sign(n) * floor(a / abs(n)). Always positive.
+    //
+    // Truncated division (1), floored division (3), the IEEE 754 remainder (6), and Euclidian
+    // division (9) are commonly used for the modulus operation. The other rounding modes can also
+    // be used, but they may not give useful results.
+    modulo: 1,
+    // 0 to 9
+    // The exponent value at and beneath which `toString` returns exponential notation.
+    // JavaScript numbers: -7
+    toExpNeg: -7,
+    // 0 to -EXP_LIMIT
+    // The exponent value at and above which `toString` returns exponential notation.
+    // JavaScript numbers: 21
+    toExpPos: 21,
+    // 0 to EXP_LIMIT
+    // The minimum exponent value, beneath which underflow to zero occurs.
+    // JavaScript numbers: -324  (5e-324)
+    minE: -EXP_LIMIT,
+    // -1 to -EXP_LIMIT
+    // The maximum exponent value, above which overflow to Infinity occurs.
+    // JavaScript numbers: 308  (1.7976931348623157e+308)
+    maxE: EXP_LIMIT,
+    // 1 to EXP_LIMIT
+    // Whether to use cryptographically-secure random number generation, if available.
+    crypto: false,
+    // true/false
+  },
+  inexact,
+  quadrant,
+  external = true,
+  decimalError = "[DecimalError] ",
+  invalidArgument = decimalError + "Invalid argument: ",
+  precisionLimitExceeded = decimalError + "Precision limit exceeded",
+  cryptoUnavailable = decimalError + "crypto unavailable",
+  tag = "[object Decimal]",
+  mathfloor = Math.floor,
+  mathpow = Math.pow,
+  isBinary = /^0b([01]+(\.[01]*)?|\.[01]+)(p[+-]?\d+)?$/i,
+  isHex = /^0x([0-9a-f]+(\.[0-9a-f]*)?|\.[0-9a-f]+)(p[+-]?\d+)?$/i,
+  isOctal = /^0o([0-7]+(\.[0-7]*)?|\.[0-7]+)(p[+-]?\d+)?$/i,
+  isDecimal = /^(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
+  BASE = 1e7,
+  LOG_BASE = 7,
+  MAX_SAFE_INTEGER = 9007199254740991,
+  LN10_PRECISION = LN10.length - 1,
+  PI_PRECISION = PI.length - 1,
+  P$1 = { toStringTag: tag };
+P$1.absoluteValue = P$1.abs = function () {
   var x = new this.constructor(this);
-  if (x.s < 0)
-    x.s = 1;
+  if (x.s < 0) x.s = 1;
   return finalise(x);
 };
-P$1.ceil = function() {
+P$1.ceil = function () {
   return finalise(new this.constructor(this), this.e + 1, 2);
 };
-P$1.clampedTo = P$1.clamp = function(min2, max2) {
-  var k, x = this, Ctor = x.constructor;
+P$1.clampedTo = P$1.clamp = function (min2, max2) {
+  var k,
+    x = this,
+    Ctor = x.constructor;
   min2 = new Ctor(min2);
   max2 = new Ctor(max2);
-  if (!min2.s || !max2.s)
-    return new Ctor(NaN);
-  if (min2.gt(max2))
-    throw Error(invalidArgument + max2);
+  if (!min2.s || !max2.s) return new Ctor(NaN);
+  if (min2.gt(max2)) throw Error(invalidArgument + max2);
   k = x.cmp(min2);
   return k < 0 ? min2 : x.cmp(max2) > 0 ? max2 : new Ctor(x);
 };
-P$1.comparedTo = P$1.cmp = function(y) {
-  var i, j, xdL, ydL, x = this, xd = x.d, yd = (y = new x.constructor(y)).d, xs = x.s, ys = y.s;
+P$1.comparedTo = P$1.cmp = function (y) {
+  var i,
+    j,
+    xdL,
+    ydL,
+    x = this,
+    xd = x.d,
+    yd = (y = new x.constructor(y)).d,
+    xs = x.s,
+    ys = y.s;
   if (!xd || !yd) {
-    return !xs || !ys ? NaN : xs !== ys ? xs : xd === yd ? 0 : !xd ^ xs < 0 ? 1 : -1;
+    return !xs || !ys
+      ? NaN
+      : xs !== ys
+      ? xs
+      : xd === yd
+      ? 0
+      : !xd ^ (xs < 0)
+      ? 1
+      : -1;
   }
-  if (!xd[0] || !yd[0])
-    return xd[0] ? xs : yd[0] ? -ys : 0;
-  if (xs !== ys)
-    return xs;
-  if (x.e !== y.e)
-    return x.e > y.e ^ xs < 0 ? 1 : -1;
+  if (!xd[0] || !yd[0]) return xd[0] ? xs : yd[0] ? -ys : 0;
+  if (xs !== ys) return xs;
+  if (x.e !== y.e) return (x.e > y.e) ^ (xs < 0) ? 1 : -1;
   xdL = xd.length;
   ydL = yd.length;
   for (i = 0, j = xdL < ydL ? xdL : ydL; i < j; ++i) {
-    if (xd[i] !== yd[i])
-      return xd[i] > yd[i] ^ xs < 0 ? 1 : -1;
+    if (xd[i] !== yd[i]) return (xd[i] > yd[i]) ^ (xs < 0) ? 1 : -1;
   }
-  return xdL === ydL ? 0 : xdL > ydL ^ xs < 0 ? 1 : -1;
+  return xdL === ydL ? 0 : (xdL > ydL) ^ (xs < 0) ? 1 : -1;
 };
-P$1.cosine = P$1.cos = function() {
-  var pr, rm, x = this, Ctor = x.constructor;
-  if (!x.d)
-    return new Ctor(NaN);
-  if (!x.d[0])
-    return new Ctor(1);
+P$1.cosine = P$1.cos = function () {
+  var pr,
+    rm,
+    x = this,
+    Ctor = x.constructor;
+  if (!x.d) return new Ctor(NaN);
+  if (!x.d[0]) return new Ctor(1);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + Math.max(x.e, x.sd()) + LOG_BASE;
@@ -127,17 +174,26 @@ P$1.cosine = P$1.cos = function() {
   Ctor.rounding = rm;
   return finalise(quadrant == 2 || quadrant == 3 ? x.neg() : x, pr, rm, true);
 };
-P$1.cubeRoot = P$1.cbrt = function() {
-  var e, m2, n, r2, rep, s2, sd, t, t3, t3plusx, x = this, Ctor = x.constructor;
-  if (!x.isFinite() || x.isZero())
-    return new Ctor(x);
+P$1.cubeRoot = P$1.cbrt = function () {
+  var e,
+    m2,
+    n,
+    r2,
+    rep,
+    s2,
+    sd,
+    t,
+    t3,
+    t3plusx,
+    x = this,
+    Ctor = x.constructor;
+  if (!x.isFinite() || x.isZero()) return new Ctor(x);
   external = false;
   s2 = x.s * mathpow(x.s * x, 1 / 3);
   if (!s2 || Math.abs(s2) == 1 / 0) {
     n = digitsToString(x.d);
     e = x.e;
-    if (s2 = (e - n.length + 1) % 3)
-      n += s2 == 1 || s2 == -2 ? "0" : "00";
+    if ((s2 = (e - n.length + 1) % 3)) n += s2 == 1 || s2 == -2 ? "0" : "00";
     s2 = mathpow(n, 1 / 3);
     e = mathfloor((e + 1) / 3) - (e % 3 == (e < 0 ? -1 : 2));
     if (s2 == 1 / 0) {
@@ -152,14 +208,17 @@ P$1.cubeRoot = P$1.cbrt = function() {
     r2 = new Ctor(s2.toString());
   }
   sd = (e = Ctor.precision) + 3;
-  for (; ; ) {
+  for (;;) {
     t = r2;
     t3 = t.times(t).times(t);
     t3plusx = t3.plus(x);
     r2 = divide(t3plusx.plus(x).times(t), t3plusx.plus(t3), sd + 2, 1);
-    if (digitsToString(t.d).slice(0, sd) === (n = digitsToString(r2.d)).slice(0, sd)) {
+    if (
+      digitsToString(t.d).slice(0, sd) ===
+      (n = digitsToString(r2.d)).slice(0, sd)
+    ) {
       n = n.slice(sd - 3, sd + 1);
-      if (n == "9999" || !rep && n == "4999") {
+      if (n == "9999" || (!rep && n == "4999")) {
         if (!rep) {
           finalise(t, e + 1, 0);
           if (t.times(t).times(t).eq(x)) {
@@ -170,7 +229,7 @@ P$1.cubeRoot = P$1.cbrt = function() {
         sd += 4;
         rep = 1;
       } else {
-        if (!+n || !+n.slice(1) && n.charAt(0) == "5") {
+        if (!+n || (!+n.slice(1) && n.charAt(0) == "5")) {
           finalise(r2, e + 1, 1);
           m2 = !r2.times(r2).times(r2).eq(x);
         }
@@ -181,46 +240,55 @@ P$1.cubeRoot = P$1.cbrt = function() {
   external = true;
   return finalise(r2, e, Ctor.rounding, m2);
 };
-P$1.decimalPlaces = P$1.dp = function() {
-  var w, d = this.d, n = NaN;
+P$1.decimalPlaces = P$1.dp = function () {
+  var w,
+    d = this.d,
+    n = NaN;
   if (d) {
     w = d.length - 1;
     n = (w - mathfloor(this.e / LOG_BASE)) * LOG_BASE;
     w = d[w];
-    if (w)
-      for (; w % 10 == 0; w /= 10)
-        n--;
-    if (n < 0)
-      n = 0;
+    if (w) for (; w % 10 == 0; w /= 10) n--;
+    if (n < 0) n = 0;
   }
   return n;
 };
-P$1.dividedBy = P$1.div = function(y) {
+P$1.dividedBy = P$1.div = function (y) {
   return divide(this, new this.constructor(y));
 };
-P$1.dividedToIntegerBy = P$1.divToInt = function(y) {
-  var x = this, Ctor = x.constructor;
-  return finalise(divide(x, new Ctor(y), 0, 1, 1), Ctor.precision, Ctor.rounding);
+P$1.dividedToIntegerBy = P$1.divToInt = function (y) {
+  var x = this,
+    Ctor = x.constructor;
+  return finalise(
+    divide(x, new Ctor(y), 0, 1, 1),
+    Ctor.precision,
+    Ctor.rounding
+  );
 };
-P$1.equals = P$1.eq = function(y) {
+P$1.equals = P$1.eq = function (y) {
   return this.cmp(y) === 0;
 };
-P$1.floor = function() {
+P$1.floor = function () {
   return finalise(new this.constructor(this), this.e + 1, 3);
 };
-P$1.greaterThan = P$1.gt = function(y) {
+P$1.greaterThan = P$1.gt = function (y) {
   return this.cmp(y) > 0;
 };
-P$1.greaterThanOrEqualTo = P$1.gte = function(y) {
+P$1.greaterThanOrEqualTo = P$1.gte = function (y) {
   var k = this.cmp(y);
   return k == 1 || k === 0;
 };
-P$1.hyperbolicCosine = P$1.cosh = function() {
-  var k, n, pr, rm, len, x = this, Ctor = x.constructor, one = new Ctor(1);
-  if (!x.isFinite())
-    return new Ctor(x.s ? 1 / 0 : NaN);
-  if (x.isZero())
-    return one;
+P$1.hyperbolicCosine = P$1.cosh = function () {
+  var k,
+    n,
+    pr,
+    rm,
+    len,
+    x = this,
+    Ctor = x.constructor,
+    one = new Ctor(1);
+  if (!x.isFinite()) return new Ctor(x.s ? 1 / 0 : NaN);
+  if (x.isZero()) return one;
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + Math.max(x.e, x.sd()) + 4;
@@ -234,17 +302,23 @@ P$1.hyperbolicCosine = P$1.cosh = function() {
     n = "2.3283064365386962890625e-10";
   }
   x = taylorSeries(Ctor, 1, x.times(n), new Ctor(1), true);
-  var cosh2_x, i = k, d8 = new Ctor(8);
+  var cosh2_x,
+    i = k,
+    d8 = new Ctor(8);
   for (; i--; ) {
     cosh2_x = x.times(x);
     x = one.minus(cosh2_x.times(d8.minus(cosh2_x.times(d8))));
   }
-  return finalise(x, Ctor.precision = pr, Ctor.rounding = rm, true);
+  return finalise(x, (Ctor.precision = pr), (Ctor.rounding = rm), true);
 };
-P$1.hyperbolicSine = P$1.sinh = function() {
-  var k, pr, rm, len, x = this, Ctor = x.constructor;
-  if (!x.isFinite() || x.isZero())
-    return new Ctor(x);
+P$1.hyperbolicSine = P$1.sinh = function () {
+  var k,
+    pr,
+    rm,
+    len,
+    x = this,
+    Ctor = x.constructor;
+  if (!x.isFinite() || x.isZero()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + Math.max(x.e, x.sd()) + 4;
@@ -257,7 +331,10 @@ P$1.hyperbolicSine = P$1.sinh = function() {
     k = k > 16 ? 16 : k | 0;
     x = x.times(1 / tinyPow(5, k));
     x = taylorSeries(Ctor, 2, x, x, true);
-    var sinh2_x, d5 = new Ctor(5), d16 = new Ctor(16), d20 = new Ctor(20);
+    var sinh2_x,
+      d5 = new Ctor(5),
+      d16 = new Ctor(16),
+      d20 = new Ctor(20);
     for (; k--; ) {
       sinh2_x = x.times(x);
       x = x.times(d5.plus(sinh2_x.times(d16.times(sinh2_x).plus(d20))));
@@ -267,25 +344,39 @@ P$1.hyperbolicSine = P$1.sinh = function() {
   Ctor.rounding = rm;
   return finalise(x, pr, rm, true);
 };
-P$1.hyperbolicTangent = P$1.tanh = function() {
-  var pr, rm, x = this, Ctor = x.constructor;
-  if (!x.isFinite())
-    return new Ctor(x.s);
-  if (x.isZero())
-    return new Ctor(x);
+P$1.hyperbolicTangent = P$1.tanh = function () {
+  var pr,
+    rm,
+    x = this,
+    Ctor = x.constructor;
+  if (!x.isFinite()) return new Ctor(x.s);
+  if (x.isZero()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + 7;
   Ctor.rounding = 1;
-  return divide(x.sinh(), x.cosh(), Ctor.precision = pr, Ctor.rounding = rm);
+  return divide(
+    x.sinh(),
+    x.cosh(),
+    (Ctor.precision = pr),
+    (Ctor.rounding = rm)
+  );
 };
-P$1.inverseCosine = P$1.acos = function() {
-  var halfPi, x = this, Ctor = x.constructor, k = x.abs().cmp(1), pr = Ctor.precision, rm = Ctor.rounding;
+P$1.inverseCosine = P$1.acos = function () {
+  var halfPi,
+    x = this,
+    Ctor = x.constructor,
+    k = x.abs().cmp(1),
+    pr = Ctor.precision,
+    rm = Ctor.rounding;
   if (k !== -1) {
-    return k === 0 ? x.isNeg() ? getPi(Ctor, pr, rm) : new Ctor(0) : new Ctor(NaN);
+    return k === 0
+      ? x.isNeg()
+        ? getPi(Ctor, pr, rm)
+        : new Ctor(0)
+      : new Ctor(NaN);
   }
-  if (x.isZero())
-    return getPi(Ctor, pr + 4, rm).times(0.5);
+  if (x.isZero()) return getPi(Ctor, pr + 4, rm).times(0.5);
   Ctor.precision = pr + 6;
   Ctor.rounding = 1;
   x = x.asin();
@@ -294,12 +385,13 @@ P$1.inverseCosine = P$1.acos = function() {
   Ctor.rounding = rm;
   return halfPi.minus(x);
 };
-P$1.inverseHyperbolicCosine = P$1.acosh = function() {
-  var pr, rm, x = this, Ctor = x.constructor;
-  if (x.lte(1))
-    return new Ctor(x.eq(1) ? 0 : NaN);
-  if (!x.isFinite())
-    return new Ctor(x);
+P$1.inverseHyperbolicCosine = P$1.acosh = function () {
+  var pr,
+    rm,
+    x = this,
+    Ctor = x.constructor;
+  if (x.lte(1)) return new Ctor(x.eq(1) ? 0 : NaN);
+  if (!x.isFinite()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + Math.max(Math.abs(x.e), x.sd()) + 4;
@@ -311,10 +403,12 @@ P$1.inverseHyperbolicCosine = P$1.acosh = function() {
   Ctor.rounding = rm;
   return x.ln();
 };
-P$1.inverseHyperbolicSine = P$1.asinh = function() {
-  var pr, rm, x = this, Ctor = x.constructor;
-  if (!x.isFinite() || x.isZero())
-    return new Ctor(x);
+P$1.inverseHyperbolicSine = P$1.asinh = function () {
+  var pr,
+    rm,
+    x = this,
+    Ctor = x.constructor;
+  if (!x.isFinite() || x.isZero()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + 2 * Math.max(Math.abs(x.e), x.sd()) + 6;
@@ -326,12 +420,15 @@ P$1.inverseHyperbolicSine = P$1.asinh = function() {
   Ctor.rounding = rm;
   return x.ln();
 };
-P$1.inverseHyperbolicTangent = P$1.atanh = function() {
-  var pr, rm, wpr, xsd, x = this, Ctor = x.constructor;
-  if (!x.isFinite())
-    return new Ctor(NaN);
-  if (x.e >= 0)
-    return new Ctor(x.abs().eq(1) ? x.s / 0 : x.isZero() ? x : NaN);
+P$1.inverseHyperbolicTangent = P$1.atanh = function () {
+  var pr,
+    rm,
+    wpr,
+    xsd,
+    x = this,
+    Ctor = x.constructor;
+  if (!x.isFinite()) return new Ctor(NaN);
+  if (x.e >= 0) return new Ctor(x.abs().eq(1) ? x.s / 0 : x.isZero() ? x : NaN);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   xsd = x.sd();
@@ -346,10 +443,14 @@ P$1.inverseHyperbolicTangent = P$1.atanh = function() {
   Ctor.rounding = rm;
   return x.times(0.5);
 };
-P$1.inverseSine = P$1.asin = function() {
-  var halfPi, k, pr, rm, x = this, Ctor = x.constructor;
-  if (x.isZero())
-    return new Ctor(x);
+P$1.inverseSine = P$1.asin = function () {
+  var halfPi,
+    k,
+    pr,
+    rm,
+    x = this,
+    Ctor = x.constructor;
+  if (x.isZero()) return new Ctor(x);
   k = x.abs().cmp(1);
   pr = Ctor.precision;
   rm = Ctor.rounding;
@@ -368,11 +469,22 @@ P$1.inverseSine = P$1.asin = function() {
   Ctor.rounding = rm;
   return x.times(2);
 };
-P$1.inverseTangent = P$1.atan = function() {
-  var i, j, k, n, px, t, r2, wpr, x2, x = this, Ctor = x.constructor, pr = Ctor.precision, rm = Ctor.rounding;
+P$1.inverseTangent = P$1.atan = function () {
+  var i,
+    j,
+    k,
+    n,
+    px,
+    t,
+    r2,
+    wpr,
+    x2,
+    x = this,
+    Ctor = x.constructor,
+    pr = Ctor.precision,
+    rm = Ctor.rounding;
   if (!x.isFinite()) {
-    if (!x.s)
-      return new Ctor(NaN);
+    if (!x.s) return new Ctor(NaN);
     if (pr + 4 <= PI_PRECISION) {
       r2 = getPi(Ctor, pr + 4, rm).times(0.5);
       r2.s = x.s;
@@ -387,9 +499,8 @@ P$1.inverseTangent = P$1.atan = function() {
   }
   Ctor.precision = wpr = pr + 10;
   Ctor.rounding = 1;
-  k = Math.min(28, wpr / LOG_BASE + 2 | 0);
-  for (i = k; i; --i)
-    x = x.div(x.times(x).plus(1).sqrt().plus(1));
+  k = Math.min(28, (wpr / LOG_BASE + 2) | 0);
+  for (i = k; i; --i) x = x.div(x.times(x).plus(1).sqrt().plus(1));
   external = false;
   j = Math.ceil(wpr / LOG_BASE);
   n = 1;
@@ -398,52 +509,60 @@ P$1.inverseTangent = P$1.atan = function() {
   px = x;
   for (; i !== -1; ) {
     px = px.times(x2);
-    t = r2.minus(px.div(n += 2));
+    t = r2.minus(px.div((n += 2)));
     px = px.times(x2);
-    r2 = t.plus(px.div(n += 2));
-    if (r2.d[j] !== void 0)
-      for (i = j; r2.d[i] === t.d[i] && i--; )
-        ;
+    r2 = t.plus(px.div((n += 2)));
+    if (r2.d[j] !== void 0) for (i = j; r2.d[i] === t.d[i] && i--; );
   }
-  if (k)
-    r2 = r2.times(2 << k - 1);
+  if (k) r2 = r2.times(2 << (k - 1));
   external = true;
-  return finalise(r2, Ctor.precision = pr, Ctor.rounding = rm, true);
+  return finalise(r2, (Ctor.precision = pr), (Ctor.rounding = rm), true);
 };
-P$1.isFinite = function() {
+P$1.isFinite = function () {
   return !!this.d;
 };
-P$1.isInteger = P$1.isInt = function() {
+P$1.isInteger = P$1.isInt = function () {
   return !!this.d && mathfloor(this.e / LOG_BASE) > this.d.length - 2;
 };
-P$1.isNaN = function() {
+P$1.isNaN = function () {
   return !this.s;
 };
-P$1.isNegative = P$1.isNeg = function() {
+P$1.isNegative = P$1.isNeg = function () {
   return this.s < 0;
 };
-P$1.isPositive = P$1.isPos = function() {
+P$1.isPositive = P$1.isPos = function () {
   return this.s > 0;
 };
-P$1.isZero = function() {
+P$1.isZero = function () {
   return !!this.d && this.d[0] === 0;
 };
-P$1.lessThan = P$1.lt = function(y) {
+P$1.lessThan = P$1.lt = function (y) {
   return this.cmp(y) < 0;
 };
-P$1.lessThanOrEqualTo = P$1.lte = function(y) {
+P$1.lessThanOrEqualTo = P$1.lte = function (y) {
   return this.cmp(y) < 1;
 };
-P$1.logarithm = P$1.log = function(base2) {
-  var isBase10, d, denominator, k, inf, num, sd, r2, arg = this, Ctor = arg.constructor, pr = Ctor.precision, rm = Ctor.rounding, guard = 5;
+P$1.logarithm = P$1.log = function (base2) {
+  var isBase10,
+    d,
+    denominator,
+    k,
+    inf,
+    num,
+    sd,
+    r2,
+    arg = this,
+    Ctor = arg.constructor,
+    pr = Ctor.precision,
+    rm = Ctor.rounding,
+    guard = 5;
   if (base2 == null) {
     base2 = new Ctor(10);
     isBase10 = true;
   } else {
     base2 = new Ctor(base2);
     d = base2.d;
-    if (base2.s < 0 || !d || !d[0] || base2.eq(1))
-      return new Ctor(NaN);
+    if (base2.s < 0 || !d || !d[0] || base2.eq(1)) return new Ctor(NaN);
     isBase10 = base2.eq(10);
   }
   d = arg.d;
@@ -454,8 +573,7 @@ P$1.logarithm = P$1.log = function(base2) {
     if (d.length > 1) {
       inf = true;
     } else {
-      for (k = d[0]; k % 10 === 0; )
-        k /= 10;
+      for (k = d[0]; k % 10 === 0; ) k /= 10;
       inf = k !== 1;
     }
   }
@@ -464,11 +582,13 @@ P$1.logarithm = P$1.log = function(base2) {
   num = naturalLogarithm(arg, sd);
   denominator = isBase10 ? getLn10(Ctor, sd + 10) : naturalLogarithm(base2, sd);
   r2 = divide(num, denominator, sd, 1);
-  if (checkRoundingDigits(r2.d, k = pr, rm)) {
+  if (checkRoundingDigits(r2.d, (k = pr), rm)) {
     do {
       sd += 10;
       num = naturalLogarithm(arg, sd);
-      denominator = isBase10 ? getLn10(Ctor, sd + 10) : naturalLogarithm(base2, sd);
+      denominator = isBase10
+        ? getLn10(Ctor, sd + 10)
+        : naturalLogarithm(base2, sd);
       r2 = divide(num, denominator, sd, 1);
       if (!inf) {
         if (+digitsToString(r2.d).slice(k + 1, k + 15) + 1 == 1e14) {
@@ -476,21 +596,31 @@ P$1.logarithm = P$1.log = function(base2) {
         }
         break;
       }
-    } while (checkRoundingDigits(r2.d, k += 10, rm));
+    } while (checkRoundingDigits(r2.d, (k += 10), rm));
   }
   external = true;
   return finalise(r2, pr, rm);
 };
-P$1.minus = P$1.sub = function(y) {
-  var d, e, i, j, k, len, pr, rm, xd, xe, xLTy, yd, x = this, Ctor = x.constructor;
+P$1.minus = P$1.sub = function (y) {
+  var d,
+    e,
+    i,
+    j,
+    k,
+    len,
+    pr,
+    rm,
+    xd,
+    xe,
+    xLTy,
+    yd,
+    x = this,
+    Ctor = x.constructor;
   y = new Ctor(y);
   if (!x.d || !y.d) {
-    if (!x.s || !y.s)
-      y = new Ctor(NaN);
-    else if (x.d)
-      y.s = -y.s;
-    else
-      y = new Ctor(y.d || x.s !== y.s ? x : NaN);
+    if (!x.s || !y.s) y = new Ctor(NaN);
+    else if (x.d) y.s = -y.s;
+    else y = new Ctor(y.d || x.s !== y.s ? x : NaN);
     return y;
   }
   if (x.s != y.s) {
@@ -502,12 +632,9 @@ P$1.minus = P$1.sub = function(y) {
   pr = Ctor.precision;
   rm = Ctor.rounding;
   if (!xd[0] || !yd[0]) {
-    if (yd[0])
-      y.s = -y.s;
-    else if (xd[0])
-      y = new Ctor(x);
-    else
-      return new Ctor(rm === 3 ? -0 : 0);
+    if (yd[0]) y.s = -y.s;
+    else if (xd[0]) y = new Ctor(x);
+    else return new Ctor(rm === 3 ? -0 : 0);
     return external ? finalise(y, pr, rm) : y;
   }
   e = mathfloor(y.e / LOG_BASE);
@@ -531,15 +658,13 @@ P$1.minus = P$1.sub = function(y) {
       d.length = 1;
     }
     d.reverse();
-    for (i = k; i--; )
-      d.push(0);
+    for (i = k; i--; ) d.push(0);
     d.reverse();
   } else {
     i = xd.length;
     len = yd.length;
     xLTy = i < len;
-    if (xLTy)
-      len = i;
+    if (xLTy) len = i;
     for (i = 0; i < len; i++) {
       if (xd[i] != yd[i]) {
         xLTy = xd[i] < yd[i];
@@ -555,33 +680,29 @@ P$1.minus = P$1.sub = function(y) {
     y.s = -y.s;
   }
   len = xd.length;
-  for (i = yd.length - len; i > 0; --i)
-    xd[len++] = 0;
+  for (i = yd.length - len; i > 0; --i) xd[len++] = 0;
   for (i = yd.length; i > k; ) {
     if (xd[--i] < yd[i]) {
-      for (j = i; j && xd[--j] === 0; )
-        xd[j] = BASE - 1;
+      for (j = i; j && xd[--j] === 0; ) xd[j] = BASE - 1;
       --xd[j];
       xd[i] += BASE;
     }
     xd[i] -= yd[i];
   }
-  for (; xd[--len] === 0; )
-    xd.pop();
-  for (; xd[0] === 0; xd.shift())
-    --e;
-  if (!xd[0])
-    return new Ctor(rm === 3 ? -0 : 0);
+  for (; xd[--len] === 0; ) xd.pop();
+  for (; xd[0] === 0; xd.shift()) --e;
+  if (!xd[0]) return new Ctor(rm === 3 ? -0 : 0);
   y.d = xd;
   y.e = getBase10Exponent(xd, e);
   return external ? finalise(y, pr, rm) : y;
 };
-P$1.modulo = P$1.mod = function(y) {
-  var q, x = this, Ctor = x.constructor;
+P$1.modulo = P$1.mod = function (y) {
+  var q,
+    x = this,
+    Ctor = x.constructor;
   y = new Ctor(y);
-  if (!x.d || !y.s || y.d && !y.d[0])
-    return new Ctor(NaN);
-  if (!y.d || x.d && !x.d[0]) {
+  if (!x.d || !y.s || (y.d && !y.d[0])) return new Ctor(NaN);
+  if (!y.d || (x.d && !x.d[0])) {
     return finalise(new Ctor(x), Ctor.precision, Ctor.rounding);
   }
   external = false;
@@ -595,25 +716,34 @@ P$1.modulo = P$1.mod = function(y) {
   external = true;
   return x.minus(q);
 };
-P$1.naturalExponential = P$1.exp = function() {
+P$1.naturalExponential = P$1.exp = function () {
   return naturalExponential(this);
 };
-P$1.naturalLogarithm = P$1.ln = function() {
+P$1.naturalLogarithm = P$1.ln = function () {
   return naturalLogarithm(this);
 };
-P$1.negated = P$1.neg = function() {
+P$1.negated = P$1.neg = function () {
   var x = new this.constructor(this);
   x.s = -x.s;
   return finalise(x);
 };
-P$1.plus = P$1.add = function(y) {
-  var carry, d, e, i, k, len, pr, rm, xd, yd, x = this, Ctor = x.constructor;
+P$1.plus = P$1.add = function (y) {
+  var carry,
+    d,
+    e,
+    i,
+    k,
+    len,
+    pr,
+    rm,
+    xd,
+    yd,
+    x = this,
+    Ctor = x.constructor;
   y = new Ctor(y);
   if (!x.d || !y.d) {
-    if (!x.s || !y.s)
-      y = new Ctor(NaN);
-    else if (!x.d)
-      y = new Ctor(y.d || x.s === y.s ? x : NaN);
+    if (!x.s || !y.s) y = new Ctor(NaN);
+    else if (!x.d) y = new Ctor(y.d || x.s === y.s ? x : NaN);
     return y;
   }
   if (x.s != y.s) {
@@ -625,8 +755,7 @@ P$1.plus = P$1.add = function(y) {
   pr = Ctor.precision;
   rm = Ctor.rounding;
   if (!xd[0] || !yd[0]) {
-    if (!yd[0])
-      y = new Ctor(x);
+    if (!yd[0]) y = new Ctor(x);
     return external ? finalise(y, pr, rm) : y;
   }
   k = mathfloor(x.e / LOG_BASE);
@@ -650,8 +779,7 @@ P$1.plus = P$1.add = function(y) {
       d.length = 1;
     }
     d.reverse();
-    for (; i--; )
-      d.push(0);
+    for (; i--; ) d.push(0);
     d.reverse();
   }
   len = xd.length;
@@ -663,42 +791,43 @@ P$1.plus = P$1.add = function(y) {
     xd = d;
   }
   for (carry = 0; i; ) {
-    carry = (xd[--i] = xd[i] + yd[i] + carry) / BASE | 0;
+    carry = ((xd[--i] = xd[i] + yd[i] + carry) / BASE) | 0;
     xd[i] %= BASE;
   }
   if (carry) {
     xd.unshift(carry);
     ++e;
   }
-  for (len = xd.length; xd[--len] == 0; )
-    xd.pop();
+  for (len = xd.length; xd[--len] == 0; ) xd.pop();
   y.d = xd;
   y.e = getBase10Exponent(xd, e);
   return external ? finalise(y, pr, rm) : y;
 };
-P$1.precision = P$1.sd = function(z) {
-  var k, x = this;
+P$1.precision = P$1.sd = function (z) {
+  var k,
+    x = this;
   if (z !== void 0 && z !== !!z && z !== 1 && z !== 0)
     throw Error(invalidArgument + z);
   if (x.d) {
     k = getPrecision(x.d);
-    if (z && x.e + 1 > k)
-      k = x.e + 1;
+    if (z && x.e + 1 > k) k = x.e + 1;
   } else {
     k = NaN;
   }
   return k;
 };
-P$1.round = function() {
-  var x = this, Ctor = x.constructor;
+P$1.round = function () {
+  var x = this,
+    Ctor = x.constructor;
   return finalise(new Ctor(x), x.e + 1, Ctor.rounding);
 };
-P$1.sine = P$1.sin = function() {
-  var pr, rm, x = this, Ctor = x.constructor;
-  if (!x.isFinite())
-    return new Ctor(NaN);
-  if (x.isZero())
-    return new Ctor(x);
+P$1.sine = P$1.sin = function () {
+  var pr,
+    rm,
+    x = this,
+    Ctor = x.constructor;
+  if (!x.isFinite()) return new Ctor(NaN);
+  if (x.isZero()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + Math.max(x.e, x.sd()) + LOG_BASE;
@@ -708,17 +837,26 @@ P$1.sine = P$1.sin = function() {
   Ctor.rounding = rm;
   return finalise(quadrant > 2 ? x.neg() : x, pr, rm, true);
 };
-P$1.squareRoot = P$1.sqrt = function() {
-  var m2, n, sd, r2, rep, t, x = this, d = x.d, e = x.e, s2 = x.s, Ctor = x.constructor;
+P$1.squareRoot = P$1.sqrt = function () {
+  var m2,
+    n,
+    sd,
+    r2,
+    rep,
+    t,
+    x = this,
+    d = x.d,
+    e = x.e,
+    s2 = x.s,
+    Ctor = x.constructor;
   if (s2 !== 1 || !d || !d[0]) {
-    return new Ctor(!s2 || s2 < 0 && (!d || d[0]) ? NaN : d ? x : 1 / 0);
+    return new Ctor(!s2 || (s2 < 0 && (!d || d[0])) ? NaN : d ? x : 1 / 0);
   }
   external = false;
   s2 = Math.sqrt(+x);
   if (s2 == 0 || s2 == 1 / 0) {
     n = digitsToString(d);
-    if ((n.length + e) % 2 == 0)
-      n += "0";
+    if ((n.length + e) % 2 == 0) n += "0";
     s2 = Math.sqrt(n);
     e = mathfloor((e + 1) / 2) - (e < 0 || e % 2);
     if (s2 == 1 / 0) {
@@ -732,12 +870,15 @@ P$1.squareRoot = P$1.sqrt = function() {
     r2 = new Ctor(s2.toString());
   }
   sd = (e = Ctor.precision) + 3;
-  for (; ; ) {
+  for (;;) {
     t = r2;
     r2 = t.plus(divide(x, t, sd + 2, 1)).times(0.5);
-    if (digitsToString(t.d).slice(0, sd) === (n = digitsToString(r2.d)).slice(0, sd)) {
+    if (
+      digitsToString(t.d).slice(0, sd) ===
+      (n = digitsToString(r2.d)).slice(0, sd)
+    ) {
       n = n.slice(sd - 3, sd + 1);
-      if (n == "9999" || !rep && n == "4999") {
+      if (n == "9999" || (!rep && n == "4999")) {
         if (!rep) {
           finalise(t, e + 1, 0);
           if (t.times(t).eq(x)) {
@@ -748,7 +889,7 @@ P$1.squareRoot = P$1.sqrt = function() {
         sd += 4;
         rep = 1;
       } else {
-        if (!+n || !+n.slice(1) && n.charAt(0) == "5") {
+        if (!+n || (!+n.slice(1) && n.charAt(0) == "5")) {
           finalise(r2, e + 1, 1);
           m2 = !r2.times(r2).eq(x);
         }
@@ -759,12 +900,13 @@ P$1.squareRoot = P$1.sqrt = function() {
   external = true;
   return finalise(r2, e, Ctor.rounding, m2);
 };
-P$1.tangent = P$1.tan = function() {
-  var pr, rm, x = this, Ctor = x.constructor;
-  if (!x.isFinite())
-    return new Ctor(NaN);
-  if (x.isZero())
-    return new Ctor(x);
+P$1.tangent = P$1.tan = function () {
+  var pr,
+    rm,
+    x = this,
+    Ctor = x.constructor;
+  if (!x.isFinite()) return new Ctor(NaN);
+  if (x.isZero()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + 10;
@@ -776,11 +918,29 @@ P$1.tangent = P$1.tan = function() {
   Ctor.rounding = rm;
   return finalise(quadrant == 2 || quadrant == 4 ? x.neg() : x, pr, rm, true);
 };
-P$1.times = P$1.mul = function(y) {
-  var carry, e, i, k, r2, rL, t, xdL, ydL, x = this, Ctor = x.constructor, xd = x.d, yd = (y = new Ctor(y)).d;
+P$1.times = P$1.mul = function (y) {
+  var carry,
+    e,
+    i,
+    k,
+    r2,
+    rL,
+    t,
+    xdL,
+    ydL,
+    x = this,
+    Ctor = x.constructor,
+    xd = x.d,
+    yd = (y = new Ctor(y)).d;
   y.s *= x.s;
   if (!xd || !xd[0] || !yd || !yd[0]) {
-    return new Ctor(!y.s || xd && !xd[0] && !yd || yd && !yd[0] && !xd ? NaN : !xd || !yd ? y.s / 0 : y.s * 0);
+    return new Ctor(
+      !y.s || (xd && !xd[0] && !yd) || (yd && !yd[0] && !xd)
+        ? NaN
+        : !xd || !yd
+        ? y.s / 0
+        : y.s * 0
+    );
   }
   e = mathfloor(x.e / LOG_BASE) + mathfloor(y.e / LOG_BASE);
   xdL = xd.length;
@@ -795,76 +955,84 @@ P$1.times = P$1.mul = function(y) {
   }
   r2 = [];
   rL = xdL + ydL;
-  for (i = rL; i--; )
-    r2.push(0);
+  for (i = rL; i--; ) r2.push(0);
   for (i = ydL; --i >= 0; ) {
     carry = 0;
     for (k = xdL + i; k > i; ) {
       t = r2[k] + yd[i] * xd[k - i - 1] + carry;
       r2[k--] = t % BASE | 0;
-      carry = t / BASE | 0;
+      carry = (t / BASE) | 0;
     }
     r2[k] = (r2[k] + carry) % BASE | 0;
   }
-  for (; !r2[--rL]; )
-    r2.pop();
-  if (carry)
-    ++e;
-  else
-    r2.shift();
+  for (; !r2[--rL]; ) r2.pop();
+  if (carry) ++e;
+  else r2.shift();
   y.d = r2;
   y.e = getBase10Exponent(r2, e);
   return external ? finalise(y, Ctor.precision, Ctor.rounding) : y;
 };
-P$1.toBinary = function(sd, rm) {
+P$1.toBinary = function (sd, rm) {
   return toStringBinary(this, 2, sd, rm);
 };
-P$1.toDecimalPlaces = P$1.toDP = function(dp, rm) {
-  var x = this, Ctor = x.constructor;
+P$1.toDecimalPlaces = P$1.toDP = function (dp, rm) {
+  var x = this,
+    Ctor = x.constructor;
   x = new Ctor(x);
-  if (dp === void 0)
-    return x;
+  if (dp === void 0) return x;
   checkInt32(dp, 0, MAX_DIGITS);
-  if (rm === void 0)
-    rm = Ctor.rounding;
-  else
-    checkInt32(rm, 0, 8);
+  if (rm === void 0) rm = Ctor.rounding;
+  else checkInt32(rm, 0, 8);
   return finalise(x, dp + x.e + 1, rm);
 };
-P$1.toExponential = function(dp, rm) {
-  var str2, x = this, Ctor = x.constructor;
+P$1.toExponential = function (dp, rm) {
+  var str2,
+    x = this,
+    Ctor = x.constructor;
   if (dp === void 0) {
     str2 = finiteToString(x, true);
   } else {
     checkInt32(dp, 0, MAX_DIGITS);
-    if (rm === void 0)
-      rm = Ctor.rounding;
-    else
-      checkInt32(rm, 0, 8);
+    if (rm === void 0) rm = Ctor.rounding;
+    else checkInt32(rm, 0, 8);
     x = finalise(new Ctor(x), dp + 1, rm);
     str2 = finiteToString(x, true, dp + 1);
   }
   return x.isNeg() && !x.isZero() ? "-" + str2 : str2;
 };
-P$1.toFixed = function(dp, rm) {
-  var str2, y, x = this, Ctor = x.constructor;
+P$1.toFixed = function (dp, rm) {
+  var str2,
+    y,
+    x = this,
+    Ctor = x.constructor;
   if (dp === void 0) {
     str2 = finiteToString(x);
   } else {
     checkInt32(dp, 0, MAX_DIGITS);
-    if (rm === void 0)
-      rm = Ctor.rounding;
-    else
-      checkInt32(rm, 0, 8);
+    if (rm === void 0) rm = Ctor.rounding;
+    else checkInt32(rm, 0, 8);
     y = finalise(new Ctor(x), dp + x.e + 1, rm);
     str2 = finiteToString(y, false, dp + y.e + 1);
   }
   return x.isNeg() && !x.isZero() ? "-" + str2 : str2;
 };
-P$1.toFraction = function(maxD) {
-  var d, d0, d1, d2, e, k, n, n0, n1, pr, q, r2, x = this, xd = x.d, Ctor = x.constructor;
-  if (!xd)
-    return new Ctor(x);
+P$1.toFraction = function (maxD) {
+  var d,
+    d0,
+    d1,
+    d2,
+    e,
+    k,
+    n,
+    n0,
+    n1,
+    pr,
+    q,
+    r2,
+    x = this,
+    xd = x.d,
+    Ctor = x.constructor;
+  if (!xd) return new Ctor(x);
   n1 = d0 = new Ctor(1);
   d1 = n0 = new Ctor(0);
   d = new Ctor(d1);
@@ -875,19 +1043,17 @@ P$1.toFraction = function(maxD) {
     maxD = e > 0 ? d : n1;
   } else {
     n = new Ctor(maxD);
-    if (!n.isInt() || n.lt(n1))
-      throw Error(invalidArgument + n);
-    maxD = n.gt(d) ? e > 0 ? d : n1 : n;
+    if (!n.isInt() || n.lt(n1)) throw Error(invalidArgument + n);
+    maxD = n.gt(d) ? (e > 0 ? d : n1) : n;
   }
   external = false;
   n = new Ctor(digitsToString(xd));
   pr = Ctor.precision;
   Ctor.precision = e = xd.length * LOG_BASE * 2;
-  for (; ; ) {
+  for (;;) {
     q = divide(n, d, 0, 1, 1);
     d2 = d0.plus(q.times(d1));
-    if (d2.cmp(maxD) == 1)
-      break;
+    if (d2.cmp(maxD) == 1) break;
     d0 = d1;
     d1 = d2;
     d2 = n1;
@@ -901,20 +1067,26 @@ P$1.toFraction = function(maxD) {
   n0 = n0.plus(d2.times(n1));
   d0 = d0.plus(d2.times(d1));
   n0.s = n1.s = x.s;
-  r2 = divide(n1, d1, e, 1).minus(x).abs().cmp(divide(n0, d0, e, 1).minus(x).abs()) < 1 ? [n1, d1] : [n0, d0];
+  r2 =
+    divide(n1, d1, e, 1)
+      .minus(x)
+      .abs()
+      .cmp(divide(n0, d0, e, 1).minus(x).abs()) < 1
+      ? [n1, d1]
+      : [n0, d0];
   Ctor.precision = pr;
   external = true;
   return r2;
 };
-P$1.toHexadecimal = P$1.toHex = function(sd, rm) {
+P$1.toHexadecimal = P$1.toHex = function (sd, rm) {
   return toStringBinary(this, 16, sd, rm);
 };
-P$1.toNearest = function(y, rm) {
-  var x = this, Ctor = x.constructor;
+P$1.toNearest = function (y, rm) {
+  var x = this,
+    Ctor = x.constructor;
   x = new Ctor(x);
   if (y == null) {
-    if (!x.d)
-      return x;
+    if (!x.d) return x;
     y = new Ctor(1);
     rm = Ctor.rounding;
   } else {
@@ -924,11 +1096,9 @@ P$1.toNearest = function(y, rm) {
     } else {
       checkInt32(rm, 0, 8);
     }
-    if (!x.d)
-      return y.s ? x : y;
+    if (!x.d) return y.s ? x : y;
     if (!y.d) {
-      if (y.s)
-        y.s = x.s;
+      if (y.s) y.s = x.s;
       return y;
     }
   }
@@ -943,23 +1113,28 @@ P$1.toNearest = function(y, rm) {
   }
   return x;
 };
-P$1.toNumber = function() {
+P$1.toNumber = function () {
   return +this;
 };
-P$1.toOctal = function(sd, rm) {
+P$1.toOctal = function (sd, rm) {
   return toStringBinary(this, 8, sd, rm);
 };
-P$1.toPower = P$1.pow = function(y) {
-  var e, k, pr, r2, rm, s2, x = this, Ctor = x.constructor, yn = +(y = new Ctor(y));
-  if (!x.d || !y.d || !x.d[0] || !y.d[0])
-    return new Ctor(mathpow(+x, yn));
+P$1.toPower = P$1.pow = function (y) {
+  var e,
+    k,
+    pr,
+    r2,
+    rm,
+    s2,
+    x = this,
+    Ctor = x.constructor,
+    yn = +(y = new Ctor(y));
+  if (!x.d || !y.d || !x.d[0] || !y.d[0]) return new Ctor(mathpow(+x, yn));
   x = new Ctor(x);
-  if (x.eq(1))
-    return x;
+  if (x.eq(1)) return x;
   pr = Ctor.precision;
   rm = Ctor.rounding;
-  if (y.eq(1))
-    return finalise(x, pr, rm);
+  if (y.eq(1)) return finalise(x, pr, rm);
   e = mathfloor(y.e / LOG_BASE);
   if (e >= y.d.length - 1 && (k = yn < 0 ? -yn : yn) <= MAX_SAFE_INTEGER) {
     r2 = intPow(Ctor, x, k, pr);
@@ -967,17 +1142,20 @@ P$1.toPower = P$1.pow = function(y) {
   }
   s2 = x.s;
   if (s2 < 0) {
-    if (e < y.d.length - 1)
-      return new Ctor(NaN);
-    if ((y.d[e] & 1) == 0)
-      s2 = 1;
+    if (e < y.d.length - 1) return new Ctor(NaN);
+    if ((y.d[e] & 1) == 0) s2 = 1;
     if (x.e == 0 && x.d[0] == 1 && x.d.length == 1) {
       x.s = s2;
       return x;
     }
   }
   k = mathpow(+x, yn);
-  e = k == 0 || !isFinite(k) ? mathfloor(yn * (Math.log("0." + digitsToString(x.d)) / Math.LN10 + x.e + 1)) : new Ctor(k + "").e;
+  e =
+    k == 0 || !isFinite(k)
+      ? mathfloor(
+          yn * (Math.log("0." + digitsToString(x.d)) / Math.LN10 + x.e + 1)
+        )
+      : new Ctor(k + "").e;
   if (e > Ctor.maxE + 1 || e < Ctor.minE - 1)
     return new Ctor(e > 0 ? s2 / 0 : 0);
   external = false;
@@ -988,7 +1166,11 @@ P$1.toPower = P$1.pow = function(y) {
     r2 = finalise(r2, pr + 5, 1);
     if (checkRoundingDigits(r2.d, pr, rm)) {
       e = pr + 10;
-      r2 = finalise(naturalExponential(y.times(naturalLogarithm(x, e + k)), e), e + 5, 1);
+      r2 = finalise(
+        naturalExponential(y.times(naturalLogarithm(x, e + k)), e),
+        e + 5,
+        1
+      );
       if (+digitsToString(r2.d).slice(pr + 1, pr + 15) + 1 == 1e14) {
         r2 = finalise(r2, pr + 1, 0);
       }
@@ -999,67 +1181,72 @@ P$1.toPower = P$1.pow = function(y) {
   Ctor.rounding = rm;
   return finalise(r2, pr, rm);
 };
-P$1.toPrecision = function(sd, rm) {
-  var str2, x = this, Ctor = x.constructor;
+P$1.toPrecision = function (sd, rm) {
+  var str2,
+    x = this,
+    Ctor = x.constructor;
   if (sd === void 0) {
     str2 = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
   } else {
     checkInt32(sd, 1, MAX_DIGITS);
-    if (rm === void 0)
-      rm = Ctor.rounding;
-    else
-      checkInt32(rm, 0, 8);
+    if (rm === void 0) rm = Ctor.rounding;
+    else checkInt32(rm, 0, 8);
     x = finalise(new Ctor(x), sd, rm);
     str2 = finiteToString(x, sd <= x.e || x.e <= Ctor.toExpNeg, sd);
   }
   return x.isNeg() && !x.isZero() ? "-" + str2 : str2;
 };
-P$1.toSignificantDigits = P$1.toSD = function(sd, rm) {
-  var x = this, Ctor = x.constructor;
+P$1.toSignificantDigits = P$1.toSD = function (sd, rm) {
+  var x = this,
+    Ctor = x.constructor;
   if (sd === void 0) {
     sd = Ctor.precision;
     rm = Ctor.rounding;
   } else {
     checkInt32(sd, 1, MAX_DIGITS);
-    if (rm === void 0)
-      rm = Ctor.rounding;
-    else
-      checkInt32(rm, 0, 8);
+    if (rm === void 0) rm = Ctor.rounding;
+    else checkInt32(rm, 0, 8);
   }
   return finalise(new Ctor(x), sd, rm);
 };
-P$1.toString = function() {
-  var x = this, Ctor = x.constructor, str2 = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
+P$1.toString = function () {
+  var x = this,
+    Ctor = x.constructor,
+    str2 = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
   return x.isNeg() && !x.isZero() ? "-" + str2 : str2;
 };
-P$1.truncated = P$1.trunc = function() {
+P$1.truncated = P$1.trunc = function () {
   return finalise(new this.constructor(this), this.e + 1, 1);
 };
-P$1.valueOf = P$1.toJSON = function() {
-  var x = this, Ctor = x.constructor, str2 = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
+P$1.valueOf = P$1.toJSON = function () {
+  var x = this,
+    Ctor = x.constructor,
+    str2 = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
   return x.isNeg() ? "-" + str2 : str2;
 };
 function digitsToString(d) {
-  var i, k, ws, indexOfLastWord = d.length - 1, str2 = "", w = d[0];
+  var i,
+    k,
+    ws,
+    indexOfLastWord = d.length - 1,
+    str2 = "",
+    w = d[0];
   if (indexOfLastWord > 0) {
     str2 += w;
     for (i = 1; i < indexOfLastWord; i++) {
       ws = d[i] + "";
       k = LOG_BASE - ws.length;
-      if (k)
-        str2 += getZeroString(k);
+      if (k) str2 += getZeroString(k);
       str2 += ws;
     }
     w = d[i];
     ws = w + "";
     k = LOG_BASE - ws.length;
-    if (k)
-      str2 += getZeroString(k);
+    if (k) str2 += getZeroString(k);
   } else if (w === 0) {
     return "0";
   }
-  for (; w % 10 === 0; )
-    w /= 10;
+  for (; w % 10 === 0; ) w /= 10;
   return str2 + w;
 }
 function checkInt32(i, min2, max2) {
@@ -1069,8 +1256,7 @@ function checkInt32(i, min2, max2) {
 }
 function checkRoundingDigits(d, i, rm, repeating) {
   var di, k, r2, rd;
-  for (k = d[0]; k >= 10; k /= 10)
-    --i;
+  for (k = d[0]; k >= 10; k /= 10) --i;
   if (--i < 0) {
     i += LOG_BASE;
     di = 0;
@@ -1082,40 +1268,49 @@ function checkRoundingDigits(d, i, rm, repeating) {
   rd = d[di] % k | 0;
   if (repeating == null) {
     if (i < 3) {
-      if (i == 0)
-        rd = rd / 100 | 0;
-      else if (i == 1)
-        rd = rd / 10 | 0;
-      r2 = rm < 4 && rd == 99999 || rm > 3 && rd == 49999 || rd == 5e4 || rd == 0;
+      if (i == 0) rd = (rd / 100) | 0;
+      else if (i == 1) rd = (rd / 10) | 0;
+      r2 =
+        (rm < 4 && rd == 99999) ||
+        (rm > 3 && rd == 49999) ||
+        rd == 5e4 ||
+        rd == 0;
     } else {
-      r2 = (rm < 4 && rd + 1 == k || rm > 3 && rd + 1 == k / 2) && (d[di + 1] / k / 100 | 0) == mathpow(10, i - 2) - 1 || (rd == k / 2 || rd == 0) && (d[di + 1] / k / 100 | 0) == 0;
+      r2 =
+        (((rm < 4 && rd + 1 == k) || (rm > 3 && rd + 1 == k / 2)) &&
+          ((d[di + 1] / k / 100) | 0) == mathpow(10, i - 2) - 1) ||
+        ((rd == k / 2 || rd == 0) && ((d[di + 1] / k / 100) | 0) == 0);
     }
   } else {
     if (i < 4) {
-      if (i == 0)
-        rd = rd / 1e3 | 0;
-      else if (i == 1)
-        rd = rd / 100 | 0;
-      else if (i == 2)
-        rd = rd / 10 | 0;
-      r2 = (repeating || rm < 4) && rd == 9999 || !repeating && rm > 3 && rd == 4999;
+      if (i == 0) rd = (rd / 1e3) | 0;
+      else if (i == 1) rd = (rd / 100) | 0;
+      else if (i == 2) rd = (rd / 10) | 0;
+      r2 =
+        ((repeating || rm < 4) && rd == 9999) ||
+        (!repeating && rm > 3 && rd == 4999);
     } else {
-      r2 = ((repeating || rm < 4) && rd + 1 == k || !repeating && rm > 3 && rd + 1 == k / 2) && (d[di + 1] / k / 1e3 | 0) == mathpow(10, i - 3) - 1;
+      r2 =
+        (((repeating || rm < 4) && rd + 1 == k) ||
+          (!repeating && rm > 3 && rd + 1 == k / 2)) &&
+        ((d[di + 1] / k / 1e3) | 0) == mathpow(10, i - 3) - 1;
     }
   }
   return r2;
 }
 function convertBase(str2, baseIn, baseOut) {
-  var j, arr = [0], arrL, i = 0, strL = str2.length;
+  var j,
+    arr = [0],
+    arrL,
+    i = 0,
+    strL = str2.length;
   for (; i < strL; ) {
-    for (arrL = arr.length; arrL--; )
-      arr[arrL] *= baseIn;
+    for (arrL = arr.length; arrL--; ) arr[arrL] *= baseIn;
     arr[0] += NUMERALS.indexOf(str2.charAt(i++));
     for (j = 0; j < arr.length; j++) {
       if (arr[j] > baseOut - 1) {
-        if (arr[j + 1] === void 0)
-          arr[j + 1] = 0;
-        arr[j + 1] += arr[j] / baseOut | 0;
+        if (arr[j + 1] === void 0) arr[j + 1] = 0;
+        arr[j + 1] += (arr[j] / baseOut) | 0;
         arr[j] %= baseOut;
       }
     }
@@ -1124,8 +1319,7 @@ function convertBase(str2, baseIn, baseOut) {
 }
 function cosine(Ctor, x) {
   var k, len, y;
-  if (x.isZero())
-    return x;
+  if (x.isZero()) return x;
   len = x.d.length;
   if (len < 32) {
     k = Math.ceil(len / 3);
@@ -1143,16 +1337,17 @@ function cosine(Ctor, x) {
   Ctor.precision -= k;
   return x;
 }
-var divide = function() {
+var divide = (function () {
   function multiplyInteger(x, k, base2) {
-    var temp, carry = 0, i = x.length;
+    var temp,
+      carry = 0,
+      i = x.length;
     for (x = x.slice(); i--; ) {
       temp = x[i] * k + carry;
       x[i] = temp % base2 | 0;
-      carry = temp / base2 | 0;
+      carry = (temp / base2) | 0;
     }
-    if (carry)
-      x.unshift(carry);
+    if (carry) x.unshift(carry);
     return x;
   }
   function compare(a, b, aL, bL) {
@@ -1176,18 +1371,42 @@ var divide = function() {
       i = a[aL] < b[aL] ? 1 : 0;
       a[aL] = i * base2 + a[aL] - b[aL];
     }
-    for (; !a[0] && a.length > 1; )
-      a.shift();
+    for (; !a[0] && a.length > 1; ) a.shift();
   }
-  return function(x, y, pr, rm, dp, base2) {
-    var cmp, e, i, k, logBase, more, prod, prodL, q, qd, rem, remL, rem0, sd, t, xi, xL, yd0, yL, yz, Ctor = x.constructor, sign6 = x.s == y.s ? 1 : -1, xd = x.d, yd = y.d;
+  return function (x, y, pr, rm, dp, base2) {
+    var cmp,
+      e,
+      i,
+      k,
+      logBase,
+      more,
+      prod,
+      prodL,
+      q,
+      qd,
+      rem,
+      remL,
+      rem0,
+      sd,
+      t,
+      xi,
+      xL,
+      yd0,
+      yL,
+      yz,
+      Ctor = x.constructor,
+      sign6 = x.s == y.s ? 1 : -1,
+      xd = x.d,
+      yd = y.d;
     if (!xd || !xd[0] || !yd || !yd[0]) {
       return new Ctor(
         // Return NaN if either NaN, or both Infinity or 0.
-        !x.s || !y.s || (xd ? yd && xd[0] == yd[0] : !yd) ? NaN : (
-          // Return ±0 if x is 0 or y is ±Infinity, or return ±Infinity as y is 0.
-          xd && xd[0] == 0 || !yd ? sign6 * 0 : sign6 / 0
-        )
+        !x.s || !y.s || (xd ? yd && xd[0] == yd[0] : !yd)
+          ? NaN
+          : // Return ±0 if x is 0 or y is ±Infinity, or return ±Infinity as y is 0.
+          (xd && xd[0] == 0) || !yd
+          ? sign6 * 0
+          : sign6 / 0
       );
     }
     if (base2) {
@@ -1202,10 +1421,8 @@ var divide = function() {
     xL = xd.length;
     q = new Ctor(sign6);
     qd = q.d = [];
-    for (i = 0; yd[i] == (xd[i] || 0); i++)
-      ;
-    if (yd[i] > (xd[i] || 0))
-      e--;
+    for (i = 0; yd[i] == (xd[i] || 0); i++);
+    if (yd[i] > (xd[i] || 0)) e--;
     if (pr == null) {
       sd = pr = Ctor.precision;
       rm = Ctor.rounding;
@@ -1218,7 +1435,7 @@ var divide = function() {
       qd.push(1);
       more = true;
     } else {
-      sd = sd / logBase + 2 | 0;
+      sd = (sd / logBase + 2) | 0;
       i = 0;
       if (yL == 1) {
         k = 0;
@@ -1226,12 +1443,12 @@ var divide = function() {
         sd++;
         for (; (i < xL || k) && sd--; i++) {
           t = k * base2 + (xd[i] || 0);
-          qd[i] = t / yd | 0;
+          qd[i] = (t / yd) | 0;
           k = t % yd | 0;
         }
         more = k || i < xL;
       } else {
-        k = base2 / (yd[0] + 1) | 0;
+        k = (base2 / (yd[0] + 1)) | 0;
         if (k > 1) {
           yd = multiplyInteger(yd, k, base2);
           xd = multiplyInteger(xd, k, base2);
@@ -1241,24 +1458,20 @@ var divide = function() {
         xi = yL;
         rem = xd.slice(0, yL);
         remL = rem.length;
-        for (; remL < yL; )
-          rem[remL++] = 0;
+        for (; remL < yL; ) rem[remL++] = 0;
         yz = yd.slice();
         yz.unshift(0);
         yd0 = yd[0];
-        if (yd[1] >= base2 / 2)
-          ++yd0;
+        if (yd[1] >= base2 / 2) ++yd0;
         do {
           k = 0;
           cmp = compare(yd, rem, yL, remL);
           if (cmp < 0) {
             rem0 = rem[0];
-            if (yL != remL)
-              rem0 = rem0 * base2 + (rem[1] || 0);
-            k = rem0 / yd0 | 0;
+            if (yL != remL) rem0 = rem0 * base2 + (rem[1] || 0);
+            k = (rem0 / yd0) | 0;
             if (k > 1) {
-              if (k >= base2)
-                k = base2 - 1;
+              if (k >= base2) k = base2 - 1;
               prod = multiplyInteger(yd, k, base2);
               prodL = prod.length;
               remL = rem.length;
@@ -1268,13 +1481,11 @@ var divide = function() {
                 subtract(prod, yL < prodL ? yz : yd, prodL, base2);
               }
             } else {
-              if (k == 0)
-                cmp = k = 1;
+              if (k == 0) cmp = k = 1;
               prod = yd.slice();
             }
             prodL = prod.length;
-            if (prodL < remL)
-              prod.unshift(0);
+            if (prodL < remL) prod.unshift(0);
             subtract(rem, prod, remL, base2);
             if (cmp == -1) {
               remL = rem.length;
@@ -1299,108 +1510,124 @@ var divide = function() {
         } while ((xi++ < xL || rem[0] !== void 0) && sd--);
         more = rem[0] !== void 0;
       }
-      if (!qd[0])
-        qd.shift();
+      if (!qd[0]) qd.shift();
     }
     if (logBase == 1) {
       q.e = e;
       inexact = more;
     } else {
-      for (i = 1, k = qd[0]; k >= 10; k /= 10)
-        i++;
+      for (i = 1, k = qd[0]; k >= 10; k /= 10) i++;
       q.e = i + e * logBase - 1;
       finalise(q, dp ? pr + q.e + 1 : pr, rm, more);
     }
     return q;
   };
-}();
+})();
 function finalise(x, sd, rm, isTruncated) {
-  var digits, i, j, k, rd, roundUp, w, xd, xdi, Ctor = x.constructor;
-  out:
-    if (sd != null) {
-      xd = x.d;
-      if (!xd)
-        return x;
-      for (digits = 1, k = xd[0]; k >= 10; k /= 10)
-        digits++;
-      i = sd - digits;
-      if (i < 0) {
-        i += LOG_BASE;
-        j = sd;
-        w = xd[xdi = 0];
-        rd = w / mathpow(10, digits - j - 1) % 10 | 0;
-      } else {
-        xdi = Math.ceil((i + 1) / LOG_BASE);
-        k = xd.length;
-        if (xdi >= k) {
-          if (isTruncated) {
-            for (; k++ <= xdi; )
-              xd.push(0);
-            w = rd = 0;
-            digits = 1;
-            i %= LOG_BASE;
-            j = i - LOG_BASE + 1;
-          } else {
-            break out;
-          }
-        } else {
-          w = k = xd[xdi];
-          for (digits = 1; k >= 10; k /= 10)
-            digits++;
+  var digits,
+    i,
+    j,
+    k,
+    rd,
+    roundUp,
+    w,
+    xd,
+    xdi,
+    Ctor = x.constructor;
+  out: if (sd != null) {
+    xd = x.d;
+    if (!xd) return x;
+    for (digits = 1, k = xd[0]; k >= 10; k /= 10) digits++;
+    i = sd - digits;
+    if (i < 0) {
+      i += LOG_BASE;
+      j = sd;
+      w = xd[(xdi = 0)];
+      rd = (w / mathpow(10, digits - j - 1)) % 10 | 0;
+    } else {
+      xdi = Math.ceil((i + 1) / LOG_BASE);
+      k = xd.length;
+      if (xdi >= k) {
+        if (isTruncated) {
+          for (; k++ <= xdi; ) xd.push(0);
+          w = rd = 0;
+          digits = 1;
           i %= LOG_BASE;
-          j = i - LOG_BASE + digits;
-          rd = j < 0 ? 0 : w / mathpow(10, digits - j - 1) % 10 | 0;
-        }
-      }
-      isTruncated = isTruncated || sd < 0 || xd[xdi + 1] !== void 0 || (j < 0 ? w : w % mathpow(10, digits - j - 1));
-      roundUp = rm < 4 ? (rd || isTruncated) && (rm == 0 || rm == (x.s < 0 ? 3 : 2)) : rd > 5 || rd == 5 && (rm == 4 || isTruncated || rm == 6 && // Check whether the digit to the left of the rounding digit is odd.
-      (i > 0 ? j > 0 ? w / mathpow(10, digits - j) : 0 : xd[xdi - 1]) % 10 & 1 || rm == (x.s < 0 ? 8 : 7));
-      if (sd < 1 || !xd[0]) {
-        xd.length = 0;
-        if (roundUp) {
-          sd -= x.e + 1;
-          xd[0] = mathpow(10, (LOG_BASE - sd % LOG_BASE) % LOG_BASE);
-          x.e = -sd || 0;
+          j = i - LOG_BASE + 1;
         } else {
-          xd[0] = x.e = 0;
+          break out;
         }
-        return x;
-      }
-      if (i == 0) {
-        xd.length = xdi;
-        k = 1;
-        xdi--;
       } else {
-        xd.length = xdi + 1;
-        k = mathpow(10, LOG_BASE - i);
-        xd[xdi] = j > 0 ? (w / mathpow(10, digits - j) % mathpow(10, j) | 0) * k : 0;
+        w = k = xd[xdi];
+        for (digits = 1; k >= 10; k /= 10) digits++;
+        i %= LOG_BASE;
+        j = i - LOG_BASE + digits;
+        rd = j < 0 ? 0 : (w / mathpow(10, digits - j - 1)) % 10 | 0;
       }
+    }
+    isTruncated =
+      isTruncated ||
+      sd < 0 ||
+      xd[xdi + 1] !== void 0 ||
+      (j < 0 ? w : w % mathpow(10, digits - j - 1));
+    roundUp =
+      rm < 4
+        ? (rd || isTruncated) && (rm == 0 || rm == (x.s < 0 ? 3 : 2))
+        : rd > 5 ||
+          (rd == 5 &&
+            (rm == 4 ||
+              isTruncated ||
+              (rm == 6 && // Check whether the digit to the left of the rounding digit is odd.
+                (i > 0
+                  ? j > 0
+                    ? w / mathpow(10, digits - j)
+                    : 0
+                  : xd[xdi - 1]) %
+                  10 &
+                  1) ||
+              rm == (x.s < 0 ? 8 : 7)));
+    if (sd < 1 || !xd[0]) {
+      xd.length = 0;
       if (roundUp) {
-        for (; ; ) {
-          if (xdi == 0) {
-            for (i = 1, j = xd[0]; j >= 10; j /= 10)
-              i++;
-            j = xd[0] += k;
-            for (k = 1; j >= 10; j /= 10)
-              k++;
-            if (i != k) {
-              x.e++;
-              if (xd[0] == BASE)
-                xd[0] = 1;
-            }
-            break;
-          } else {
-            xd[xdi] += k;
-            if (xd[xdi] != BASE)
-              break;
-            xd[xdi--] = 0;
-            k = 1;
+        sd -= x.e + 1;
+        xd[0] = mathpow(10, (LOG_BASE - (sd % LOG_BASE)) % LOG_BASE);
+        x.e = -sd || 0;
+      } else {
+        xd[0] = x.e = 0;
+      }
+      return x;
+    }
+    if (i == 0) {
+      xd.length = xdi;
+      k = 1;
+      xdi--;
+    } else {
+      xd.length = xdi + 1;
+      k = mathpow(10, LOG_BASE - i);
+      xd[xdi] =
+        j > 0 ? ((w / mathpow(10, digits - j)) % mathpow(10, j) | 0) * k : 0;
+    }
+    if (roundUp) {
+      for (;;) {
+        if (xdi == 0) {
+          for (i = 1, j = xd[0]; j >= 10; j /= 10) i++;
+          j = xd[0] += k;
+          for (k = 1; j >= 10; j /= 10) k++;
+          if (i != k) {
+            x.e++;
+            if (xd[0] == BASE) xd[0] = 1;
           }
+          break;
+        } else {
+          xd[xdi] += k;
+          if (xd[xdi] != BASE) break;
+          xd[xdi--] = 0;
+          k = 1;
         }
       }
-      for (i = xd.length; xd[--i] === 0; )
-        xd.pop();
     }
+    for (i = xd.length; xd[--i] === 0; ) xd.pop();
+  }
   if (external) {
     if (x.e > Ctor.maxE) {
       x.d = null;
@@ -1413,9 +1640,11 @@ function finalise(x, sd, rm, isTruncated) {
   return x;
 }
 function finiteToString(x, isExp, sd) {
-  if (!x.isFinite())
-    return nonFiniteToString(x);
-  var k, e = x.e, str2 = digitsToString(x.d), len = str2.length;
+  if (!x.isFinite()) return nonFiniteToString(x);
+  var k,
+    e = x.e,
+    str2 = digitsToString(x.d),
+    len = str2.length;
   if (isExp) {
     if (sd && (k = sd - len) > 0) {
       str2 = str2.charAt(0) + "." + str2.slice(1) + getZeroString(k);
@@ -1425,18 +1654,14 @@ function finiteToString(x, isExp, sd) {
     str2 = str2 + (x.e < 0 ? "e" : "e+") + x.e;
   } else if (e < 0) {
     str2 = "0." + getZeroString(-e - 1) + str2;
-    if (sd && (k = sd - len) > 0)
-      str2 += getZeroString(k);
+    if (sd && (k = sd - len) > 0) str2 += getZeroString(k);
   } else if (e >= len) {
     str2 += getZeroString(e + 1 - len);
-    if (sd && (k = sd - e - 1) > 0)
-      str2 = str2 + "." + getZeroString(k);
+    if (sd && (k = sd - e - 1) > 0) str2 = str2 + "." + getZeroString(k);
   } else {
-    if ((k = e + 1) < len)
-      str2 = str2.slice(0, k) + "." + str2.slice(k);
+    if ((k = e + 1) < len) str2 = str2.slice(0, k) + "." + str2.slice(k);
     if (sd && (k = sd - len) > 0) {
-      if (e + 1 === len)
-        str2 += ".";
+      if (e + 1 === len) str2 += ".";
       str2 += getZeroString(k);
     }
   }
@@ -1444,55 +1669,50 @@ function finiteToString(x, isExp, sd) {
 }
 function getBase10Exponent(digits, e) {
   var w = digits[0];
-  for (e *= LOG_BASE; w >= 10; w /= 10)
-    e++;
+  for (e *= LOG_BASE; w >= 10; w /= 10) e++;
   return e;
 }
 function getLn10(Ctor, sd, pr) {
   if (sd > LN10_PRECISION) {
     external = true;
-    if (pr)
-      Ctor.precision = pr;
+    if (pr) Ctor.precision = pr;
     throw Error(precisionLimitExceeded);
   }
   return finalise(new Ctor(LN10), sd, 1, true);
 }
 function getPi(Ctor, sd, rm) {
-  if (sd > PI_PRECISION)
-    throw Error(precisionLimitExceeded);
+  if (sd > PI_PRECISION) throw Error(precisionLimitExceeded);
   return finalise(new Ctor(PI), sd, rm, true);
 }
 function getPrecision(digits) {
-  var w = digits.length - 1, len = w * LOG_BASE + 1;
+  var w = digits.length - 1,
+    len = w * LOG_BASE + 1;
   w = digits[w];
   if (w) {
-    for (; w % 10 == 0; w /= 10)
-      len--;
-    for (w = digits[0]; w >= 10; w /= 10)
-      len++;
+    for (; w % 10 == 0; w /= 10) len--;
+    for (w = digits[0]; w >= 10; w /= 10) len++;
   }
   return len;
 }
 function getZeroString(k) {
   var zs = "";
-  for (; k--; )
-    zs += "0";
+  for (; k--; ) zs += "0";
   return zs;
 }
 function intPow(Ctor, x, n, pr) {
-  var isTruncated, r2 = new Ctor(1), k = Math.ceil(pr / LOG_BASE + 4);
+  var isTruncated,
+    r2 = new Ctor(1),
+    k = Math.ceil(pr / LOG_BASE + 4);
   external = false;
-  for (; ; ) {
+  for (;;) {
     if (n % 2) {
       r2 = r2.times(x);
-      if (truncate(r2.d, k))
-        isTruncated = true;
+      if (truncate(r2.d, k)) isTruncated = true;
     }
     n = mathfloor(n / 2);
     if (n === 0) {
       n = r2.d.length - 1;
-      if (isTruncated && r2.d[n] === 0)
-        ++r2.d[n];
+      if (isTruncated && r2.d[n] === 0) ++r2.d[n];
       break;
     }
     x = x.times(x);
@@ -1505,7 +1725,9 @@ function isOdd(n) {
   return n.d[n.d.length - 1] & 1;
 }
 function maxOrMin(Ctor, args, ltgt) {
-  var y, x = new Ctor(args[0]), i = 0;
+  var y,
+    x = new Ctor(args[0]),
+    i = 0;
   for (; ++i < args.length; ) {
     y = new Ctor(args[i]);
     if (!y.s) {
@@ -1518,9 +1740,33 @@ function maxOrMin(Ctor, args, ltgt) {
   return x;
 }
 function naturalExponential(x, sd) {
-  var denominator, guard, j, pow3, sum2, t, wpr, rep = 0, i = 0, k = 0, Ctor = x.constructor, rm = Ctor.rounding, pr = Ctor.precision;
+  var denominator,
+    guard,
+    j,
+    pow3,
+    sum2,
+    t,
+    wpr,
+    rep = 0,
+    i = 0,
+    k = 0,
+    Ctor = x.constructor,
+    rm = Ctor.rounding,
+    pr = Ctor.precision;
   if (!x.d || !x.d[0] || x.e > 17) {
-    return new Ctor(x.d ? !x.d[0] ? 1 : x.s < 0 ? 0 : 1 / 0 : x.s ? x.s < 0 ? 0 : x : 0 / 0);
+    return new Ctor(
+      x.d
+        ? !x.d[0]
+          ? 1
+          : x.s < 0
+          ? 0
+          : 1 / 0
+        : x.s
+        ? x.s < 0
+          ? 0
+          : x
+        : 0 / 0
+    );
   }
   if (sd == null) {
     external = false;
@@ -1533,18 +1779,19 @@ function naturalExponential(x, sd) {
     x = x.times(t);
     k += 5;
   }
-  guard = Math.log(mathpow(2, k)) / Math.LN10 * 2 + 5 | 0;
+  guard = ((Math.log(mathpow(2, k)) / Math.LN10) * 2 + 5) | 0;
   wpr += guard;
   denominator = pow3 = sum2 = new Ctor(1);
   Ctor.precision = wpr;
-  for (; ; ) {
+  for (;;) {
     pow3 = finalise(pow3.times(x), wpr, 1);
     denominator = denominator.times(++i);
     t = sum2.plus(divide(pow3, denominator, wpr, 1));
-    if (digitsToString(t.d).slice(0, wpr) === digitsToString(sum2.d).slice(0, wpr)) {
+    if (
+      digitsToString(t.d).slice(0, wpr) === digitsToString(sum2.d).slice(0, wpr)
+    ) {
       j = k;
-      while (j--)
-        sum2 = finalise(sum2.times(sum2), wpr, 1);
+      while (j--) sum2 = finalise(sum2.times(sum2), wpr, 1);
       if (sd == null) {
         if (rep < 3 && checkRoundingDigits(sum2.d, wpr - guard, rm, rep)) {
           Ctor.precision = wpr += 10;
@@ -1552,7 +1799,7 @@ function naturalExponential(x, sd) {
           i = 0;
           rep++;
         } else {
-          return finalise(sum2, Ctor.precision = pr, rm, external = true);
+          return finalise(sum2, (Ctor.precision = pr), rm, (external = true));
         }
       } else {
         Ctor.precision = pr;
@@ -1563,8 +1810,25 @@ function naturalExponential(x, sd) {
   }
 }
 function naturalLogarithm(y, sd) {
-  var c, c0, denominator, e, numerator, rep, sum2, t, wpr, x1, x2, n = 1, guard = 10, x = y, xd = x.d, Ctor = x.constructor, rm = Ctor.rounding, pr = Ctor.precision;
-  if (x.s < 0 || !xd || !xd[0] || !x.e && xd[0] == 1 && xd.length == 1) {
+  var c,
+    c0,
+    denominator,
+    e,
+    numerator,
+    rep,
+    sum2,
+    t,
+    wpr,
+    x1,
+    x2,
+    n = 1,
+    guard = 10,
+    x = y,
+    xd = x.d,
+    Ctor = x.constructor,
+    rm = Ctor.rounding,
+    pr = Ctor.precision;
+  if (x.s < 0 || !xd || !xd[0] || (!x.e && xd[0] == 1 && xd.length == 1)) {
     return new Ctor(xd && !xd[0] ? -1 / 0 : x.s != 1 ? NaN : xd ? 0 : x);
   }
   if (sd == null) {
@@ -1576,8 +1840,8 @@ function naturalLogarithm(y, sd) {
   Ctor.precision = wpr += guard;
   c = digitsToString(xd);
   c0 = c.charAt(0);
-  if (Math.abs(e = x.e) < 15e14) {
-    while (c0 < 7 && c0 != 1 || c0 == 1 && c.charAt(1) > 3) {
+  if (Math.abs((e = x.e)) < 15e14) {
+    while ((c0 < 7 && c0 != 1) || (c0 == 1 && c.charAt(1) > 3)) {
       x = x.times(y);
       c = digitsToString(x.d);
       c0 = c.charAt(0);
@@ -1594,19 +1858,20 @@ function naturalLogarithm(y, sd) {
     t = getLn10(Ctor, wpr + 2, pr).times(e + "");
     x = naturalLogarithm(new Ctor(c0 + "." + c.slice(1)), wpr - guard).plus(t);
     Ctor.precision = pr;
-    return sd == null ? finalise(x, pr, rm, external = true) : x;
+    return sd == null ? finalise(x, pr, rm, (external = true)) : x;
   }
   x1 = x;
   sum2 = numerator = x = divide(x.minus(1), x.plus(1), wpr, 1);
   x2 = finalise(x.times(x), wpr, 1);
   denominator = 3;
-  for (; ; ) {
+  for (;;) {
     numerator = finalise(numerator.times(x2), wpr, 1);
     t = sum2.plus(divide(numerator, new Ctor(denominator), wpr, 1));
-    if (digitsToString(t.d).slice(0, wpr) === digitsToString(sum2.d).slice(0, wpr)) {
+    if (
+      digitsToString(t.d).slice(0, wpr) === digitsToString(sum2.d).slice(0, wpr)
+    ) {
       sum2 = sum2.times(2);
-      if (e !== 0)
-        sum2 = sum2.plus(getLn10(Ctor, wpr + 2, pr).times(e + ""));
+      if (e !== 0) sum2 = sum2.plus(getLn10(Ctor, wpr + 2, pr).times(e + ""));
       sum2 = divide(sum2, new Ctor(n), wpr, 1);
       if (sd == null) {
         if (checkRoundingDigits(sum2.d, wpr - guard, rm, rep)) {
@@ -1615,7 +1880,7 @@ function naturalLogarithm(y, sd) {
           x2 = finalise(x.times(x), wpr, 1);
           denominator = rep = 1;
         } else {
-          return finalise(sum2, Ctor.precision = pr, rm, external = true);
+          return finalise(sum2, (Ctor.precision = pr), rm, (external = true));
         }
       } else {
         Ctor.precision = pr;
@@ -1627,44 +1892,37 @@ function naturalLogarithm(y, sd) {
   }
 }
 function nonFiniteToString(x) {
-  return String(x.s * x.s / 0);
+  return String((x.s * x.s) / 0);
 }
 function parseDecimal(x, str2) {
   var e, i, len;
-  if ((e = str2.indexOf(".")) > -1)
-    str2 = str2.replace(".", "");
+  if ((e = str2.indexOf(".")) > -1) str2 = str2.replace(".", "");
   if ((i = str2.search(/e/i)) > 0) {
-    if (e < 0)
-      e = i;
+    if (e < 0) e = i;
     e += +str2.slice(i + 1);
     str2 = str2.substring(0, i);
   } else if (e < 0) {
     e = str2.length;
   }
-  for (i = 0; str2.charCodeAt(i) === 48; i++)
-    ;
-  for (len = str2.length; str2.charCodeAt(len - 1) === 48; --len)
-    ;
+  for (i = 0; str2.charCodeAt(i) === 48; i++);
+  for (len = str2.length; str2.charCodeAt(len - 1) === 48; --len);
   str2 = str2.slice(i, len);
   if (str2) {
     len -= i;
     x.e = e = e - i - 1;
     x.d = [];
     i = (e + 1) % LOG_BASE;
-    if (e < 0)
-      i += LOG_BASE;
+    if (e < 0) i += LOG_BASE;
     if (i < len) {
-      if (i)
-        x.d.push(+str2.slice(0, i));
+      if (i) x.d.push(+str2.slice(0, i));
       for (len -= LOG_BASE; i < len; )
-        x.d.push(+str2.slice(i, i += LOG_BASE));
+        x.d.push(+str2.slice(i, (i += LOG_BASE)));
       str2 = str2.slice(i);
       i = LOG_BASE - str2.length;
     } else {
       i -= len;
     }
-    for (; i--; )
-      str2 += "0";
+    for (; i--; ) str2 += "0";
     x.d.push(+str2);
     if (external) {
       if (x.e > x.constructor.maxE) {
@@ -1685,11 +1943,9 @@ function parseOther(x, str2) {
   var base2, Ctor, divisor, i, isFloat, len, p, xd, xe;
   if (str2.indexOf("_") > -1) {
     str2 = str2.replace(/(\d)_(?=\d)/g, "$1");
-    if (isDecimal.test(str2))
-      return parseDecimal(x, str2);
+    if (isDecimal.test(str2)) return parseDecimal(x, str2);
   } else if (str2 === "Infinity" || str2 === "NaN") {
-    if (!+str2)
-      x.s = NaN;
+    if (!+str2) x.s = NaN;
     x.e = NaN;
     x.d = null;
     return x;
@@ -1722,22 +1978,19 @@ function parseOther(x, str2) {
   }
   xd = convertBase(str2, base2, BASE);
   xe = xd.length - 1;
-  for (i = xe; xd[i] === 0; --i)
-    xd.pop();
-  if (i < 0)
-    return new Ctor(x.s * 0);
+  for (i = xe; xd[i] === 0; --i) xd.pop();
+  if (i < 0) return new Ctor(x.s * 0);
   x.e = getBase10Exponent(xd, xe);
   x.d = xd;
   external = false;
-  if (isFloat)
-    x = divide(x, divisor, len * 4);
-  if (p)
-    x = x.times(Math.abs(p) < 54 ? mathpow(2, p) : Decimal.pow(2, p));
+  if (isFloat) x = divide(x, divisor, len * 4);
+  if (p) x = x.times(Math.abs(p) < 54 ? mathpow(2, p) : Decimal.pow(2, p));
   external = true;
   return x;
 }
 function sine(Ctor, x) {
-  var k, len = x.d.length;
+  var k,
+    len = x.d.length;
   if (len < 3) {
     return x.isZero() ? x : taylorSeries(Ctor, 2, x, x);
   }
@@ -1745,7 +1998,10 @@ function sine(Ctor, x) {
   k = k > 16 ? 16 : k | 0;
   x = x.times(1 / tinyPow(5, k));
   x = taylorSeries(Ctor, 2, x, x);
-  var sin2_x, d5 = new Ctor(5), d16 = new Ctor(16), d20 = new Ctor(20);
+  var sin2_x,
+    d5 = new Ctor(5),
+    d16 = new Ctor(16),
+    d20 = new Ctor(20);
   for (; k--; ) {
     sin2_x = x.times(x);
     x = x.times(d5.plus(sin2_x.times(d16.times(sin2_x).minus(d20))));
@@ -1753,20 +2009,23 @@ function sine(Ctor, x) {
   return x;
 }
 function taylorSeries(Ctor, n, x, y, isHyperbolic) {
-  var j, t, u, x2, pr = Ctor.precision, k = Math.ceil(pr / LOG_BASE);
+  var j,
+    t,
+    u,
+    x2,
+    pr = Ctor.precision,
+    k = Math.ceil(pr / LOG_BASE);
   external = false;
   x2 = x.times(x);
   u = new Ctor(y);
-  for (; ; ) {
+  for (;;) {
     t = divide(u.times(x2), new Ctor(n++ * n++), pr, 1);
     u = isHyperbolic ? y.plus(t) : y.minus(t);
     y = divide(t.times(x2), new Ctor(n++ * n++), pr, 1);
     t = u.plus(y);
     if (t.d[k] !== void 0) {
-      for (j = k; t.d[j] === u.d[j] && j--; )
-        ;
-      if (j == -1)
-        break;
+      for (j = k; t.d[j] === u.d[j] && j--; );
+      if (j == -1) break;
     }
     j = u;
     u = y;
@@ -1779,12 +2038,14 @@ function taylorSeries(Ctor, n, x, y, isHyperbolic) {
 }
 function tinyPow(b, e) {
   var n = b;
-  while (--e)
-    n *= b;
+  while (--e) n *= b;
   return n;
 }
 function toLessThanHalfPi(Ctor, x) {
-  var t, isNeg = x.s < 0, pi = getPi(Ctor, Ctor.precision, 1), halfPi = pi.times(0.5);
+  var t,
+    isNeg = x.s < 0,
+    pi = getPi(Ctor, Ctor.precision, 1),
+    halfPi = pi.times(0.5);
   x = x.abs();
   if (x.lte(halfPi)) {
     quadrant = isNeg ? 4 : 1;
@@ -1796,21 +2057,29 @@ function toLessThanHalfPi(Ctor, x) {
   } else {
     x = x.minus(t.times(pi));
     if (x.lte(halfPi)) {
-      quadrant = isOdd(t) ? isNeg ? 2 : 3 : isNeg ? 4 : 1;
+      quadrant = isOdd(t) ? (isNeg ? 2 : 3) : isNeg ? 4 : 1;
       return x;
     }
-    quadrant = isOdd(t) ? isNeg ? 1 : 4 : isNeg ? 3 : 2;
+    quadrant = isOdd(t) ? (isNeg ? 1 : 4) : isNeg ? 3 : 2;
   }
   return x.minus(pi).abs();
 }
 function toStringBinary(x, baseOut, sd, rm) {
-  var base2, e, i, k, len, roundUp, str2, xd, y, Ctor = x.constructor, isExp = sd !== void 0;
+  var base2,
+    e,
+    i,
+    k,
+    len,
+    roundUp,
+    str2,
+    xd,
+    y,
+    Ctor = x.constructor,
+    isExp = sd !== void 0;
   if (isExp) {
     checkInt32(sd, 1, MAX_DIGITS);
-    if (rm === void 0)
-      rm = Ctor.rounding;
-    else
-      checkInt32(rm, 0, 8);
+    if (rm === void 0) rm = Ctor.rounding;
+    else checkInt32(rm, 0, 8);
   } else {
     sd = Ctor.precision;
     rm = Ctor.rounding;
@@ -1839,8 +2108,7 @@ function toStringBinary(x, baseOut, sd, rm) {
     }
     xd = convertBase(str2, 10, base2);
     e = len = xd.length;
-    for (; xd[--len] == 0; )
-      xd.pop();
+    for (; xd[--len] == 0; ) xd.pop();
     if (!xd[0]) {
       str2 = isExp ? "0p+0" : "0";
     } else {
@@ -1858,7 +2126,15 @@ function toStringBinary(x, baseOut, sd, rm) {
       i = xd[sd];
       k = base2 / 2;
       roundUp = roundUp || xd[sd + 1] !== void 0;
-      roundUp = rm < 4 ? (i !== void 0 || roundUp) && (rm === 0 || rm === (x.s < 0 ? 3 : 2)) : i > k || i === k && (rm === 4 || roundUp || rm === 6 && xd[sd - 1] & 1 || rm === (x.s < 0 ? 8 : 7));
+      roundUp =
+        rm < 4
+          ? (i !== void 0 || roundUp) && (rm === 0 || rm === (x.s < 0 ? 3 : 2))
+          : i > k ||
+            (i === k &&
+              (rm === 4 ||
+                roundUp ||
+                (rm === 6 && xd[sd - 1] & 1) ||
+                rm === (x.s < 0 ? 8 : 7)));
       xd.length = sd;
       if (roundUp) {
         for (; ++xd[--sd] > base2 - 1; ) {
@@ -1869,19 +2145,15 @@ function toStringBinary(x, baseOut, sd, rm) {
           }
         }
       }
-      for (len = xd.length; !xd[len - 1]; --len)
-        ;
-      for (i = 0, str2 = ""; i < len; i++)
-        str2 += NUMERALS.charAt(xd[i]);
+      for (len = xd.length; !xd[len - 1]; --len);
+      for (i = 0, str2 = ""; i < len; i++) str2 += NUMERALS.charAt(xd[i]);
       if (isExp) {
         if (len > 1) {
           if (baseOut == 16 || baseOut == 8) {
             i = baseOut == 16 ? 4 : 3;
-            for (--len; len % i; len++)
-              str2 += "0";
+            for (--len; len % i; len++) str2 += "0";
             xd = convertBase(str2, base2, baseOut);
-            for (len = xd.length; !xd[len - 1]; --len)
-              ;
+            for (len = xd.length; !xd[len - 1]; --len);
             for (i = 1, str2 = "1."; i < len; i++)
               str2 += NUMERALS.charAt(xd[i]);
           } else {
@@ -1890,18 +2162,16 @@ function toStringBinary(x, baseOut, sd, rm) {
         }
         str2 = str2 + (e < 0 ? "p" : "p+") + e;
       } else if (e < 0) {
-        for (; ++e; )
-          str2 = "0" + str2;
+        for (; ++e; ) str2 = "0" + str2;
         str2 = "0." + str2;
       } else {
-        if (++e > len)
-          for (e -= len; e--; )
-            str2 += "0";
-        else if (e < len)
-          str2 = str2.slice(0, e) + "." + str2.slice(e);
+        if (++e > len) for (e -= len; e--; ) str2 += "0";
+        else if (e < len) str2 = str2.slice(0, e) + "." + str2.slice(e);
       }
     }
-    str2 = (baseOut == 16 ? "0x" : baseOut == 2 ? "0b" : baseOut == 8 ? "0o" : "") + str2;
+    str2 =
+      (baseOut == 16 ? "0x" : baseOut == 2 ? "0b" : baseOut == 8 ? "0o" : "") +
+      str2;
   }
   return x.s < 0 ? "-" + str2 : str2;
 }
@@ -1938,7 +2208,10 @@ function atanh(x) {
 function atan2(y, x) {
   y = new this(y);
   x = new this(x);
-  var r2, pr = this.precision, rm = this.rounding, wpr = pr + 4;
+  var r2,
+    pr = this.precision,
+    rm = this.rounding,
+    wpr = pr + 4;
   if (!y.s || !x.s) {
     r2 = new this(NaN);
   } else if (!y.d && !x.d) {
@@ -1967,7 +2240,7 @@ function cbrt(x) {
   return new this(x).cbrt();
 }
 function ceil(x) {
-  return finalise(x = new this(x), x.e + 1, 2);
+  return finalise((x = new this(x)), x.e + 1, 2);
 }
 function clamp(x, min2, max2) {
   return new this(x).clamp(min2, max2);
@@ -1975,45 +2248,50 @@ function clamp(x, min2, max2) {
 function config(obj) {
   if (!obj || typeof obj !== "object")
     throw Error(decimalError + "Object expected");
-  var i, p, v2, useDefaults = obj.defaults === true, ps = [
-    "precision",
-    1,
-    MAX_DIGITS,
-    "rounding",
-    0,
-    8,
-    "toExpNeg",
-    -EXP_LIMIT,
-    0,
-    "toExpPos",
-    0,
-    EXP_LIMIT,
-    "maxE",
-    0,
-    EXP_LIMIT,
-    "minE",
-    -EXP_LIMIT,
-    0,
-    "modulo",
-    0,
-    9
-  ];
+  var i,
+    p,
+    v2,
+    useDefaults = obj.defaults === true,
+    ps = [
+      "precision",
+      1,
+      MAX_DIGITS,
+      "rounding",
+      0,
+      8,
+      "toExpNeg",
+      -EXP_LIMIT,
+      0,
+      "toExpPos",
+      0,
+      EXP_LIMIT,
+      "maxE",
+      0,
+      EXP_LIMIT,
+      "minE",
+      -EXP_LIMIT,
+      0,
+      "modulo",
+      0,
+      9,
+    ];
   for (i = 0; i < ps.length; i += 3) {
-    if (p = ps[i], useDefaults)
-      this[p] = DEFAULTS[p];
+    if (((p = ps[i]), useDefaults)) this[p] = DEFAULTS[p];
     if ((v2 = obj[p]) !== void 0) {
       if (mathfloor(v2) === v2 && v2 >= ps[i + 1] && v2 <= ps[i + 2])
         this[p] = v2;
-      else
-        throw Error(invalidArgument + p + ": " + v2);
+      else throw Error(invalidArgument + p + ": " + v2);
     }
   }
-  if (p = "crypto", useDefaults)
-    this[p] = DEFAULTS[p];
+  if (((p = "crypto"), useDefaults)) this[p] = DEFAULTS[p];
   if ((v2 = obj[p]) !== void 0) {
     if (v2 === true || v2 === false || v2 === 0 || v2 === 1) {
       if (v2) {
-        if (typeof crypto != "undefined" && crypto && (crypto.getRandomValues || crypto.randomBytes)) {
+        if (
+          typeof crypto != "undefined" &&
+          crypto &&
+          (crypto.getRandomValues || crypto.randomBytes)
+        ) {
           this[p] = true;
         } else {
           throw Error(cryptoUnavailable);
@@ -2036,9 +2314,11 @@ function cosh(x) {
 function clone(obj) {
   var i, p, ps;
   function Decimal2(v2) {
-    var e, i2, t, x = this;
-    if (!(x instanceof Decimal2))
-      return new Decimal2(v2);
+    var e,
+      i2,
+      t,
+      x = this;
+    if (!(x instanceof Decimal2)) return new Decimal2(v2);
     x.constructor = Decimal2;
     if (isDecimalInstance(v2)) {
       x.s = v2.s;
@@ -2074,8 +2354,7 @@ function clone(obj) {
         x.s = 1;
       }
       if (v2 === ~~v2 && v2 < 1e7) {
-        for (e = 0, i2 = v2; i2 >= 10; i2 /= 10)
-          e++;
+        for (e = 0, i2 = v2; i2 >= 10; i2 /= 10) e++;
         if (external) {
           if (e > Decimal2.maxE) {
             x.e = NaN;
@@ -2093,8 +2372,7 @@ function clone(obj) {
         }
         return;
       } else if (v2 * 0 !== 0) {
-        if (!v2)
-          x.s = NaN;
+        if (!v2) x.s = NaN;
         x.e = NaN;
         x.d = null;
         return;
@@ -2107,8 +2385,7 @@ function clone(obj) {
       v2 = v2.slice(1);
       x.s = -1;
     } else {
-      if (i2 === 43)
-        v2 = v2.slice(1);
+      if (i2 === 43) v2 = v2.slice(1);
       x.s = 1;
     }
     return isDecimal.test(v2) ? parseDecimal(x, v2) : parseOther(x, v2);
@@ -2165,14 +2442,21 @@ function clone(obj) {
   Decimal2.tan = tan;
   Decimal2.tanh = tanh;
   Decimal2.trunc = trunc;
-  if (obj === void 0)
-    obj = {};
+  if (obj === void 0) obj = {};
   if (obj) {
     if (obj.defaults !== true) {
-      ps = ["precision", "rounding", "toExpNeg", "toExpPos", "maxE", "minE", "modulo", "crypto"];
+      ps = [
+        "precision",
+        "rounding",
+        "toExpNeg",
+        "toExpPos",
+        "maxE",
+        "minE",
+        "modulo",
+        "crypto",
+      ];
       for (i = 0; i < ps.length; )
-        if (!obj.hasOwnProperty(p = ps[i++]))
-          obj[p] = this[p];
+        if (!obj.hasOwnProperty((p = ps[i++]))) obj[p] = this[p];
     }
   }
   Decimal2.config(obj);
@@ -2185,10 +2469,12 @@ function exp(x) {
   return new this(x).exp();
 }
 function floor(x) {
-  return finalise(x = new this(x), x.e + 1, 3);
+  return finalise((x = new this(x)), x.e + 1, 3);
 }
 function hypot() {
-  var i, n, t = new this(0);
+  var i,
+    n,
+    t = new this(0);
   external = false;
   for (i = 0; i < arguments.length; ) {
     n = new this(arguments[i++]);
@@ -2206,7 +2492,7 @@ function hypot() {
   return t.sqrt();
 }
 function isDecimalInstance(obj) {
-  return obj instanceof Decimal || obj && obj.toStringTag === tag || false;
+  return obj instanceof Decimal || (obj && obj.toStringTag === tag) || false;
 }
 function ln(x) {
   return new this(x).ln();
@@ -2236,15 +2522,18 @@ function pow(x, y) {
   return new this(x).pow(y);
 }
 function random(sd) {
-  var d, e, k, n, i = 0, r2 = new this(1), rd = [];
-  if (sd === void 0)
-    sd = this.precision;
-  else
-    checkInt32(sd, 1, MAX_DIGITS);
+  var d,
+    e,
+    k,
+    n,
+    i = 0,
+    r2 = new this(1),
+    rd = [];
+  if (sd === void 0) sd = this.precision;
+  else checkInt32(sd, 1, MAX_DIGITS);
   k = Math.ceil(sd / LOG_BASE);
   if (!this.crypto) {
-    for (; i < k; )
-      rd[i++] = Math.random() * 1e7 | 0;
+    for (; i < k; ) rd[i++] = (Math.random() * 1e7) | 0;
   } else if (crypto.getRandomValues) {
     d = crypto.getRandomValues(new Uint32Array(k));
     for (; i < k; ) {
@@ -2256,7 +2545,7 @@ function random(sd) {
       }
     }
   } else if (crypto.randomBytes) {
-    d = crypto.randomBytes(k *= 4);
+    d = crypto.randomBytes((k *= 4));
     for (; i < k; ) {
       n = d[i] + (d[i + 1] << 8) + (d[i + 2] << 16) + ((d[i + 3] & 127) << 24);
       if (n >= 214e7) {
@@ -2274,32 +2563,28 @@ function random(sd) {
   sd %= LOG_BASE;
   if (k && sd) {
     n = mathpow(10, LOG_BASE - sd);
-    rd[i] = (k / n | 0) * n;
+    rd[i] = ((k / n) | 0) * n;
   }
-  for (; rd[i] === 0; i--)
-    rd.pop();
+  for (; rd[i] === 0; i--) rd.pop();
   if (i < 0) {
     e = 0;
     rd = [0];
   } else {
     e = -1;
-    for (; rd[0] === 0; e -= LOG_BASE)
-      rd.shift();
-    for (k = 1, n = rd[0]; n >= 10; n /= 10)
-      k++;
-    if (k < LOG_BASE)
-      e -= LOG_BASE - k;
+    for (; rd[0] === 0; e -= LOG_BASE) rd.shift();
+    for (k = 1, n = rd[0]; n >= 10; n /= 10) k++;
+    if (k < LOG_BASE) e -= LOG_BASE - k;
   }
   r2.e = e;
   r2.d = rd;
   return r2;
 }
 function round(x) {
-  return finalise(x = new this(x), x.e + 1, this.rounding);
+  return finalise((x = new this(x)), x.e + 1, this.rounding);
 }
 function sign$1(x) {
   x = new this(x);
-  return x.d ? x.d[0] ? x.s : 0 * x.s : x.s || NaN;
+  return x.d ? (x.d[0] ? x.s : 0 * x.s) : x.s || NaN;
 }
 function sin(x) {
   return new this(x).sin();
@@ -2314,10 +2599,11 @@ function sub(x, y) {
   return new this(x).sub(y);
 }
 function sum() {
-  var i = 0, args = arguments, x = new this(args[i]);
+  var i = 0,
+    args = arguments,
+    x = new this(args[i]);
   external = false;
-  for (; x.s && ++i < args.length; )
-    x = x.plus(args[i]);
+  for (; x.s && ++i < args.length; ) x = x.plus(args[i]);
   external = true;
   return finalise(x, this.precision, this.rounding);
 }
@@ -2328,11 +2614,11 @@ function tanh(x) {
   return new this(x).tanh();
 }
 function trunc(x) {
-  return finalise(x = new this(x), x.e + 1, 1);
+  return finalise((x = new this(x)), x.e + 1, 1);
 }
 P$1[Symbol.for("nodejs.util.inspect.custom")] = P$1.toString;
 P$1[Symbol.toStringTag] = "Decimal";
-var Decimal = P$1.constructor = clone(DEFAULTS);
+var Decimal = (P$1.constructor = clone(DEFAULTS));
 LN10 = new Decimal(LN10);
 PI = new Decimal(PI);
 class ManifestBuilder {
@@ -2344,7 +2630,7 @@ class ManifestBuilder {
   takeAllFromWorktop(resourceAddress, callback) {
     const instruction = {
       kind: "TakeAllFromWorktop",
-      resourceAddress
+      resourceAddress,
     };
     this.instructions.push(instruction);
     const builderId = this.idAllocator.bucket();
@@ -2354,7 +2640,7 @@ class ManifestBuilder {
     const instruction = {
       kind: "TakeFromWorktop",
       resourceAddress,
-      amount
+      amount,
     };
     this.instructions.push(instruction);
     const builderId = this.idAllocator.bucket();
@@ -2364,7 +2650,7 @@ class ManifestBuilder {
     const instruction = {
       kind: "TakeNonFungiblesFromWorktop",
       resourceAddress,
-      ids
+      ids,
     };
     this.instructions.push(instruction);
     const builderId = this.idAllocator.bucket();
@@ -2373,7 +2659,7 @@ class ManifestBuilder {
   returnToWorktop(bucketId) {
     const instruction = {
       kind: "ReturnToWorktop",
-      bucketId
+      bucketId,
     };
     this.instructions.push(instruction);
     return this;
@@ -2381,7 +2667,7 @@ class ManifestBuilder {
   assertWorktopContainsAny(resourceAddress) {
     const instruction = {
       kind: "AssertWorktopContainsAny",
-      resourceAddress
+      resourceAddress,
     };
     this.instructions.push(instruction);
     return this;
@@ -2390,7 +2676,7 @@ class ManifestBuilder {
     const instruction = {
       kind: "AssertWorktopContains",
       resourceAddress,
-      amount
+      amount,
     };
     this.instructions.push(instruction);
     return this;
@@ -2399,14 +2685,14 @@ class ManifestBuilder {
     const instruction = {
       kind: "AssertWorktopContainsNonFungibles",
       resourceAddress,
-      ids
+      ids,
     };
     this.instructions.push(instruction);
     return this;
   }
   popFromAuthZone(callback) {
     const instruction = {
-      kind: "PopFromAuthZone"
+      kind: "PopFromAuthZone",
     };
     this.instructions.push(instruction);
     const proofId = this.idAllocator.proof();
@@ -2415,14 +2701,14 @@ class ManifestBuilder {
   pushToAuthZone(proofId) {
     const instruction = {
       kind: "PushToAuthZone",
-      proofId
+      proofId,
     };
     this.instructions.push(instruction);
     return this;
   }
   dropAuthZoneProofs() {
     const instruction = {
-      kind: "DropAuthZoneProofs"
+      kind: "DropAuthZoneProofs",
     };
     this.instructions.push(instruction);
     return this;
@@ -2431,7 +2717,7 @@ class ManifestBuilder {
     const instruction = {
       kind: "CreateProofFromAuthZoneOfAmount",
       resourceAddress,
-      amount
+      amount,
     };
     this.instructions.push(instruction);
     const proofId = this.idAllocator.proof();
@@ -2441,7 +2727,7 @@ class ManifestBuilder {
     const instruction = {
       kind: "CreateProofFromAuthZoneOfNonFungibles",
       resourceAddress,
-      ids
+      ids,
     };
     this.instructions.push(instruction);
     const proofId = this.idAllocator.proof();
@@ -2450,7 +2736,7 @@ class ManifestBuilder {
   createProofFromAuthZoneOfAll(resourceAddress, callback) {
     const instruction = {
       kind: "CreateProofFromAuthZoneOfAll",
-      resourceAddress
+      resourceAddress,
     };
     this.instructions.push(instruction);
     const proofId = this.idAllocator.proof();
@@ -2458,7 +2744,7 @@ class ManifestBuilder {
   }
   dropAuthZoneSignatureProofs() {
     const instruction = {
-      kind: "DropAuthZoneSignatureProofs"
+      kind: "DropAuthZoneSignatureProofs",
     };
     this.instructions.push(instruction);
     return this;
@@ -2467,7 +2753,7 @@ class ManifestBuilder {
     const instruction = {
       kind: "CreateProofFromBucketOfAmount",
       bucketId,
-      amount
+      amount,
     };
     this.instructions.push(instruction);
     const proofId = this.idAllocator.proof();
@@ -2477,7 +2763,7 @@ class ManifestBuilder {
     const instruction = {
       kind: "CreateProofFromBucketOfNonFungibles",
       bucketId,
-      ids
+      ids,
     };
     this.instructions.push(instruction);
     const proofId = this.idAllocator.proof();
@@ -2486,7 +2772,7 @@ class ManifestBuilder {
   createProofFromBucketOfAll(bucketId, callback) {
     const instruction = {
       kind: "CreateProofFromBucketOfAll",
-      bucketId
+      bucketId,
     };
     this.instructions.push(instruction);
     const proofId = this.idAllocator.proof();
@@ -2495,7 +2781,7 @@ class ManifestBuilder {
   burnResource(bucketId) {
     const instruction = {
       kind: "BurnResource",
-      bucketId
+      bucketId,
     };
     this.instructions.push(instruction);
     return this;
@@ -2503,7 +2789,7 @@ class ManifestBuilder {
   cloneProof(proofId, callback) {
     const instruction = {
       kind: "CloneProof",
-      proofId
+      proofId,
     };
     this.instructions.push(instruction);
     const newProofId = this.idAllocator.proof();
@@ -2512,7 +2798,7 @@ class ManifestBuilder {
   dropProof(proofId) {
     const instruction = {
       kind: "DropProof",
-      proofId
+      proofId,
     };
     this.instructions.push(instruction);
     return this;
@@ -2523,7 +2809,7 @@ class ManifestBuilder {
       packageAddress: resolveManifestAddress$1(packageAddress),
       blueprintName,
       functionName,
-      args: { kind: ValueKind.Tuple, fields: args }
+      args: { kind: ValueKind.Tuple, fields: args },
     };
     this.instructions.push(instruction);
     return this;
@@ -2533,7 +2819,7 @@ class ManifestBuilder {
       kind: "CallMethod",
       address: resolveManifestAddress$1(address2),
       methodName,
-      args: { kind: ValueKind.Tuple, fields: args }
+      args: { kind: ValueKind.Tuple, fields: args },
     };
     this.instructions.push(instruction);
     return this;
@@ -2543,7 +2829,7 @@ class ManifestBuilder {
       kind: "CallRoyaltyMethod",
       address: resolveManifestAddress$1(address2),
       methodName,
-      args: { kind: ValueKind.Tuple, fields: args }
+      args: { kind: ValueKind.Tuple, fields: args },
     };
     this.instructions.push(instruction);
     return this;
@@ -2553,7 +2839,7 @@ class ManifestBuilder {
       kind: "CallMetadataMethod",
       address: resolveManifestAddress$1(address2),
       methodName,
-      args: { kind: ValueKind.Tuple, fields: args }
+      args: { kind: ValueKind.Tuple, fields: args },
     };
     this.instructions.push(instruction);
     return this;
@@ -2563,7 +2849,7 @@ class ManifestBuilder {
       kind: "CallRoleAssignmentMethod",
       address: resolveManifestAddress$1(address2),
       methodName,
-      args: { kind: ValueKind.Tuple, fields: args }
+      args: { kind: ValueKind.Tuple, fields: args },
     };
     this.instructions.push(instruction);
     return this;
@@ -2573,14 +2859,14 @@ class ManifestBuilder {
       kind: "CallDirectVaultMethod",
       address: address2,
       methodName,
-      args: { kind: ValueKind.Tuple, fields: args }
+      args: { kind: ValueKind.Tuple, fields: args },
     };
     this.instructions.push(instruction);
     return this;
   }
   dropAllProofs() {
     const instruction = {
-      kind: "DropAllProofs"
+      kind: "DropAllProofs",
     };
     this.instructions.push(instruction);
     return this;
@@ -2589,7 +2875,7 @@ class ManifestBuilder {
     const instruction = {
       kind: "AllocateGlobalAddress",
       packageAddress,
-      blueprintName
+      blueprintName,
     };
     this.instructions.push(instruction);
     return this;
@@ -2598,9 +2884,9 @@ class ManifestBuilder {
     return {
       instructions: {
         kind: "Parsed",
-        value: this.instructions
+        value: this.instructions,
       },
-      blobs: this.blobs
+      blobs: this.blobs,
     };
   }
 }
@@ -2627,93 +2913,93 @@ class IdAllocator {
 const bool$1 = (value) => {
   return {
     kind: ValueKind.Bool,
-    value
+    value,
   };
 };
 const i8 = (value) => {
   return {
     kind: ValueKind.I8,
-    value: resolveNumber(value)
+    value: resolveNumber(value),
   };
 };
 const i16 = (value) => {
   return {
     kind: ValueKind.I16,
-    value: resolveNumber(value)
+    value: resolveNumber(value),
   };
 };
 const i32 = (value) => {
   return {
     kind: ValueKind.I32,
-    value: resolveNumber(value)
+    value: resolveNumber(value),
   };
 };
 const i64 = (value) => {
   return {
     kind: ValueKind.I64,
-    value: resolveBigInt(value)
+    value: resolveBigInt(value),
   };
 };
 const i128 = (value) => {
   return {
     kind: ValueKind.I128,
-    value: resolveBigInt(value)
+    value: resolveBigInt(value),
   };
 };
 const u8 = (value) => {
   return {
     kind: ValueKind.U8,
-    value: resolveNumber(value)
+    value: resolveNumber(value),
   };
 };
 const u16 = (value) => {
   return {
     kind: ValueKind.U16,
-    value: resolveNumber(value)
+    value: resolveNumber(value),
   };
 };
 const u32 = (value) => {
   return {
     kind: ValueKind.U32,
-    value: resolveNumber(value)
+    value: resolveNumber(value),
   };
 };
 const u64$1 = (value) => {
   return {
     kind: ValueKind.U64,
-    value: resolveBigInt(value)
+    value: resolveBigInt(value),
   };
 };
 const u128 = (value) => {
   return {
     kind: ValueKind.U128,
-    value: resolveBigInt(value)
+    value: resolveBigInt(value),
   };
 };
 const str$1 = (value) => {
   return {
     kind: ValueKind.String,
-    value
+    value,
   };
 };
 const enumeration = (discriminator, ...fields) => {
   return {
     kind: ValueKind.Enum,
     discriminator,
-    fields
+    fields,
   };
 };
 const array = (elementKind, ...elements) => {
   return {
     kind: ValueKind.Array,
     elementValueKind: elementKind,
-    elements
+    elements,
   };
 };
 const tuple = (...fields) => {
   return {
     kind: ValueKind.Tuple,
-    fields
+    fields,
   };
 };
 const map = (keyKind, valueKind, ...entries) => {
@@ -2723,7 +3009,7 @@ const map = (keyKind, valueKind, ...entries) => {
     valueValueKind: valueKind,
     entries: entries.map(([key2, value]) => {
       return { key: key2, value };
-    })
+    }),
   };
 };
 const address = (value) => {
@@ -2733,16 +3019,16 @@ const address = (value) => {
         kind: ValueKind.Address,
         value: {
           kind: "Static",
-          value
-        }
+          value,
+        },
       };
     case "number":
       return {
         kind: ValueKind.Address,
         value: {
           kind: "Named",
-          value
-        }
+          value,
+        },
       };
     default:
       throw new Error();
@@ -2751,49 +3037,49 @@ const address = (value) => {
 const bucket = (value) => {
   return {
     kind: ValueKind.Bucket,
-    value
+    value,
   };
 };
 const proof = (value) => {
   return {
     kind: ValueKind.Proof,
-    value
+    value,
   };
 };
 const expression = (value) => {
   return {
     kind: ValueKind.Expression,
-    value: Expression[value]
+    value: Expression[value],
   };
 };
 const decimal = (value) => {
   return {
     kind: ValueKind.Decimal,
-    value: resolveDecimal$1(value)
+    value: resolveDecimal$1(value),
   };
 };
 const preciseDecimal = (value) => {
   return {
     kind: ValueKind.PreciseDecimal,
-    value: resolveDecimal$1(value)
+    value: resolveDecimal$1(value),
   };
 };
 const blob = (value) => {
   return {
     kind: ValueKind.Blob,
-    value: resolveBytes$1(value)
+    value: resolveBytes$1(value),
   };
 };
 const nonFungibleLocalId = (value) => {
   return {
     kind: ValueKind.NonFungibleLocalId,
-    value
+    value,
   };
 };
 const addressReservation = (value) => {
   return {
     kind: ValueKind.AddressReservation,
-    value
+    value,
   };
 };
 const resolveBigInt = (value) => {
@@ -2837,12 +3123,12 @@ const resolveManifestAddress$1 = (value) => {
     case "string":
       return {
         kind: "Static",
-        value
+        value,
       };
     case "number":
       return {
         kind: "Named",
-        value
+        value,
       };
     default:
       throw new Error();
@@ -2852,27 +3138,39 @@ var SerializableEntityType = /* @__PURE__ */ ((SerializableEntityType2) => {
   SerializableEntityType2["GlobalPackage"] = "GlobalPackage";
   SerializableEntityType2["GlobalConsensusManager"] = "GlobalConsensusManager";
   SerializableEntityType2["GlobalValidator"] = "GlobalValidator";
-  SerializableEntityType2["GlobalTransactionTracker"] = "GlobalTransactionTracker";
+  SerializableEntityType2["GlobalTransactionTracker"] =
+    "GlobalTransactionTracker";
   SerializableEntityType2["GlobalGenericComponent"] = "GlobalGenericComponent";
   SerializableEntityType2["GlobalAccount"] = "GlobalAccount";
   SerializableEntityType2["GlobalIdentity"] = "GlobalIdentity";
   SerializableEntityType2["GlobalAccessController"] = "GlobalAccessController";
   SerializableEntityType2["GlobalOneResourcePool"] = "GlobalOneResourcePool";
   SerializableEntityType2["GlobalTwoResourcePool"] = "GlobalTwoResourcePool";
-  SerializableEntityType2["GlobalMultiResourcePool"] = "GlobalMultiResourcePool";
-  SerializableEntityType2["GlobalVirtualSecp256k1Account"] = "GlobalVirtualSecp256k1Account";
-  SerializableEntityType2["GlobalVirtualSecp256k1Identity"] = "GlobalVirtualSecp256k1Identity";
-  SerializableEntityType2["GlobalVirtualEd25519Account"] = "GlobalVirtualEd25519Account";
-  SerializableEntityType2["GlobalVirtualEd25519Identity"] = "GlobalVirtualEd25519Identity";
-  SerializableEntityType2["GlobalFungibleResourceManager"] = "GlobalFungibleResourceManager";
+  SerializableEntityType2["GlobalMultiResourcePool"] =
+    "GlobalMultiResourcePool";
+  SerializableEntityType2["GlobalVirtualSecp256k1Account"] =
+    "GlobalVirtualSecp256k1Account";
+  SerializableEntityType2["GlobalVirtualSecp256k1Identity"] =
+    "GlobalVirtualSecp256k1Identity";
+  SerializableEntityType2["GlobalVirtualEd25519Account"] =
+    "GlobalVirtualEd25519Account";
+  SerializableEntityType2["GlobalVirtualEd25519Identity"] =
+    "GlobalVirtualEd25519Identity";
+  SerializableEntityType2["GlobalFungibleResourceManager"] =
+    "GlobalFungibleResourceManager";
   SerializableEntityType2["InternalFungibleVault"] = "InternalFungibleVault";
-  SerializableEntityType2["GlobalNonFungibleResourceManager"] = "GlobalNonFungibleResourceManager";
-  SerializableEntityType2["InternalNonFungibleVault"] = "InternalNonFungibleVault";
-  SerializableEntityType2["InternalGenericComponent"] = "InternalGenericComponent";
+  SerializableEntityType2["GlobalNonFungibleResourceManager"] =
+    "GlobalNonFungibleResourceManager";
+  SerializableEntityType2["InternalNonFungibleVault"] =
+    "InternalNonFungibleVault";
+  SerializableEntityType2["InternalGenericComponent"] =
+    "InternalGenericComponent";
   SerializableEntityType2["InternalKeyValueStore"] = "InternalKeyValueStore";
   return SerializableEntityType2;
 })(SerializableEntityType || {});
-var SerializableOlympiaNetwork = /* @__PURE__ */ ((SerializableOlympiaNetwork2) => {
+var SerializableOlympiaNetwork = /* @__PURE__ */ ((
+  SerializableOlympiaNetwork2
+) => {
   SerializableOlympiaNetwork2["Mainnet"] = "Mainnet";
   SerializableOlympiaNetwork2["Stokenet"] = "Stokenet";
   SerializableOlympiaNetwork2["Releasenet"] = "Releasenet";
@@ -2883,24 +3181,32 @@ var SerializableOlympiaNetwork = /* @__PURE__ */ ((SerializableOlympiaNetwork2) 
   SerializableOlympiaNetwork2["Localnet"] = "Localnet";
   return SerializableOlympiaNetwork2;
 })(SerializableOlympiaNetwork || {});
-var SerializableDefaultDepositRule = /* @__PURE__ */ ((SerializableDefaultDepositRule2) => {
+var SerializableDefaultDepositRule = /* @__PURE__ */ ((
+  SerializableDefaultDepositRule2
+) => {
   SerializableDefaultDepositRule2["Accept"] = "Accept";
   SerializableDefaultDepositRule2["Reject"] = "Reject";
   SerializableDefaultDepositRule2["AllowExisting"] = "AllowExisting";
   return SerializableDefaultDepositRule2;
 })(SerializableDefaultDepositRule || {});
-var SerializableInstructionsKind = /* @__PURE__ */ ((SerializableInstructionsKind2) => {
+var SerializableInstructionsKind = /* @__PURE__ */ ((
+  SerializableInstructionsKind2
+) => {
   SerializableInstructionsKind2["String"] = "String";
   SerializableInstructionsKind2["Parsed"] = "Parsed";
   return SerializableInstructionsKind2;
 })(SerializableInstructionsKind || {});
-var SerializableSerializationMode = /* @__PURE__ */ ((SerializableSerializationMode2) => {
+var SerializableSerializationMode = /* @__PURE__ */ ((
+  SerializableSerializationMode2
+) => {
   SerializableSerializationMode2["Programmatic"] = "Programmatic";
   SerializableSerializationMode2["Model"] = "Model";
   SerializableSerializationMode2["Natural"] = "Natural";
   return SerializableSerializationMode2;
 })(SerializableSerializationMode || {});
-var SerializableResourcePreference = /* @__PURE__ */ ((SerializableResourcePreference2) => {
+var SerializableResourcePreference = /* @__PURE__ */ ((
+  SerializableResourcePreference2
+) => {
   SerializableResourcePreference2["Allowed"] = "Allowed";
   SerializableResourcePreference2["Disallowed"] = "Disallowed";
   return SerializableResourcePreference2;
@@ -2910,7 +3216,9 @@ var SerializableExpression = /* @__PURE__ */ ((SerializableExpression2) => {
   SerializableExpression2["EntireAuthZone"] = "EntireAuthZone";
   return SerializableExpression2;
 })(SerializableExpression || {});
-var SerializableManifestValueKind = /* @__PURE__ */ ((SerializableManifestValueKind2) => {
+var SerializableManifestValueKind = /* @__PURE__ */ ((
+  SerializableManifestValueKind2
+) => {
   SerializableManifestValueKind2["Bool"] = "Bool";
   SerializableManifestValueKind2["I8"] = "I8";
   SerializableManifestValueKind2["I16"] = "I16";
@@ -2938,1450 +3246,1609 @@ var SerializableManifestValueKind = /* @__PURE__ */ ((SerializableManifestValueK
   SerializableManifestValueKind2["AddressReservation"] = "AddressReservation";
   return SerializableManifestValueKind2;
 })(SerializableManifestValueKind || {});
-const _GeneratedConverter = class {
-};
+const _GeneratedConverter = class {};
 let GeneratedConverter = _GeneratedConverter;
-__publicField(GeneratedConverter, "PublicKey", class {
-  static toGenerated(value) {
-    return {
-      kind: value.curve,
-      value: Convert.Uint8Array.toHexString(value.publicKey)
-    };
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Secp256k1":
-        return new PublicKey.Secp256k1(
-          Convert.HexString.toUint8Array(value.value)
-        );
-      case "Ed25519":
-        return new PublicKey.Ed25519(
-          Convert.HexString.toUint8Array(value.value)
-        );
+__publicField(
+  GeneratedConverter,
+  "PublicKey",
+  class {
+    static toGenerated(value) {
+      return {
+        kind: value.curve,
+        value: Convert.Uint8Array.toHexString(value.publicKey),
+      };
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Secp256k1":
+          return new PublicKey.Secp256k1(
+            Convert.HexString.toUint8Array(value.value)
+          );
+        case "Ed25519":
+          return new PublicKey.Ed25519(
+            Convert.HexString.toUint8Array(value.value)
+          );
+      }
     }
   }
-});
-__publicField(GeneratedConverter, "Signature", class {
-  static toGenerated(value) {
-    return {
-      kind: value.curve,
-      value: Convert.Uint8Array.toHexString(value.signature)
-    };
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Secp256k1":
-        return new Signature.Secp256k1(
-          Convert.HexString.toUint8Array(value.value)
-        );
-      case "Ed25519":
-        return new Signature.Ed25519(
-          Convert.HexString.toUint8Array(value.value)
-        );
+);
+__publicField(
+  GeneratedConverter,
+  "Signature",
+  class {
+    static toGenerated(value) {
+      return {
+        kind: value.curve,
+        value: Convert.Uint8Array.toHexString(value.signature),
+      };
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Secp256k1":
+          return new Signature.Secp256k1(
+            Convert.HexString.toUint8Array(value.value)
+          );
+        case "Ed25519":
+          return new Signature.Ed25519(
+            Convert.HexString.toUint8Array(value.value)
+          );
+      }
     }
   }
-});
-__publicField(GeneratedConverter, "SignatureWithPublicKey", class {
-  static toGenerated(value) {
-    switch (value.curve) {
-      case "Ed25519":
-        return {
-          kind: "Ed25519",
-          value: {
-            public_key: Convert.Uint8Array.toHexString(value.publicKey),
-            signature: Convert.Uint8Array.toHexString(value.signature)
-          }
-        };
-      case "Secp256k1":
-        return {
-          kind: "Secp256k1",
-          value: {
-            signature: Convert.Uint8Array.toHexString(value.signature)
-          }
-        };
+);
+__publicField(
+  GeneratedConverter,
+  "SignatureWithPublicKey",
+  class {
+    static toGenerated(value) {
+      switch (value.curve) {
+        case "Ed25519":
+          return {
+            kind: "Ed25519",
+            value: {
+              public_key: Convert.Uint8Array.toHexString(value.publicKey),
+              signature: Convert.Uint8Array.toHexString(value.signature),
+            },
+          };
+        case "Secp256k1":
+          return {
+            kind: "Secp256k1",
+            value: {
+              signature: Convert.Uint8Array.toHexString(value.signature),
+            },
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Secp256k1":
+          return new SignatureWithPublicKey.Secp256k1(
+            Convert.HexString.toUint8Array(value.value.signature)
+          );
+        case "Ed25519":
+          return new SignatureWithPublicKey.Ed25519(
+            Convert.HexString.toUint8Array(value.value.signature),
+            Convert.HexString.toUint8Array(value.value.public_key)
+          );
+      }
     }
   }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Secp256k1":
-        return new SignatureWithPublicKey.Secp256k1(
-          Convert.HexString.toUint8Array(value.value.signature)
-        );
-      case "Ed25519":
-        return new SignatureWithPublicKey.Ed25519(
-          Convert.HexString.toUint8Array(value.value.signature),
-          Convert.HexString.toUint8Array(value.value.public_key)
-        );
+);
+__publicField(
+  GeneratedConverter,
+  "OlympiaNetwork",
+  class {
+    static toGenerated(value) {
+      return SerializableOlympiaNetwork[OlympiaNetwork[value]];
+    }
+    static fromGenerated(value) {
+      return OlympiaNetwork[SerializableOlympiaNetwork[value]];
     }
   }
-});
-__publicField(GeneratedConverter, "OlympiaNetwork", class {
-  static toGenerated(value) {
-    return SerializableOlympiaNetwork[OlympiaNetwork[value]];
-  }
-  static fromGenerated(value) {
-    return OlympiaNetwork[SerializableOlympiaNetwork[value]];
-  }
-});
-__publicField(GeneratedConverter, "SerializationMode", class {
-  static toGenerated(value) {
-    return SerializableSerializationMode[SerializationMode[value]];
-  }
-  static fromGenerated(value) {
-    return SerializationMode[SerializableSerializationMode[value]];
-  }
-});
-__publicField(GeneratedConverter, "ManifestSborStringRepresentation", class {
-  static toGenerated(value) {
-    switch (value) {
-      case ManifestSborStringRepresentation.ManifestString:
-        return {
-          kind: "ManifestString"
-        };
-      case ManifestSborStringRepresentation.ProgrammaticJson:
-        return {
-          kind: "Json",
-          value: SerializableSerializationMode.Programmatic
-        };
-      case ManifestSborStringRepresentation.NaturalJson:
-        return {
-          kind: "Json",
-          value: SerializableSerializationMode.Natural
-        };
-      case ManifestSborStringRepresentation.ModelJson:
-        return {
-          kind: "Json",
-          value: SerializableSerializationMode.Model
-        };
+);
+__publicField(
+  GeneratedConverter,
+  "SerializationMode",
+  class {
+    static toGenerated(value) {
+      return SerializableSerializationMode[SerializationMode[value]];
+    }
+    static fromGenerated(value) {
+      return SerializationMode[SerializableSerializationMode[value]];
     }
   }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "ManifestString":
-        return ManifestSborStringRepresentation.ManifestString;
-      case "Json":
-        switch (value.value) {
-          case SerializableSerializationMode.Programmatic:
-            return ManifestSborStringRepresentation.ProgrammaticJson;
-          case SerializableSerializationMode.Natural:
-            return ManifestSborStringRepresentation.NaturalJson;
-          case SerializableSerializationMode.Model:
-            return ManifestSborStringRepresentation.ModelJson;
-        }
+);
+__publicField(
+  GeneratedConverter,
+  "ManifestSborStringRepresentation",
+  class {
+    static toGenerated(value) {
+      switch (value) {
+        case ManifestSborStringRepresentation.ManifestString:
+          return {
+            kind: "ManifestString",
+          };
+        case ManifestSborStringRepresentation.ProgrammaticJson:
+          return {
+            kind: "Json",
+            value: SerializableSerializationMode.Programmatic,
+          };
+        case ManifestSborStringRepresentation.NaturalJson:
+          return {
+            kind: "Json",
+            value: SerializableSerializationMode.Natural,
+          };
+        case ManifestSborStringRepresentation.ModelJson:
+          return {
+            kind: "Json",
+            value: SerializableSerializationMode.Model,
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "ManifestString":
+          return ManifestSborStringRepresentation.ManifestString;
+        case "Json":
+          switch (value.value) {
+            case SerializableSerializationMode.Programmatic:
+              return ManifestSborStringRepresentation.ProgrammaticJson;
+            case SerializableSerializationMode.Natural:
+              return ManifestSborStringRepresentation.NaturalJson;
+            case SerializableSerializationMode.Model:
+              return ManifestSborStringRepresentation.ModelJson;
+          }
+      }
     }
   }
-});
-__publicField(GeneratedConverter, "ManifestValueKind", class {
-  static toGenerated(value) {
-    return SerializableManifestValueKind[ValueKind[value]];
-  }
-  static fromGenerated(value) {
-    return ValueKind[SerializableManifestValueKind[value]];
-  }
-});
-__publicField(GeneratedConverter, "Expression", class {
-  static toGenerated(value) {
-    return SerializableExpression[Expression[value]];
-  }
-  static fromGenerated(value) {
-    return Expression[SerializableExpression[value]];
-  }
-});
-__publicField(GeneratedConverter, "ManifestAddress", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "Named":
-        return {
-          kind: value.kind,
-          value: Convert.Number.toString(value.value)
-        };
-      case "Static":
-        return {
-          kind: value.kind,
-          value: value.value
-        };
+);
+__publicField(
+  GeneratedConverter,
+  "ManifestValueKind",
+  class {
+    static toGenerated(value) {
+      return SerializableManifestValueKind[ValueKind[value]];
+    }
+    static fromGenerated(value) {
+      return ValueKind[SerializableManifestValueKind[value]];
     }
   }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Named":
-        return {
-          kind: value.kind,
-          value: Convert.String.toNumber(value.value)
-        };
-      case "Static":
-        return {
-          kind: value.kind,
-          value: value.value
-        };
+);
+__publicField(
+  GeneratedConverter,
+  "Expression",
+  class {
+    static toGenerated(value) {
+      return SerializableExpression[Expression[value]];
+    }
+    static fromGenerated(value) {
+      return Expression[SerializableExpression[value]];
     }
   }
-});
-__publicField(GeneratedConverter, "ManifestValue", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case ValueKind.Bool:
-        return {
-          kind: value.kind,
-          value: {
-            value: value.value
-          }
-        };
-      case ValueKind.I8:
-      case ValueKind.I16:
-      case ValueKind.I32:
-      case ValueKind.U8:
-      case ValueKind.U16:
-      case ValueKind.U32:
-      case ValueKind.Bucket:
-      case ValueKind.Proof:
-      case ValueKind.AddressReservation:
-        return {
-          kind: ValueKind[value.kind],
-          value: {
-            value: Convert.Number.toString(value.value)
-          }
-        };
-      case ValueKind.I64:
-      case ValueKind.I128:
-      case ValueKind.U64:
-      case ValueKind.U128:
-        return {
-          kind: ValueKind[value.kind],
-          value: {
-            value: Convert.BigInt.toString(value.value)
-          }
-        };
-      case ValueKind.Blob:
-        return {
-          kind: ValueKind[value.kind],
-          value: {
-            value: Convert.Uint8Array.toHexString(value.value)
-          }
-        };
-      case ValueKind.String:
-      case ValueKind.NonFungibleLocalId:
-        return {
-          kind: ValueKind[value.kind],
-          value: {
-            value: value.value
-          }
-        };
-      case ValueKind.Decimal:
-      case ValueKind.PreciseDecimal:
-        return {
-          kind: ValueKind[value.kind],
-          value: {
-            value: Convert.Decimal.toString(value.value)
-          }
-        };
-      case ValueKind.Enum:
-        return {
-          kind: value.kind,
-          value: {
-            discriminator: Convert.Number.toString(value.discriminator),
-            fields: value.fields.map(
-              _GeneratedConverter.ManifestValue.toGenerated
-            )
-          }
-        };
-      case ValueKind.Array:
-        return {
-          kind: value.kind,
-          value: {
-            element_value_kind: SerializableManifestValueKind[value.elementValueKind],
-            elements: value.elements.map(
-              _GeneratedConverter.ManifestValue.toGenerated
-            )
-          }
-        };
-      case ValueKind.Tuple:
-        return {
-          kind: value.kind,
-          value: {
-            fields: value.fields.map(
-              _GeneratedConverter.ManifestValue.toGenerated
-            )
-          }
-        };
-      case ValueKind.Map:
-        return {
-          kind: value.kind,
-          value: {
-            key_value_kind: SerializableManifestValueKind[value.keyValueKind],
-            value_value_kind: SerializableManifestValueKind[value.valueValueKind],
-            entries: value.entries.map((mapEntry) => {
-              return {
-                key: _GeneratedConverter.ManifestValue.toGenerated(
-                  mapEntry.key
-                ),
-                value: _GeneratedConverter.ManifestValue.toGenerated(
-                  mapEntry.value
-                )
-              };
-            })
-          }
-        };
-      case ValueKind.Address:
-        return {
-          kind: value.kind,
-          value: {
-            value: _GeneratedConverter.ManifestAddress.toGenerated(
-              value.value
-            )
-          }
-        };
-      case ValueKind.Expression:
-        return {
-          kind: value.kind,
-          value: {
-            value: _GeneratedConverter.Expression.toGenerated(value.value)
-          }
-        };
-    }
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Bool":
-        return {
-          kind: ValueKind.Bool,
-          value: value.value.value
-        };
-      case "I8":
-      case "I16":
-      case "I32":
-      case "U8":
-      case "U16":
-      case "U32":
-      case "Bucket":
-      case "Proof":
-      case "AddressReservation":
-        return {
-          kind: ValueKind[value.kind],
-          value: Convert.String.toNumber(value.value.value)
-        };
-      case "I64":
-      case "I128":
-      case "U64":
-      case "U128":
-        return {
-          kind: ValueKind[value.kind],
-          value: Convert.String.toBigInt(value.value.value)
-        };
-      case "Blob":
-        return {
-          kind: ValueKind[value.kind],
-          value: Convert.HexString.toUint8Array(value.value.value)
-        };
-      case "String":
-      case "NonFungibleLocalId":
-        return {
-          kind: ValueKind[value.kind],
-          value: value.value.value
-        };
-      case "Decimal":
-      case "PreciseDecimal":
-        return {
-          kind: ValueKind[value.kind],
-          value: Convert.String.toDecimal(value.value.value)
-        };
-      case "Enum":
-        return {
-          kind: ValueKind.Enum,
-          discriminator: Convert.String.toNumber(value.value.discriminator),
-          fields: value.value.fields.map(
-            _GeneratedConverter.ManifestValue.fromGenerated
-          )
-        };
-      case "Array":
-        return {
-          kind: ValueKind.Array,
-          elementValueKind: ValueKind[value.value.element_value_kind],
-          elements: value.value.elements.map(
-            _GeneratedConverter.ManifestValue.fromGenerated
-          )
-        };
-      case "Tuple":
-        return {
-          kind: ValueKind.Tuple,
-          fields: value.value.fields.map(
-            _GeneratedConverter.ManifestValue.fromGenerated
-          )
-        };
-      case "Map":
-        return {
-          kind: ValueKind.Map,
-          keyValueKind: ValueKind[value.value.key_value_kind],
-          valueValueKind: ValueKind[value.value.value_value_kind],
-          entries: value.value.entries.map((entry) => {
-            return {
-              key: _GeneratedConverter.ManifestValue.fromGenerated(entry.key),
-              value: _GeneratedConverter.ManifestValue.fromGenerated(
-                entry.value
-              )
-            };
-          })
-        };
-      case "Address":
-        return {
-          kind: ValueKind.Address,
-          value: _GeneratedConverter.ManifestAddress.fromGenerated(
-            value.value.value
-          )
-        };
-      case "Expression":
-        return {
-          kind: ValueKind.Expression,
-          value: _GeneratedConverter.Expression.fromGenerated(
-            value.value.value
-          )
-        };
-    }
-  }
-});
-__publicField(GeneratedConverter, "Instruction", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "TakeAllFromWorktop":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress
-          }
-        };
-      case "TakeFromWorktop":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress,
-            amount: Convert.Decimal.toString(value.amount)
-          }
-        };
-      case "TakeNonFungiblesFromWorktop":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress,
-            ids: value.ids
-          }
-        };
-      case "ReturnToWorktop":
-        return {
-          kind: value.kind,
-          value: {
-            bucket_id: Convert.Number.toString(value.bucketId)
-          }
-        };
-      case "AssertWorktopContainsAny":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress
-          }
-        };
-      case "AssertWorktopContains":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress,
-            amount: Convert.Decimal.toString(value.amount)
-          }
-        };
-      case "AssertWorktopContainsNonFungibles":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress,
-            ids: value.ids
-          }
-        };
-      case "PopFromAuthZone":
-        return {
-          kind: value.kind
-        };
-      case "PushToAuthZone":
-        return {
-          kind: value.kind,
-          value: {
-            proof_id: Convert.Number.toString(value.proofId)
-          }
-        };
-      case "DropNamedProofs":
-      case "DropAuthZoneProofs":
-      case "DropAuthZoneRegularProofs":
-      case "DropAuthZoneSignatureProofs":
-        return {
-          kind: value.kind
-        };
-      case "CreateProofFromAuthZoneOfAmount":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress,
-            amount: Convert.Decimal.toString(value.amount)
-          }
-        };
-      case "CreateProofFromAuthZoneOfNonFungibles":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress,
-            ids: value.ids
-          }
-        };
-      case "CreateProofFromAuthZoneOfAll":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress
-          }
-        };
-      case "CreateProofFromBucketOfAmount":
-        return {
-          kind: value.kind,
-          value: {
-            bucket_id: Convert.Number.toString(value.bucketId),
-            amount: Convert.Decimal.toString(value.amount)
-          }
-        };
-      case "CreateProofFromBucketOfNonFungibles":
-        return {
-          kind: value.kind,
-          value: {
-            bucket_id: Convert.Number.toString(value.bucketId),
-            ids: value.ids
-          }
-        };
-      case "CreateProofFromBucketOfAll":
-        return {
-          kind: value.kind,
-          value: {
-            bucket_id: Convert.Number.toString(value.bucketId)
-          }
-        };
-      case "BurnResource":
-        return {
-          kind: value.kind,
-          value: {
-            bucket_id: Convert.Number.toString(value.bucketId)
-          }
-        };
-      case "CloneProof":
-        return {
-          kind: value.kind,
-          value: {
-            proof_id: Convert.Number.toString(value.proofId)
-          }
-        };
-      case "DropProof":
-        return {
-          kind: value.kind,
-          value: {
-            proof_id: Convert.Number.toString(value.proofId)
-          }
-        };
-      case "CallFunction":
-        return {
-          kind: value.kind,
-          value: {
-            package_address: _GeneratedConverter.ManifestAddress.toGenerated(
-              value.packageAddress
-            ),
-            blueprint_name: value.blueprintName,
-            function_name: value.functionName,
-            args: _GeneratedConverter.ManifestValue.toGenerated(value.args)
-          }
-        };
-      case "CallMethod":
-      case "CallRoyaltyMethod":
-      case "CallMetadataMethod":
-      case "CallRoleAssignmentMethod":
-        return {
-          kind: value.kind,
-          value: {
-            address: _GeneratedConverter.ManifestAddress.toGenerated(
-              value.address
-            ),
-            method_name: value.methodName,
-            args: _GeneratedConverter.ManifestValue.toGenerated(value.args)
-          }
-        };
-      case "CallDirectVaultMethod":
-        return {
-          kind: value.kind,
-          value: {
-            address: value.address,
-            method_name: value.methodName,
-            args: _GeneratedConverter.ManifestValue.toGenerated(value.args)
-          }
-        };
-      case "DropAllProofs":
-        return {
-          kind: value.kind
-        };
-      case "AllocateGlobalAddress":
-        return {
-          kind: value.kind,
-          value: {
-            package_address: value.packageAddress,
-            blueprint_name: value.blueprintName
-          }
-        };
-    }
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "TakeAllFromWorktop":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address
-        };
-      case "TakeFromWorktop":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address,
-          amount: Convert.String.toDecimal(value.value.amount)
-        };
-      case "TakeNonFungiblesFromWorktop":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address,
-          ids: value.value.ids
-        };
-      case "ReturnToWorktop":
-        return {
-          kind: value.kind,
-          bucketId: Convert.String.toNumber(value.value.bucket_id)
-        };
-      case "AssertWorktopContainsAny":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address
-        };
-      case "AssertWorktopContains":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address,
-          amount: Convert.String.toDecimal(value.value.amount)
-        };
-      case "AssertWorktopContainsNonFungibles":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address,
-          ids: value.value.ids
-        };
-      case "PopFromAuthZone":
-        return {
-          kind: value.kind
-        };
-      case "PushToAuthZone":
-        return {
-          kind: value.kind,
-          proofId: Convert.String.toNumber(value.value.proof_id)
-        };
-      case "DropNamedProofs":
-      case "DropAuthZoneProofs":
-      case "DropAuthZoneRegularProofs":
-      case "DropAuthZoneSignatureProofs":
-        return {
-          kind: value.kind
-        };
-      case "CreateProofFromAuthZoneOfAmount":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address,
-          amount: Convert.String.toDecimal(value.value.amount)
-        };
-      case "CreateProofFromAuthZoneOfNonFungibles":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address,
-          ids: value.value.ids
-        };
-      case "CreateProofFromAuthZoneOfAll":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address
-        };
-      case "CreateProofFromBucketOfAmount":
-        return {
-          kind: value.kind,
-          bucketId: Convert.String.toNumber(value.value.bucket_id),
-          amount: Convert.String.toDecimal(value.value.amount)
-        };
-      case "CreateProofFromBucketOfNonFungibles":
-        return {
-          kind: value.kind,
-          bucketId: Convert.String.toNumber(value.value.bucket_id),
-          ids: value.value.ids
-        };
-      case "CreateProofFromBucketOfAll":
-        return {
-          kind: value.kind,
-          bucketId: Convert.String.toNumber(value.value.bucket_id)
-        };
-      case "BurnResource":
-        return {
-          kind: value.kind,
-          bucketId: Convert.String.toNumber(value.value.bucket_id)
-        };
-      case "CloneProof":
-        return {
-          kind: value.kind,
-          proofId: Convert.String.toNumber(value.value.proof_id)
-        };
-      case "DropProof":
-        return {
-          kind: value.kind,
-          proofId: Convert.String.toNumber(value.value.proof_id)
-        };
-      case "CallFunction":
-        return {
-          kind: value.kind,
-          packageAddress: _GeneratedConverter.ManifestAddress.fromGenerated(
-            value.value.package_address
-          ),
-          blueprintName: value.value.blueprint_name,
-          functionName: value.value.function_name,
-          args: _GeneratedConverter.ManifestValue.fromGenerated(
-            value.value.args
-          )
-        };
-      case "CallMethod":
-      case "CallRoyaltyMethod":
-      case "CallMetadataMethod":
-      case "CallRoleAssignmentMethod":
-        return {
-          kind: value.kind,
-          address: _GeneratedConverter.ManifestAddress.fromGenerated(
-            value.value.address
-          ),
-          methodName: value.value.method_name,
-          args: _GeneratedConverter.ManifestValue.fromGenerated(
-            value.value.args
-          )
-        };
-      case "CallDirectVaultMethod":
-        return {
-          kind: value.kind,
-          address: value.value.address,
-          methodName: value.value.method_name,
-          args: _GeneratedConverter.ManifestValue.fromGenerated(
-            value.value.args
-          )
-        };
-      case "DropAllProofs":
-        return {
-          kind: value.kind
-        };
-      case "AllocateGlobalAddress":
-        return {
-          kind: value.kind,
-          packageAddress: value.value.package_address,
-          blueprintName: value.value.blueprint_name
-        };
-    }
-  }
-});
-__publicField(GeneratedConverter, "Instructions", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "String":
-        return value;
-      case "Parsed":
-        return {
-          kind: "Parsed",
-          value: value.value.map(_GeneratedConverter.Instruction.toGenerated)
-        };
-    }
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "String":
-        return value;
-      case "Parsed":
-        return {
-          kind: "Parsed",
-          value: value.value.map(
-            _GeneratedConverter.Instruction.fromGenerated
-          )
-        };
-    }
-  }
-});
-__publicField(GeneratedConverter, "TransactionManifest", class {
-  static toGenerated(value) {
-    return {
-      instructions: _GeneratedConverter.Instructions.toGenerated(
-        value.instructions
-      ),
-      blobs: value.blobs.map(Convert.Uint8Array.toHexString)
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      instructions: _GeneratedConverter.Instructions.fromGenerated(
-        value.instructions
-      ),
-      blobs: value.blobs.map(Convert.HexString.toUint8Array)
-    };
-  }
-});
-__publicField(GeneratedConverter, "TransactionHeader", class {
-  static toGenerated(value) {
-    return {
-      network_id: Convert.Number.toString(value.networkId),
-      start_epoch_inclusive: Convert.Number.toString(
-        value.startEpochInclusive
-      ),
-      end_epoch_exclusive: Convert.Number.toString(value.endEpochExclusive),
-      nonce: Convert.Number.toString(value.nonce),
-      notary_is_signatory: value.notaryIsSignatory,
-      notary_public_key: _GeneratedConverter.PublicKey.toGenerated(
-        value.notaryPublicKey
-      ),
-      tip_percentage: Convert.Number.toString(value.tipPercentage)
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      networkId: Convert.String.toNumber(value.network_id),
-      startEpochInclusive: Convert.String.toNumber(
-        value.start_epoch_inclusive
-      ),
-      endEpochExclusive: Convert.String.toNumber(value.end_epoch_exclusive),
-      nonce: Convert.String.toNumber(value.nonce),
-      notaryPublicKey: _GeneratedConverter.PublicKey.fromGenerated(
-        value.notary_public_key
-      ),
-      notaryIsSignatory: value.notary_is_signatory,
-      tipPercentage: Convert.String.toNumber(value.tip_percentage)
-    };
-  }
-});
-__publicField(GeneratedConverter, "TransactionHash", class {
-  static toGenerated(value) {
-    return {
-      hash: Convert.Uint8Array.toHexString(value.hash),
-      id: value.id
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      hash: Convert.HexString.toUint8Array(value.hash),
-      id: value.id
-    };
-  }
-});
-__publicField(GeneratedConverter, "Intent", class {
-  static toGenerated(value) {
-    return {
-      header: _GeneratedConverter.TransactionHeader.toGenerated(value.header),
-      manifest: _GeneratedConverter.TransactionManifest.toGenerated(
-        value.manifest
-      ),
-      message: _GeneratedConverter.Message.toGenerated(value.message)
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      manifest: _GeneratedConverter.TransactionManifest.fromGenerated(
-        value.manifest
-      ),
-      header: _GeneratedConverter.TransactionHeader.fromGenerated(
-        value.header
-      ),
-      message: _GeneratedConverter.Message.fromGenerated(value.message)
-    };
-  }
-});
-__publicField(GeneratedConverter, "SignedIntent", class {
-  static toGenerated(value) {
-    return {
-      intent: _GeneratedConverter.Intent.toGenerated(value.intent),
-      intent_signatures: value.intentSignatures.map(
-        _GeneratedConverter.SignatureWithPublicKey.toGenerated
-      )
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      intent: _GeneratedConverter.Intent.fromGenerated(value.intent),
-      intentSignatures: value.intent_signatures.map(
-        _GeneratedConverter.SignatureWithPublicKey.fromGenerated
-      )
-    };
-  }
-});
-__publicField(GeneratedConverter, "NotarizedTransaction", class {
-  static toGenerated(value) {
-    return {
-      signed_intent: _GeneratedConverter.SignedIntent.toGenerated(
-        value.signedIntent
-      ),
-      notary_signature: _GeneratedConverter.Signature.toGenerated(
-        value.notarySignature
-      )
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      signedIntent: _GeneratedConverter.SignedIntent.fromGenerated(
-        value.signed_intent
-      ),
-      notarySignature: _GeneratedConverter.Signature.fromGenerated(
-        value.notary_signature
-      )
-    };
-  }
-});
-__publicField(GeneratedConverter, "EntityType", class {
-  static toGenerated(value) {
-    return SerializableEntityType[EntityType[value]];
-  }
-  static fromGenerated(value) {
-    return EntityType[SerializableEntityType[value]];
-  }
-});
-__publicField(GeneratedConverter, "MessageValidationConfig", class {
-  static toGenerated(value) {
-    return {
-      max_plaintext_message_length: Convert.BigInt.toString(
-        value.maxPlaintextMessageLength
-      ),
-      max_encrypted_message_length: Convert.BigInt.toString(
-        value.maxEncryptedMessageLength
-      ),
-      max_mime_type_length: Convert.BigInt.toString(value.maxMimeTypeLength),
-      max_decryptors: Convert.BigInt.toString(value.maxDecryptors)
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      maxPlaintextMessageLength: Convert.String.toBigInt(
-        value.max_plaintext_message_length
-      ),
-      maxEncryptedMessageLength: Convert.String.toBigInt(
-        value.max_encrypted_message_length
-      ),
-      maxMimeTypeLength: Convert.String.toBigInt(value.max_mime_type_length),
-      maxDecryptors: Convert.String.toBigInt(value.max_decryptors)
-    };
-  }
-});
-__publicField(GeneratedConverter, "FeeSummary", class {
-  static toGenerated(value) {
-    return {
-      execution_cost: Convert.Decimal.toString(value.executionCost),
-      finalization_cost: Convert.Decimal.toString(value.finalizationCost),
-      storage_expansion_cost: Convert.Decimal.toString(
-        value.storageExpansionCost
-      ),
-      royalty_cost: Convert.Decimal.toString(value.royaltyCost)
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      executionCost: Convert.String.toDecimal(value.execution_cost),
-      finalizationCost: Convert.String.toDecimal(value.finalization_cost),
-      storageExpansionCost: Convert.String.toDecimal(
-        value.storage_expansion_cost
-      ),
-      royaltyCost: Convert.String.toDecimal(value.royalty_cost)
-    };
-  }
-});
-__publicField(GeneratedConverter, "FeeLocks", class {
-  static toGenerated(value) {
-    return {
-      lock: Convert.Decimal.toString(value.lock),
-      contingent_lock: Convert.Decimal.toString(value.contingentLock)
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      lock: Convert.String.toDecimal(value.lock),
-      contingentLock: Convert.String.toDecimal(value.contingent_lock)
-    };
-  }
-});
-__publicField(GeneratedConverter, "DecimalSource", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "Guaranteed":
-        return {
-          kind: value.kind,
-          value: {
-            value: Convert.Decimal.toString(value.value)
-          }
-        };
-      case "Predicted":
-        return {
-          kind: value.kind,
-          value: {
-            value: Convert.Decimal.toString(value.value),
-            instruction_index: Convert.Number.toString(
-              value.instructionIndex
-            )
-          }
-        };
-    }
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Guaranteed":
-        return {
-          kind: value.kind,
-          value: Convert.String.toDecimal(value.value.value)
-        };
-      case "Predicted":
-        return {
-          kind: value.kind,
-          value: Convert.String.toDecimal(value.value.value),
-          instructionIndex: Convert.String.toNumber(
-            value.value.instruction_index
-          )
-        };
-    }
-  }
-});
-__publicField(GeneratedConverter, "NonFungibleLocalIdArraySource", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "Guaranteed":
-        return {
-          kind: value.kind,
-          value: {
-            value: value.value
-          }
-        };
-      case "Predicted":
-        return {
-          kind: value.kind,
-          value: {
+);
+__publicField(
+  GeneratedConverter,
+  "ManifestAddress",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "Named":
+          return {
+            kind: value.kind,
+            value: Convert.Number.toString(value.value),
+          };
+        case "Static":
+          return {
+            kind: value.kind,
             value: value.value,
-            instruction_index: Convert.Number.toString(
-              value.instructionIndex
-            )
-          }
-        };
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Named":
+          return {
+            kind: value.kind,
+            value: Convert.String.toNumber(value.value),
+          };
+        case "Static":
+          return {
+            kind: value.kind,
+            value: value.value,
+          };
+      }
     }
   }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Guaranteed":
-        return {
-          kind: value.kind,
-          value: value.value.value
-        };
-      case "Predicted":
-        return {
-          kind: value.kind,
-          value: value.value.value,
-          instructionIndex: Convert.String.toNumber(
-            value.value.instruction_index
-          )
-        };
+);
+__publicField(
+  GeneratedConverter,
+  "ManifestValue",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case ValueKind.Bool:
+          return {
+            kind: value.kind,
+            value: {
+              value: value.value,
+            },
+          };
+        case ValueKind.I8:
+        case ValueKind.I16:
+        case ValueKind.I32:
+        case ValueKind.U8:
+        case ValueKind.U16:
+        case ValueKind.U32:
+        case ValueKind.Bucket:
+        case ValueKind.Proof:
+        case ValueKind.AddressReservation:
+          return {
+            kind: ValueKind[value.kind],
+            value: {
+              value: Convert.Number.toString(value.value),
+            },
+          };
+        case ValueKind.I64:
+        case ValueKind.I128:
+        case ValueKind.U64:
+        case ValueKind.U128:
+          return {
+            kind: ValueKind[value.kind],
+            value: {
+              value: Convert.BigInt.toString(value.value),
+            },
+          };
+        case ValueKind.Blob:
+          return {
+            kind: ValueKind[value.kind],
+            value: {
+              value: Convert.Uint8Array.toHexString(value.value),
+            },
+          };
+        case ValueKind.String:
+        case ValueKind.NonFungibleLocalId:
+          return {
+            kind: ValueKind[value.kind],
+            value: {
+              value: value.value,
+            },
+          };
+        case ValueKind.Decimal:
+        case ValueKind.PreciseDecimal:
+          return {
+            kind: ValueKind[value.kind],
+            value: {
+              value: Convert.Decimal.toString(value.value),
+            },
+          };
+        case ValueKind.Enum:
+          return {
+            kind: value.kind,
+            value: {
+              discriminator: Convert.Number.toString(value.discriminator),
+              fields: value.fields.map(
+                _GeneratedConverter.ManifestValue.toGenerated
+              ),
+            },
+          };
+        case ValueKind.Array:
+          return {
+            kind: value.kind,
+            value: {
+              element_value_kind:
+                SerializableManifestValueKind[value.elementValueKind],
+              elements: value.elements.map(
+                _GeneratedConverter.ManifestValue.toGenerated
+              ),
+            },
+          };
+        case ValueKind.Tuple:
+          return {
+            kind: value.kind,
+            value: {
+              fields: value.fields.map(
+                _GeneratedConverter.ManifestValue.toGenerated
+              ),
+            },
+          };
+        case ValueKind.Map:
+          return {
+            kind: value.kind,
+            value: {
+              key_value_kind: SerializableManifestValueKind[value.keyValueKind],
+              value_value_kind:
+                SerializableManifestValueKind[value.valueValueKind],
+              entries: value.entries.map((mapEntry) => {
+                return {
+                  key: _GeneratedConverter.ManifestValue.toGenerated(
+                    mapEntry.key
+                  ),
+                  value: _GeneratedConverter.ManifestValue.toGenerated(
+                    mapEntry.value
+                  ),
+                };
+              }),
+            },
+          };
+        case ValueKind.Address:
+          return {
+            kind: value.kind,
+            value: {
+              value: _GeneratedConverter.ManifestAddress.toGenerated(
+                value.value
+              ),
+            },
+          };
+        case ValueKind.Expression:
+          return {
+            kind: value.kind,
+            value: {
+              value: _GeneratedConverter.Expression.toGenerated(value.value),
+            },
+          };
+      }
     }
-  }
-});
-__publicField(GeneratedConverter, "ResourceTracker", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "Fungible":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress,
-            amount: _GeneratedConverter.DecimalSource.toGenerated(
-              value.amount
-            )
-          }
-        };
-      case "NonFungible":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress,
-            amount: _GeneratedConverter.DecimalSource.toGenerated(
-              value.amount
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Bool":
+          return {
+            kind: ValueKind.Bool,
+            value: value.value.value,
+          };
+        case "I8":
+        case "I16":
+        case "I32":
+        case "U8":
+        case "U16":
+        case "U32":
+        case "Bucket":
+        case "Proof":
+        case "AddressReservation":
+          return {
+            kind: ValueKind[value.kind],
+            value: Convert.String.toNumber(value.value.value),
+          };
+        case "I64":
+        case "I128":
+        case "U64":
+        case "U128":
+          return {
+            kind: ValueKind[value.kind],
+            value: Convert.String.toBigInt(value.value.value),
+          };
+        case "Blob":
+          return {
+            kind: ValueKind[value.kind],
+            value: Convert.HexString.toUint8Array(value.value.value),
+          };
+        case "String":
+        case "NonFungibleLocalId":
+          return {
+            kind: ValueKind[value.kind],
+            value: value.value.value,
+          };
+        case "Decimal":
+        case "PreciseDecimal":
+          return {
+            kind: ValueKind[value.kind],
+            value: Convert.String.toDecimal(value.value.value),
+          };
+        case "Enum":
+          return {
+            kind: ValueKind.Enum,
+            discriminator: Convert.String.toNumber(value.value.discriminator),
+            fields: value.value.fields.map(
+              _GeneratedConverter.ManifestValue.fromGenerated
             ),
-            ids: _GeneratedConverter.NonFungibleLocalIdArraySource.toGenerated(
-              value.ids
-            )
-          }
-        };
+          };
+        case "Array":
+          return {
+            kind: ValueKind.Array,
+            elementValueKind: ValueKind[value.value.element_value_kind],
+            elements: value.value.elements.map(
+              _GeneratedConverter.ManifestValue.fromGenerated
+            ),
+          };
+        case "Tuple":
+          return {
+            kind: ValueKind.Tuple,
+            fields: value.value.fields.map(
+              _GeneratedConverter.ManifestValue.fromGenerated
+            ),
+          };
+        case "Map":
+          return {
+            kind: ValueKind.Map,
+            keyValueKind: ValueKind[value.value.key_value_kind],
+            valueValueKind: ValueKind[value.value.value_value_kind],
+            entries: value.value.entries.map((entry) => {
+              return {
+                key: _GeneratedConverter.ManifestValue.fromGenerated(entry.key),
+                value: _GeneratedConverter.ManifestValue.fromGenerated(
+                  entry.value
+                ),
+              };
+            }),
+          };
+        case "Address":
+          return {
+            kind: ValueKind.Address,
+            value: _GeneratedConverter.ManifestAddress.fromGenerated(
+              value.value.value
+            ),
+          };
+        case "Expression":
+          return {
+            kind: ValueKind.Expression,
+            value: _GeneratedConverter.Expression.fromGenerated(
+              value.value.value
+            ),
+          };
+      }
     }
   }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Fungible":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address,
-          amount: _GeneratedConverter.DecimalSource.fromGenerated(
-            value.value.amount
-          )
-        };
-      case "NonFungible":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address,
-          amount: _GeneratedConverter.DecimalSource.fromGenerated(
-            value.value.amount
+);
+__publicField(
+  GeneratedConverter,
+  "Instruction",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "TakeAllFromWorktop":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+            },
+          };
+        case "TakeFromWorktop":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+              amount: Convert.Decimal.toString(value.amount),
+            },
+          };
+        case "TakeNonFungiblesFromWorktop":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+              ids: value.ids,
+            },
+          };
+        case "ReturnToWorktop":
+          return {
+            kind: value.kind,
+            value: {
+              bucket_id: Convert.Number.toString(value.bucketId),
+            },
+          };
+        case "AssertWorktopContainsAny":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+            },
+          };
+        case "AssertWorktopContains":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+              amount: Convert.Decimal.toString(value.amount),
+            },
+          };
+        case "AssertWorktopContainsNonFungibles":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+              ids: value.ids,
+            },
+          };
+        case "PopFromAuthZone":
+          return {
+            kind: value.kind,
+          };
+        case "PushToAuthZone":
+          return {
+            kind: value.kind,
+            value: {
+              proof_id: Convert.Number.toString(value.proofId),
+            },
+          };
+        case "DropNamedProofs":
+        case "DropAuthZoneProofs":
+        case "DropAuthZoneRegularProofs":
+        case "DropAuthZoneSignatureProofs":
+          return {
+            kind: value.kind,
+          };
+        case "CreateProofFromAuthZoneOfAmount":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+              amount: Convert.Decimal.toString(value.amount),
+            },
+          };
+        case "CreateProofFromAuthZoneOfNonFungibles":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+              ids: value.ids,
+            },
+          };
+        case "CreateProofFromAuthZoneOfAll":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+            },
+          };
+        case "CreateProofFromBucketOfAmount":
+          return {
+            kind: value.kind,
+            value: {
+              bucket_id: Convert.Number.toString(value.bucketId),
+              amount: Convert.Decimal.toString(value.amount),
+            },
+          };
+        case "CreateProofFromBucketOfNonFungibles":
+          return {
+            kind: value.kind,
+            value: {
+              bucket_id: Convert.Number.toString(value.bucketId),
+              ids: value.ids,
+            },
+          };
+        case "CreateProofFromBucketOfAll":
+          return {
+            kind: value.kind,
+            value: {
+              bucket_id: Convert.Number.toString(value.bucketId),
+            },
+          };
+        case "BurnResource":
+          return {
+            kind: value.kind,
+            value: {
+              bucket_id: Convert.Number.toString(value.bucketId),
+            },
+          };
+        case "CloneProof":
+          return {
+            kind: value.kind,
+            value: {
+              proof_id: Convert.Number.toString(value.proofId),
+            },
+          };
+        case "DropProof":
+          return {
+            kind: value.kind,
+            value: {
+              proof_id: Convert.Number.toString(value.proofId),
+            },
+          };
+        case "CallFunction":
+          return {
+            kind: value.kind,
+            value: {
+              package_address: _GeneratedConverter.ManifestAddress.toGenerated(
+                value.packageAddress
+              ),
+              blueprint_name: value.blueprintName,
+              function_name: value.functionName,
+              args: _GeneratedConverter.ManifestValue.toGenerated(value.args),
+            },
+          };
+        case "CallMethod":
+        case "CallRoyaltyMethod":
+        case "CallMetadataMethod":
+        case "CallRoleAssignmentMethod":
+          return {
+            kind: value.kind,
+            value: {
+              address: _GeneratedConverter.ManifestAddress.toGenerated(
+                value.address
+              ),
+              method_name: value.methodName,
+              args: _GeneratedConverter.ManifestValue.toGenerated(value.args),
+            },
+          };
+        case "CallDirectVaultMethod":
+          return {
+            kind: value.kind,
+            value: {
+              address: value.address,
+              method_name: value.methodName,
+              args: _GeneratedConverter.ManifestValue.toGenerated(value.args),
+            },
+          };
+        case "DropAllProofs":
+          return {
+            kind: value.kind,
+          };
+        case "AllocateGlobalAddress":
+          return {
+            kind: value.kind,
+            value: {
+              package_address: value.packageAddress,
+              blueprint_name: value.blueprintName,
+            },
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "TakeAllFromWorktop":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+          };
+        case "TakeFromWorktop":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+            amount: Convert.String.toDecimal(value.value.amount),
+          };
+        case "TakeNonFungiblesFromWorktop":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+            ids: value.value.ids,
+          };
+        case "ReturnToWorktop":
+          return {
+            kind: value.kind,
+            bucketId: Convert.String.toNumber(value.value.bucket_id),
+          };
+        case "AssertWorktopContainsAny":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+          };
+        case "AssertWorktopContains":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+            amount: Convert.String.toDecimal(value.value.amount),
+          };
+        case "AssertWorktopContainsNonFungibles":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+            ids: value.value.ids,
+          };
+        case "PopFromAuthZone":
+          return {
+            kind: value.kind,
+          };
+        case "PushToAuthZone":
+          return {
+            kind: value.kind,
+            proofId: Convert.String.toNumber(value.value.proof_id),
+          };
+        case "DropNamedProofs":
+        case "DropAuthZoneProofs":
+        case "DropAuthZoneRegularProofs":
+        case "DropAuthZoneSignatureProofs":
+          return {
+            kind: value.kind,
+          };
+        case "CreateProofFromAuthZoneOfAmount":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+            amount: Convert.String.toDecimal(value.value.amount),
+          };
+        case "CreateProofFromAuthZoneOfNonFungibles":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+            ids: value.value.ids,
+          };
+        case "CreateProofFromAuthZoneOfAll":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+          };
+        case "CreateProofFromBucketOfAmount":
+          return {
+            kind: value.kind,
+            bucketId: Convert.String.toNumber(value.value.bucket_id),
+            amount: Convert.String.toDecimal(value.value.amount),
+          };
+        case "CreateProofFromBucketOfNonFungibles":
+          return {
+            kind: value.kind,
+            bucketId: Convert.String.toNumber(value.value.bucket_id),
+            ids: value.value.ids,
+          };
+        case "CreateProofFromBucketOfAll":
+          return {
+            kind: value.kind,
+            bucketId: Convert.String.toNumber(value.value.bucket_id),
+          };
+        case "BurnResource":
+          return {
+            kind: value.kind,
+            bucketId: Convert.String.toNumber(value.value.bucket_id),
+          };
+        case "CloneProof":
+          return {
+            kind: value.kind,
+            proofId: Convert.String.toNumber(value.value.proof_id),
+          };
+        case "DropProof":
+          return {
+            kind: value.kind,
+            proofId: Convert.String.toNumber(value.value.proof_id),
+          };
+        case "CallFunction":
+          return {
+            kind: value.kind,
+            packageAddress: _GeneratedConverter.ManifestAddress.fromGenerated(
+              value.value.package_address
+            ),
+            blueprintName: value.value.blueprint_name,
+            functionName: value.value.function_name,
+            args: _GeneratedConverter.ManifestValue.fromGenerated(
+              value.value.args
+            ),
+          };
+        case "CallMethod":
+        case "CallRoyaltyMethod":
+        case "CallMetadataMethod":
+        case "CallRoleAssignmentMethod":
+          return {
+            kind: value.kind,
+            address: _GeneratedConverter.ManifestAddress.fromGenerated(
+              value.value.address
+            ),
+            methodName: value.value.method_name,
+            args: _GeneratedConverter.ManifestValue.fromGenerated(
+              value.value.args
+            ),
+          };
+        case "CallDirectVaultMethod":
+          return {
+            kind: value.kind,
+            address: value.value.address,
+            methodName: value.value.method_name,
+            args: _GeneratedConverter.ManifestValue.fromGenerated(
+              value.value.args
+            ),
+          };
+        case "DropAllProofs":
+          return {
+            kind: value.kind,
+          };
+        case "AllocateGlobalAddress":
+          return {
+            kind: value.kind,
+            packageAddress: value.value.package_address,
+            blueprintName: value.value.blueprint_name,
+          };
+      }
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "Instructions",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "String":
+          return value;
+        case "Parsed":
+          return {
+            kind: "Parsed",
+            value: value.value.map(_GeneratedConverter.Instruction.toGenerated),
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "String":
+          return value;
+        case "Parsed":
+          return {
+            kind: "Parsed",
+            value: value.value.map(
+              _GeneratedConverter.Instruction.fromGenerated
+            ),
+          };
+      }
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "TransactionManifest",
+  class {
+    static toGenerated(value) {
+      return {
+        instructions: _GeneratedConverter.Instructions.toGenerated(
+          value.instructions
+        ),
+        blobs: value.blobs.map(Convert.Uint8Array.toHexString),
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        instructions: _GeneratedConverter.Instructions.fromGenerated(
+          value.instructions
+        ),
+        blobs: value.blobs.map(Convert.HexString.toUint8Array),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "TransactionHeader",
+  class {
+    static toGenerated(value) {
+      return {
+        network_id: Convert.Number.toString(value.networkId),
+        start_epoch_inclusive: Convert.Number.toString(
+          value.startEpochInclusive
+        ),
+        end_epoch_exclusive: Convert.Number.toString(value.endEpochExclusive),
+        nonce: Convert.Number.toString(value.nonce),
+        notary_is_signatory: value.notaryIsSignatory,
+        notary_public_key: _GeneratedConverter.PublicKey.toGenerated(
+          value.notaryPublicKey
+        ),
+        tip_percentage: Convert.Number.toString(value.tipPercentage),
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        networkId: Convert.String.toNumber(value.network_id),
+        startEpochInclusive: Convert.String.toNumber(
+          value.start_epoch_inclusive
+        ),
+        endEpochExclusive: Convert.String.toNumber(value.end_epoch_exclusive),
+        nonce: Convert.String.toNumber(value.nonce),
+        notaryPublicKey: _GeneratedConverter.PublicKey.fromGenerated(
+          value.notary_public_key
+        ),
+        notaryIsSignatory: value.notary_is_signatory,
+        tipPercentage: Convert.String.toNumber(value.tip_percentage),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "TransactionHash",
+  class {
+    static toGenerated(value) {
+      return {
+        hash: Convert.Uint8Array.toHexString(value.hash),
+        id: value.id,
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        hash: Convert.HexString.toUint8Array(value.hash),
+        id: value.id,
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "Intent",
+  class {
+    static toGenerated(value) {
+      return {
+        header: _GeneratedConverter.TransactionHeader.toGenerated(value.header),
+        manifest: _GeneratedConverter.TransactionManifest.toGenerated(
+          value.manifest
+        ),
+        message: _GeneratedConverter.Message.toGenerated(value.message),
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        manifest: _GeneratedConverter.TransactionManifest.fromGenerated(
+          value.manifest
+        ),
+        header: _GeneratedConverter.TransactionHeader.fromGenerated(
+          value.header
+        ),
+        message: _GeneratedConverter.Message.fromGenerated(value.message),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "SignedIntent",
+  class {
+    static toGenerated(value) {
+      return {
+        intent: _GeneratedConverter.Intent.toGenerated(value.intent),
+        intent_signatures: value.intentSignatures.map(
+          _GeneratedConverter.SignatureWithPublicKey.toGenerated
+        ),
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        intent: _GeneratedConverter.Intent.fromGenerated(value.intent),
+        intentSignatures: value.intent_signatures.map(
+          _GeneratedConverter.SignatureWithPublicKey.fromGenerated
+        ),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "NotarizedTransaction",
+  class {
+    static toGenerated(value) {
+      return {
+        signed_intent: _GeneratedConverter.SignedIntent.toGenerated(
+          value.signedIntent
+        ),
+        notary_signature: _GeneratedConverter.Signature.toGenerated(
+          value.notarySignature
+        ),
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        signedIntent: _GeneratedConverter.SignedIntent.fromGenerated(
+          value.signed_intent
+        ),
+        notarySignature: _GeneratedConverter.Signature.fromGenerated(
+          value.notary_signature
+        ),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "EntityType",
+  class {
+    static toGenerated(value) {
+      return SerializableEntityType[EntityType[value]];
+    }
+    static fromGenerated(value) {
+      return EntityType[SerializableEntityType[value]];
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "MessageValidationConfig",
+  class {
+    static toGenerated(value) {
+      return {
+        max_plaintext_message_length: Convert.BigInt.toString(
+          value.maxPlaintextMessageLength
+        ),
+        max_encrypted_message_length: Convert.BigInt.toString(
+          value.maxEncryptedMessageLength
+        ),
+        max_mime_type_length: Convert.BigInt.toString(value.maxMimeTypeLength),
+        max_decryptors: Convert.BigInt.toString(value.maxDecryptors),
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        maxPlaintextMessageLength: Convert.String.toBigInt(
+          value.max_plaintext_message_length
+        ),
+        maxEncryptedMessageLength: Convert.String.toBigInt(
+          value.max_encrypted_message_length
+        ),
+        maxMimeTypeLength: Convert.String.toBigInt(value.max_mime_type_length),
+        maxDecryptors: Convert.String.toBigInt(value.max_decryptors),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "FeeSummary",
+  class {
+    static toGenerated(value) {
+      return {
+        execution_cost: Convert.Decimal.toString(value.executionCost),
+        finalization_cost: Convert.Decimal.toString(value.finalizationCost),
+        storage_expansion_cost: Convert.Decimal.toString(
+          value.storageExpansionCost
+        ),
+        royalty_cost: Convert.Decimal.toString(value.royaltyCost),
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        executionCost: Convert.String.toDecimal(value.execution_cost),
+        finalizationCost: Convert.String.toDecimal(value.finalization_cost),
+        storageExpansionCost: Convert.String.toDecimal(
+          value.storage_expansion_cost
+        ),
+        royaltyCost: Convert.String.toDecimal(value.royalty_cost),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "FeeLocks",
+  class {
+    static toGenerated(value) {
+      return {
+        lock: Convert.Decimal.toString(value.lock),
+        contingent_lock: Convert.Decimal.toString(value.contingentLock),
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        lock: Convert.String.toDecimal(value.lock),
+        contingentLock: Convert.String.toDecimal(value.contingent_lock),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "DecimalSource",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "Guaranteed":
+          return {
+            kind: value.kind,
+            value: {
+              value: Convert.Decimal.toString(value.value),
+            },
+          };
+        case "Predicted":
+          return {
+            kind: value.kind,
+            value: {
+              value: Convert.Decimal.toString(value.value),
+              instruction_index: Convert.Number.toString(
+                value.instructionIndex
+              ),
+            },
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Guaranteed":
+          return {
+            kind: value.kind,
+            value: Convert.String.toDecimal(value.value.value),
+          };
+        case "Predicted":
+          return {
+            kind: value.kind,
+            value: Convert.String.toDecimal(value.value.value),
+            instructionIndex: Convert.String.toNumber(
+              value.value.instruction_index
+            ),
+          };
+      }
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "NonFungibleLocalIdArraySource",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "Guaranteed":
+          return {
+            kind: value.kind,
+            value: {
+              value: value.value,
+            },
+          };
+        case "Predicted":
+          return {
+            kind: value.kind,
+            value: {
+              value: value.value,
+              instruction_index: Convert.Number.toString(
+                value.instructionIndex
+              ),
+            },
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Guaranteed":
+          return {
+            kind: value.kind,
+            value: value.value.value,
+          };
+        case "Predicted":
+          return {
+            kind: value.kind,
+            value: value.value.value,
+            instructionIndex: Convert.String.toNumber(
+              value.value.instruction_index
+            ),
+          };
+      }
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "ResourceTracker",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "Fungible":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+              amount: _GeneratedConverter.DecimalSource.toGenerated(
+                value.amount
+              ),
+            },
+          };
+        case "NonFungible":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+              amount: _GeneratedConverter.DecimalSource.toGenerated(
+                value.amount
+              ),
+              ids: _GeneratedConverter.NonFungibleLocalIdArraySource.toGenerated(
+                value.ids
+              ),
+            },
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Fungible":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+            amount: _GeneratedConverter.DecimalSource.fromGenerated(
+              value.value.amount
+            ),
+          };
+        case "NonFungible":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+            amount: _GeneratedConverter.DecimalSource.fromGenerated(
+              value.value.amount
+            ),
+            ids: _GeneratedConverter.NonFungibleLocalIdArraySource.fromGenerated(
+              value.value.ids
+            ),
+          };
+      }
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "ResourceOrNonFungible",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "Resource":
+          return {
+            kind: value.kind,
+            value: value.resourceAddress,
+          };
+        case "NonFungible":
+          return {
+            kind: value.kind,
+            value: value.nonFungibleGlobalId,
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Resource":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value,
+          };
+        case "NonFungible":
+          return {
+            kind: value.kind,
+            nonFungibleGlobalId: value.value,
+          };
+      }
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "AuthorizedDepositorsChanges",
+  class {
+    static toGenerated(value) {
+      return {
+        added: value.added.map(
+          _GeneratedConverter.ResourceOrNonFungible.toGenerated
+        ),
+        removed: value.removed.map(
+          _GeneratedConverter.ResourceOrNonFungible.toGenerated
+        ),
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        added: value.added.map(
+          _GeneratedConverter.ResourceOrNonFungible.fromGenerated
+        ),
+        removed: value.removed.map(
+          _GeneratedConverter.ResourceOrNonFungible.fromGenerated
+        ),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "DefaultDepositRule",
+  class {
+    static toGenerated(value) {
+      return SerializableDefaultDepositRule[DefaultDepositRule[value]];
+    }
+    static fromGenerated(value) {
+      return DefaultDepositRule[SerializableDefaultDepositRule[value]];
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "ResourcePreference",
+  class {
+    static toGenerated(value) {
+      return SerializableResourcePreference[ResourcePreference[value]];
+    }
+    static fromGenerated(value) {
+      return ResourcePreference[SerializableResourcePreference[value]];
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "Resources",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "Amount":
+          return {
+            kind: value.kind,
+            value: Convert.Decimal.toString(value.amount),
+          };
+        case "Ids":
+          return {
+            kind: value.kind,
+            value: value.nonFungibleLocalId,
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Amount":
+          return {
+            kind: value.kind,
+            amount: Convert.String.toDecimal(value.value),
+          };
+        case "Ids":
+          return {
+            kind: value.kind,
+            nonFungibleLocalId: value.value,
+          };
+      }
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "ResourceSpecifier",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "Amount":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+              amount: Convert.Decimal.toString(value.amount),
+            },
+          };
+        case "Ids":
+          return {
+            kind: value.kind,
+            value: {
+              resource_address: value.resourceAddress,
+              ids: value.ids,
+            },
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Amount":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+            amount: Convert.String.toDecimal(value.value.amount),
+          };
+        case "Ids":
+          return {
+            kind: value.kind,
+            resourceAddress: value.value.resource_address,
+            ids: value.value.ids,
+          };
+      }
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "ResourcePreferenceAction",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "Set":
+          return {
+            kind: value.kind,
+            value: _GeneratedConverter.ResourcePreference.toGenerated(
+              value.value
+            ),
+          };
+        case "Remove":
+          return {
+            kind: value.kind,
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Set":
+          return {
+            kind: value.kind,
+            value: _GeneratedConverter.ResourcePreference.fromGenerated(
+              value.value
+            ),
+          };
+        case "Remove":
+          return {
+            kind: value.kind,
+          };
+      }
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "ValidationConfig",
+  class {
+    static toGenerated(value) {
+      return {
+        network_id: Convert.Number.toString(value.networkId),
+        max_notarized_payload_size: Convert.BigInt.toString(
+          value.maxNotarizedPayloadSize
+        ),
+        min_tip_percentage: Convert.Number.toString(value.minTipPercentage),
+        max_tip_percentage: Convert.Number.toString(value.maxTipPercentage),
+        max_epoch_range: Convert.BigInt.toString(value.maxEpochRange),
+        message_validation:
+          _GeneratedConverter.MessageValidationConfig.toGenerated(
+            value.messageValidation
           ),
-          ids: _GeneratedConverter.NonFungibleLocalIdArraySource.fromGenerated(
-            value.value.ids
-          )
-        };
+      };
     }
-  }
-});
-__publicField(GeneratedConverter, "ResourceOrNonFungible", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "Resource":
-        return {
-          kind: value.kind,
-          value: value.resourceAddress
-        };
-      case "NonFungible":
-        return {
-          kind: value.kind,
-          value: value.nonFungibleGlobalId
-        };
-    }
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Resource":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value
-        };
-      case "NonFungible":
-        return {
-          kind: value.kind,
-          nonFungibleGlobalId: value.value
-        };
-    }
-  }
-});
-__publicField(GeneratedConverter, "AuthorizedDepositorsChanges", class {
-  static toGenerated(value) {
-    return {
-      added: value.added.map(
-        _GeneratedConverter.ResourceOrNonFungible.toGenerated
-      ),
-      removed: value.removed.map(
-        _GeneratedConverter.ResourceOrNonFungible.toGenerated
-      )
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      added: value.added.map(
-        _GeneratedConverter.ResourceOrNonFungible.fromGenerated
-      ),
-      removed: value.removed.map(
-        _GeneratedConverter.ResourceOrNonFungible.fromGenerated
-      )
-    };
-  }
-});
-__publicField(GeneratedConverter, "DefaultDepositRule", class {
-  static toGenerated(value) {
-    return SerializableDefaultDepositRule[DefaultDepositRule[value]];
-  }
-  static fromGenerated(value) {
-    return DefaultDepositRule[SerializableDefaultDepositRule[value]];
-  }
-});
-__publicField(GeneratedConverter, "ResourcePreference", class {
-  static toGenerated(value) {
-    return SerializableResourcePreference[ResourcePreference[value]];
-  }
-  static fromGenerated(value) {
-    return ResourcePreference[SerializableResourcePreference[value]];
-  }
-});
-__publicField(GeneratedConverter, "Resources", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "Amount":
-        return {
-          kind: value.kind,
-          value: Convert.Decimal.toString(value.amount)
-        };
-      case "Ids":
-        return {
-          kind: value.kind,
-          value: value.nonFungibleLocalId
-        };
-    }
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Amount":
-        return {
-          kind: value.kind,
-          amount: Convert.String.toDecimal(value.value)
-        };
-      case "Ids":
-        return {
-          kind: value.kind,
-          nonFungibleLocalId: value.value
-        };
-    }
-  }
-});
-__publicField(GeneratedConverter, "ResourceSpecifier", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "Amount":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress,
-            amount: Convert.Decimal.toString(value.amount)
-          }
-        };
-      case "Ids":
-        return {
-          kind: value.kind,
-          value: {
-            resource_address: value.resourceAddress,
-            ids: value.ids
-          }
-        };
-    }
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Amount":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address,
-          amount: Convert.String.toDecimal(value.value.amount)
-        };
-      case "Ids":
-        return {
-          kind: value.kind,
-          resourceAddress: value.value.resource_address,
-          ids: value.value.ids
-        };
-    }
-  }
-});
-__publicField(GeneratedConverter, "ResourcePreferenceAction", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "Set":
-        return {
-          kind: value.kind,
-          value: _GeneratedConverter.ResourcePreference.toGenerated(
-            value.value
-          )
-        };
-      case "Remove":
-        return {
-          kind: value.kind
-        };
-    }
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Set":
-        return {
-          kind: value.kind,
-          value: _GeneratedConverter.ResourcePreference.fromGenerated(
-            value.value
-          )
-        };
-      case "Remove":
-        return {
-          kind: value.kind
-        };
-    }
-  }
-});
-__publicField(GeneratedConverter, "ValidationConfig", class {
-  static toGenerated(value) {
-    return {
-      network_id: Convert.Number.toString(value.networkId),
-      max_notarized_payload_size: Convert.BigInt.toString(
-        value.maxNotarizedPayloadSize
-      ),
-      min_tip_percentage: Convert.Number.toString(value.minTipPercentage),
-      max_tip_percentage: Convert.Number.toString(value.maxTipPercentage),
-      max_epoch_range: Convert.BigInt.toString(value.maxEpochRange),
-      message_validation: _GeneratedConverter.MessageValidationConfig.toGenerated(
-        value.messageValidation
-      )
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      networkId: Convert.String.toNumber(value.network_id),
-      maxNotarizedPayloadSize: Convert.String.toBigInt(
-        value.max_notarized_payload_size
-      ),
-      minTipPercentage: Convert.String.toNumber(value.min_tip_percentage),
-      maxTipPercentage: Convert.String.toNumber(value.max_tip_percentage),
-      maxEpochRange: Convert.String.toBigInt(value.max_epoch_range),
-      messageValidation: _GeneratedConverter.MessageValidationConfig.fromGenerated(
-        value.message_validation
-      )
-    };
-  }
-});
-__publicField(GeneratedConverter, "Message", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "None":
-        return { kind: value.kind };
-      case "PlainText":
-        return {
-          kind: value.kind,
-          value: _GeneratedConverter.PlainTextMessage.toGenerated(value.value)
-        };
-      case "Encrypted":
-        return {
-          kind: value.kind,
-          value: _GeneratedConverter.EncryptedMessage.toGenerated(value.value)
-        };
-    }
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "None":
-        return { kind: value.kind };
-      case "PlainText":
-        return {
-          kind: value.kind,
-          value: _GeneratedConverter.PlainTextMessage.fromGenerated(
-            value.value
-          )
-        };
-      case "Encrypted":
-        return {
-          kind: value.kind,
-          value: _GeneratedConverter.EncryptedMessage.fromGenerated(
-            value.value
-          )
-        };
-    }
-  }
-});
-__publicField(GeneratedConverter, "PlainTextMessage", class {
-  static toGenerated(value) {
-    return {
-      mime_type: value.mimeType,
-      message: _GeneratedConverter.MessageContent.toGenerated(value.message)
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      mimeType: value.mime_type,
-      message: _GeneratedConverter.MessageContent.fromGenerated(value.message)
-    };
-  }
-});
-__publicField(GeneratedConverter, "MessageContent", class {
-  static toGenerated(value) {
-    switch (value.kind) {
-      case "Bytes":
-        return {
-          kind: value.kind,
-          value: Convert.Uint8Array.toHexString(value.value)
-        };
-      case "String":
-        return {
-          kind: value.kind,
-          value: value.value
-        };
-    }
-  }
-  static fromGenerated(value) {
-    switch (value.kind) {
-      case "Bytes":
-        return {
-          kind: value.kind,
-          value: Convert.HexString.toUint8Array(value.value)
-        };
-      case "String":
-        return {
-          kind: value.kind,
-          value: value.value
-        };
-    }
-  }
-});
-__publicField(GeneratedConverter, "EncryptedMessage", class {
-  static toGenerated(value) {
-    return {
-      encrypted: Convert.Uint8Array.toHexString(value.encrypted),
-      decryptors_by_curve: recordMap(
-        value.decryptorsByCurve,
-        (key2, value2) => {
-          return [
-            key2,
-            _GeneratedConverter.DecryptorsByCurve.toGenerated(value2)
-          ];
-        }
-      )
-    };
-  }
-  static fromGenerated(value) {
-    return {
-      encrypted: Convert.HexString.toUint8Array(value.encrypted),
-      decryptorsByCurve: recordMap(
-        value.decryptors_by_curve,
-        (key2, value2) => {
-          return [
-            key2,
-            _GeneratedConverter.DecryptorsByCurve.fromGenerated(value2)
-          ];
-        }
-      )
-    };
-  }
-});
-__publicField(GeneratedConverter, "DecryptorsByCurve", class {
-  static toGenerated(value) {
-    return {
-      kind: value.kind,
-      value: {
-        dh_ephemeral_public_key: Convert.Uint8Array.toHexString(
-          value.value.dhEphemeralPublicKey
+    static fromGenerated(value) {
+      return {
+        networkId: Convert.String.toNumber(value.network_id),
+        maxNotarizedPayloadSize: Convert.String.toBigInt(
+          value.max_notarized_payload_size
         ),
-        decryptors: value.value.decryptors.reduce(
-          (obj, [key2, value2]) => {
-            obj[Convert.Uint8Array.toHexString(key2)] = Convert.Uint8Array.toHexString(value2);
+        minTipPercentage: Convert.String.toNumber(value.min_tip_percentage),
+        maxTipPercentage: Convert.String.toNumber(value.max_tip_percentage),
+        maxEpochRange: Convert.String.toBigInt(value.max_epoch_range),
+        messageValidation:
+          _GeneratedConverter.MessageValidationConfig.fromGenerated(
+            value.message_validation
+          ),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "Message",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "None":
+          return { kind: value.kind };
+        case "PlainText":
+          return {
+            kind: value.kind,
+            value: _GeneratedConverter.PlainTextMessage.toGenerated(
+              value.value
+            ),
+          };
+        case "Encrypted":
+          return {
+            kind: value.kind,
+            value: _GeneratedConverter.EncryptedMessage.toGenerated(
+              value.value
+            ),
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "None":
+          return { kind: value.kind };
+        case "PlainText":
+          return {
+            kind: value.kind,
+            value: _GeneratedConverter.PlainTextMessage.fromGenerated(
+              value.value
+            ),
+          };
+        case "Encrypted":
+          return {
+            kind: value.kind,
+            value: _GeneratedConverter.EncryptedMessage.fromGenerated(
+              value.value
+            ),
+          };
+      }
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "PlainTextMessage",
+  class {
+    static toGenerated(value) {
+      return {
+        mime_type: value.mimeType,
+        message: _GeneratedConverter.MessageContent.toGenerated(value.message),
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        mimeType: value.mime_type,
+        message: _GeneratedConverter.MessageContent.fromGenerated(
+          value.message
+        ),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "MessageContent",
+  class {
+    static toGenerated(value) {
+      switch (value.kind) {
+        case "Bytes":
+          return {
+            kind: value.kind,
+            value: Convert.Uint8Array.toHexString(value.value),
+          };
+        case "String":
+          return {
+            kind: value.kind,
+            value: value.value,
+          };
+      }
+    }
+    static fromGenerated(value) {
+      switch (value.kind) {
+        case "Bytes":
+          return {
+            kind: value.kind,
+            value: Convert.HexString.toUint8Array(value.value),
+          };
+        case "String":
+          return {
+            kind: value.kind,
+            value: value.value,
+          };
+      }
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "EncryptedMessage",
+  class {
+    static toGenerated(value) {
+      return {
+        encrypted: Convert.Uint8Array.toHexString(value.encrypted),
+        decryptors_by_curve: recordMap(
+          value.decryptorsByCurve,
+          (key2, value2) => {
+            return [
+              key2,
+              _GeneratedConverter.DecryptorsByCurve.toGenerated(value2),
+            ];
+          }
+        ),
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        encrypted: Convert.HexString.toUint8Array(value.encrypted),
+        decryptorsByCurve: recordMap(
+          value.decryptors_by_curve,
+          (key2, value2) => {
+            return [
+              key2,
+              _GeneratedConverter.DecryptorsByCurve.fromGenerated(value2),
+            ];
+          }
+        ),
+      };
+    }
+  }
+);
+__publicField(
+  GeneratedConverter,
+  "DecryptorsByCurve",
+  class {
+    static toGenerated(value) {
+      return {
+        kind: value.kind,
+        value: {
+          dh_ephemeral_public_key: Convert.Uint8Array.toHexString(
+            value.value.dhEphemeralPublicKey
+          ),
+          decryptors: value.value.decryptors.reduce((obj, [key2, value2]) => {
+            obj[Convert.Uint8Array.toHexString(key2)] =
+              Convert.Uint8Array.toHexString(value2);
             return obj;
-          },
-          {}
-        )
-      }
-    };
+          }, {}),
+        },
+      };
+    }
+    static fromGenerated(value) {
+      return {
+        kind: value.kind,
+        value: {
+          dhEphemeralPublicKey: Convert.HexString.toUint8Array(
+            value.value.dh_ephemeral_public_key
+          ),
+          decryptors: Object.entries(value.value.decryptors).map(
+            ([key2, value2]) => [
+              Convert.HexString.toUint8Array(key2),
+              Convert.HexString.toUint8Array(value2),
+            ]
+          ),
+        },
+      };
+    }
   }
-  static fromGenerated(value) {
-    return {
-      kind: value.kind,
-      value: {
-        dhEphemeralPublicKey: Convert.HexString.toUint8Array(
-          value.value.dh_ephemeral_public_key
-        ),
-        decryptors: Object.entries(value.value.decryptors).map(
-          ([key2, value2]) => [
-            Convert.HexString.toUint8Array(key2),
-            Convert.HexString.toUint8Array(value2)
-          ]
-        )
-      }
-    };
-  }
-});
+);
 const recordMap = (record, callback) => {
   let newRecord = {};
   for (const key2 in record) {
@@ -4420,8 +4887,8 @@ class TransactionBuilderManifestStep {
       kind: "PlainText",
       value: {
         mimeType: "text/plain",
-        message: { kind: "String", value: message }
-      }
+        message: { kind: "String", value: message },
+      },
     });
   }
   manifest(manifest) {
@@ -4442,7 +4909,7 @@ class TransactionBuilderIntentSignaturesStep {
     this.intent = {
       header,
       manifest,
-      message
+      message,
     };
     this.intentSignatures = [];
   }
@@ -4484,9 +4951,9 @@ class TransactionBuilderIntentSignaturesStep {
     return {
       signedIntent: {
         intent: this.intent,
-        intentSignatures: await this.resolveIntentSignatures()
+        intentSignatures: await this.resolveIntentSignatures(),
       },
-      notarySignature: signature2
+      notarySignature: signature2,
     };
   }
   async notarizeAsync(source) {
@@ -4495,9 +4962,9 @@ class TransactionBuilderIntentSignaturesStep {
     return {
       signedIntent: {
         intent: this.intent,
-        intentSignatures: await this.resolveIntentSignatures()
+        intentSignatures: await this.resolveIntentSignatures(),
       },
-      notarySignature: signature2
+      notarySignature: signature2,
     };
   }
   async resolveIntentSignatures() {
@@ -4522,7 +4989,7 @@ class TransactionBuilderIntentSignaturesStep {
   async signedIntentHash() {
     const input = {
       intent: this.intent,
-      intentSignatures: await this.resolveIntentSignatures()
+      intentSignatures: await this.resolveIntentSignatures(),
     };
     const output2 = this.radixEngineToolkit.signedIntentHash(
       GeneratedConverter.SignedIntent.toGenerated(input)
@@ -4530,35 +4997,82 @@ class TransactionBuilderIntentSignaturesStep {
     return GeneratedConverter.TransactionHash.fromGenerated(output2);
   }
 }
-const resolveSignatureSource = (source, messageHash, signerResponseCallback) => {
+const resolveSignatureSource = (
+  source,
+  messageHash,
+  signerResponseCallback
+) => {
   if (typeof source === "function") {
     return source(messageHash);
   } else if ("produceSignature" in source) {
-    return signerResponseCallback(
-      source.produceSignature(messageHash)
-    );
+    return signerResponseCallback(source.produceSignature(messageHash));
   } else {
     return source;
   }
 };
-class Convert {
-}
-__publicField(Convert, "String", (_a = class {
-}, __publicField(_a, "toNumber", (str2) => Number(str2)), __publicField(_a, "toBigInt", (str2) => BigInt(str2)), __publicField(_a, "toDecimal", (str2) => new Decimal(str2)), _a));
-__publicField(Convert, "Number", (_b = class {
-}, __publicField(_b, "toString", (num) => num.toLocaleString("fullwide", { useGrouping: false })), _b));
-__publicField(Convert, "Uint8Array", (_c = class {
-}, __publicField(_c, "toHexString", (array2) => Array.from(array2).map((b) => b.toString(16).padStart(2, "0")).join("")), _c));
-__publicField(Convert, "HexString", (_d = class {
-}, __publicField(_d, "toUint8Array", (str2) => Uint8Array.from(str2.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)))), _d));
-__publicField(Convert, "BigInt", (_e = class {
-}, __publicField(_e, "toString", (num) => num.toLocaleString("fullwide", { useGrouping: false })), _e));
-__publicField(Convert, "Decimal", (_f = class {
-}, __publicField(_f, "toString", (num) => num.toFixed()), _f));
-class NotImplementedException extends Error {
-}
+class Convert {}
+__publicField(
+  Convert,
+  "String",
+  ((_a = class {}),
+  __publicField(_a, "toNumber", (str2) => Number(str2)),
+  __publicField(_a, "toBigInt", (str2) => BigInt(str2)),
+  __publicField(_a, "toDecimal", (str2) => new Decimal(str2)),
+  _a)
+);
+__publicField(
+  Convert,
+  "Number",
+  ((_b = class {}),
+  __publicField(_b, "toString", (num) =>
+    num.toLocaleString("fullwide", { useGrouping: false })
+  ),
+  _b)
+);
+__publicField(
+  Convert,
+  "Uint8Array",
+  ((_c = class {}),
+  __publicField(_c, "toHexString", (array2) =>
+    Array.from(array2)
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("")
+  ),
+  _c)
+);
+__publicField(
+  Convert,
+  "HexString",
+  ((_d = class {}),
+  __publicField(_d, "toUint8Array", (str2) =>
+    Uint8Array.from(str2.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)))
+  ),
+  _d)
+);
+__publicField(
+  Convert,
+  "BigInt",
+  ((_e = class {}),
+  __publicField(_e, "toString", (num) =>
+    num.toLocaleString("fullwide", { useGrouping: false })
+  ),
+  _e)
+);
+__publicField(
+  Convert,
+  "Decimal",
+  ((_f = class {}), __publicField(_f, "toString", (num) => num.toFixed()), _f)
+);
+class NotImplementedException extends Error {}
 class SimpleTransactionBuilder {
-  constructor(retWrapper, startEpoch, networkId, fromAccount, notaryPublicKey, nonce) {
+  constructor(
+    retWrapper,
+    startEpoch,
+    networkId,
+    fromAccount,
+    notaryPublicKey,
+    nonce
+  ) {
     __publicField(this, "retWrapper");
     __publicField(this, "_startEpoch");
     __publicField(this, "_expiresAfterEpochs", 2);
@@ -4579,7 +5093,8 @@ class SimpleTransactionBuilder {
     this._notaryPublicKey = notaryPublicKey;
   }
   static async new(settings) {
-    const { networkId, validFromEpoch, fromAccount, signerPublicKey } = settings;
+    const { networkId, validFromEpoch, fromAccount, signerPublicKey } =
+      settings;
     return new SimpleTransactionBuilder(
       await rawRadixEngineToolkit,
       validFromEpoch,
@@ -4596,18 +5111,22 @@ class SimpleTransactionBuilder {
     );
     const {
       components: { faucet: faucetComponentAddress },
-      resources: { xrdResource: xrdResourceAddress }
+      resources: { xrdResource: xrdResourceAddress },
     } = await LTSRadixEngineToolkit.Derive.knownAddresses(networkId);
-    const manifest = new ManifestBuilder().callMethod(faucetComponentAddress, "lock_fee", [decimal("10")]).callMethod(faucetComponentAddress, "free", []).takeFromWorktop(
-      xrdResourceAddress,
-      new Decimal("10000"),
-      (builder, bucketId) => {
-        return builder.callMethod(toAccount, "try_deposit_or_abort", [
-          bucket(bucketId),
-          enumeration(0)
-        ]);
-      }
-    ).build();
+    const manifest = new ManifestBuilder()
+      .callMethod(faucetComponentAddress, "lock_fee", [decimal("10")])
+      .callMethod(faucetComponentAddress, "free", [])
+      .takeFromWorktop(
+        xrdResourceAddress,
+        new Decimal("10000"),
+        (builder, bucketId) => {
+          return builder.callMethod(toAccount, "try_deposit_or_abort", [
+            bucket(bucketId),
+            enumeration(0),
+          ]);
+        }
+      )
+      .build();
     const header = {
       networkId,
       startEpochInclusive: validFromEpoch,
@@ -4615,23 +5134,23 @@ class SimpleTransactionBuilder {
       nonce: generateRandomNonce(),
       notaryPublicKey: ephemeralPrivateKey.publicKey(),
       notaryIsSignatory: false,
-      tipPercentage: 0
+      tipPercentage: 0,
     };
     const intent = new LTSTransactionIntent({
       header,
       manifest,
-      message: { kind: "None" }
+      message: { kind: "None" },
     });
     const signedIntent = new LTSSignedTransactionIntent({
       intent: { header, manifest, message: { kind: "None" } },
-      intentSignatures: []
+      intentSignatures: [],
     });
     return new CompiledSignedTransactionIntent(
       await rawRadixEngineToolkit,
       await intent.transactionId(),
       {
         intent: { header, manifest, message: { kind: "None" } },
-        intentSignatures: []
+        intentSignatures: [],
       },
       await signedIntent.compile(),
       await signedIntent.signedIntentHash()
@@ -4680,7 +5199,7 @@ class SimpleTransactionBuilder {
       toAccount: transfer.toAccount,
       fromAccount: this._fromAccount,
       resourceAddress: transfer.resourceAddress,
-      amount: resolveDecimal(transfer.amount)
+      amount: resolveDecimal(transfer.amount),
     });
     return this;
   }
@@ -4698,7 +5217,7 @@ class SimpleTransactionBuilder {
     );
     const signedIntent = {
       intent,
-      intentSignatures: []
+      intentSignatures: [],
     };
     const compiledSignedIntent = Convert.HexString.toUint8Array(
       this.retWrapper.signedIntentCompile(
@@ -4725,24 +5244,20 @@ class SimpleTransactionBuilder {
     const intentHash = GeneratedConverter.TransactionHash.fromGenerated(
       this.retWrapper.intentHash(GeneratedConverter.Intent.toGenerated(intent))
     );
-    const signatures = signatureSources.map(
-      (source) => resolveSignatureSource(
-        source,
-        intentHash.hash,
-        (signerResponse) => {
-          switch (signerResponse.curve) {
-            case "Secp256k1":
-              return new SignatureWithPublicKey.Secp256k1(
-                signerResponse.signature
-              );
-            case "Ed25519":
-              return new SignatureWithPublicKey.Ed25519(
-                signerResponse.signature,
-                signerResponse.publicKey
-              );
-          }
+    const signatures = signatureSources.map((source) =>
+      resolveSignatureSource(source, intentHash.hash, (signerResponse) => {
+        switch (signerResponse.curve) {
+          case "Secp256k1":
+            return new SignatureWithPublicKey.Secp256k1(
+              signerResponse.signature
+            );
+          case "Ed25519":
+            return new SignatureWithPublicKey.Ed25519(
+              signerResponse.signature,
+              signerResponse.publicKey
+            );
         }
-      )
+      })
     );
     const signedIntent = { intent, intentSignatures: signatures };
     const compiledSignedIntent = Convert.HexString.toUint8Array(
@@ -4805,7 +5320,7 @@ class SimpleTransactionBuilder {
       nonce: this._nonce,
       notaryPublicKey: this._notaryPublicKey,
       notaryIsSignatory,
-      tipPercentage: this._tipPercentage
+      tipPercentage: this._tipPercentage,
     };
   }
   constructTransactionManifest() {
@@ -4821,10 +5336,10 @@ class SimpleTransactionBuilder {
         fields: [
           {
             kind: ValueKind.Decimal,
-            value: feeAmount
-          }
-        ]
-      }
+            value: feeAmount,
+          },
+        ],
+      },
     });
     for (const [from, resourceAmountMapping] of Object.entries(withdraws)) {
       for (const [resourceAddress, amount] of Object.entries(
@@ -4839,14 +5354,14 @@ class SimpleTransactionBuilder {
             fields: [
               {
                 kind: ValueKind.Address,
-                value: { kind: "Static", value: resourceAddress }
+                value: { kind: "Static", value: resourceAddress },
               },
               {
                 kind: ValueKind.Decimal,
-                value: amount
-              }
-            ]
-          }
+                value: amount,
+              },
+            ],
+          },
         });
       }
     }
@@ -4858,7 +5373,7 @@ class SimpleTransactionBuilder {
         instructions.push({
           kind: "TakeFromWorktop",
           resourceAddress,
-          amount
+          amount,
         });
         instructions.push({
           kind: "CallMethod",
@@ -4869,24 +5384,24 @@ class SimpleTransactionBuilder {
             fields: [
               {
                 kind: ValueKind.Bucket,
-                value: depositCounter++
+                value: depositCounter++,
               },
               {
                 kind: ValueKind.Enum,
                 discriminator: 0,
-                fields: []
-              }
-            ]
-          }
+                fields: [],
+              },
+            ],
+          },
         });
       }
     }
     return {
       instructions: {
         kind: "Parsed",
-        value: instructions
+        value: instructions,
       },
-      blobs: []
+      blobs: [],
     };
   }
   resolveActions() {
@@ -4897,20 +5412,32 @@ class SimpleTransactionBuilder {
       switch (action.kind) {
         case "FungibleResourceTransfer":
           const { fromAccount, toAccount, resourceAddress, amount } = action;
-          if ((withdraws == null ? void 0 : withdraws[fromAccount]) === void 0) {
+          if (
+            (withdraws == null ? void 0 : withdraws[fromAccount]) === void 0
+          ) {
             withdraws[fromAccount] = {};
           }
-          if (((_a2 = withdraws[fromAccount]) == null ? void 0 : _a2[resourceAddress]) === void 0) {
+          if (
+            ((_a2 = withdraws[fromAccount]) == null
+              ? void 0
+              : _a2[resourceAddress]) === void 0
+          ) {
             withdraws[fromAccount][resourceAddress] = new Decimal(0);
           }
-          withdraws[fromAccount][resourceAddress] = withdraws[fromAccount][resourceAddress].add(amount);
+          withdraws[fromAccount][resourceAddress] =
+            withdraws[fromAccount][resourceAddress].add(amount);
           if ((deposits == null ? void 0 : deposits[toAccount]) === void 0) {
             deposits[toAccount] = {};
           }
-          if (((_b2 = deposits[toAccount]) == null ? void 0 : _b2[resourceAddress]) === void 0) {
+          if (
+            ((_b2 = deposits[toAccount]) == null
+              ? void 0
+              : _b2[resourceAddress]) === void 0
+          ) {
             deposits[toAccount][resourceAddress] = new Decimal(0);
           }
-          deposits[toAccount][resourceAddress] = deposits[toAccount][resourceAddress].add(amount);
+          deposits[toAccount][resourceAddress] =
+            deposits[toAccount][resourceAddress].add(amount);
       }
     }
     return { withdraws, deposits };
@@ -4928,340 +5455,402 @@ function resolveDecimal(amount) {
     throw new TypeError("Invalid type passed in for decimal");
   }
 }
-const _LTSRadixEngineToolkit = class {
-};
+const _LTSRadixEngineToolkit = class {};
 let LTSRadixEngineToolkit = _LTSRadixEngineToolkit;
-__publicField(LTSRadixEngineToolkit, "Transaction", class {
-  /**
-   * Given a transaction intent of any type, this function compiles the transaction intent
-   * returning a byte array of the compiled intent.
-   * @param intent Any intent or transaction part that can be compiled.
-   * @returns The compiled intent
-   */
-  static async compile(intent) {
-    return intent.compile();
-  }
-  /**
-   * Compiles the `TransactionIntent` by calling the Radix Engine Toolkit and SBOR Encoding it.
-   * @param transactionIntent The transaction intent to compile
-   * @returns The compiled transaction intent
-   */
-  static async compileTransactionIntent(transactionIntent) {
-    return transactionIntent.compile();
-  }
-  /**
-   * Compiles the `SignedTransactionIntent` by calling the Radix Engine Toolkit and SBOR Encoding it.
-   * @param signedTransactionIntent The signed transaction intent to compile
-   * @returns The compiled signed transaction intent
-   */
-  static async compileSignedTransactionIntent(signedTransactionIntent) {
-    return signedTransactionIntent.compile();
-  }
-  /**
-   * Compiles the `NotarizedTransaction` by calling the Radix Engine Toolkit and SBOR Encoding it.
-   * @param notarizedTransactionIntent The signed transaction intent to compile
-   * @returns The compiled signed transaction intent
-   */
-  static async compileNotarizedTransactionIntent(notarizedTransactionIntent) {
-    return notarizedTransactionIntent.compile();
-  }
-  /**
-   * Decompiles and summarizes a compiled intent extracting information such as locked fees,
-   * deposits, and withdrawals.
-   * @param compiledIntent The compiled intent to produce a summary for. This function accepts any
-   * object that we can extract the compiled intent from.
-   * @returns A summary on the transaction of the various withdraws, deposits, and locked fees
-   * that can be statically obtained from the manifest.
-   *
-   * @remarks
-   * This function only works for manifests that perform simple transfers which were created
-   * through the SimpleTransactionBuilder class and will not work for any other more complex
-   * transactions since this information might not be available to obtain statically from the
-   * manifest.
-   */
-  static async summarizeTransaction(transaction) {
-    var _a2, _b2, _c2;
-    const transactionIntent = await resolveTransactionIntent(transaction);
-    const instructions = await RadixEngineToolkit.Instructions.convert(
-      transactionIntent.manifest.instructions,
-      transactionIntent.header.networkId,
-      "Parsed"
-    ).then((instructions2) => instructions2.value);
-    const [faucetComponentAddress, xrdResourceAddress] = await RadixEngineToolkit.Utils.knownAddresses(
-      transactionIntent.header.networkId
-    ).then((knownAddresses) => [
-      knownAddresses.componentAddresses.faucet,
-      knownAddresses.resourceAddresses.xrd
-    ]);
-    const bucketAmounts = {};
-    let bucketId = 0;
-    let feesLocked = void 0;
-    const withdraws = {};
-    const deposits = {};
-    for (const instruction of instructions) {
-      switch (instruction.kind) {
-        case "TakeFromWorktop":
-          const resourceAddress = instruction.resourceAddress;
-          const amount = instruction.amount;
-          bucketAmounts[bucketId++] = [resourceAddress, amount];
-          break;
-        case "CallMethod":
-          if (await isLockFeeCallMethod(instruction, faucetComponentAddress)) {
-            const [amountValue] = destructManifestValueTuple(
-              instruction.args
+__publicField(
+  LTSRadixEngineToolkit,
+  "Transaction",
+  class {
+    /**
+     * Given a transaction intent of any type, this function compiles the transaction intent
+     * returning a byte array of the compiled intent.
+     * @param intent Any intent or transaction part that can be compiled.
+     * @returns The compiled intent
+     */
+    static async compile(intent) {
+      return intent.compile();
+    }
+    /**
+     * Compiles the `TransactionIntent` by calling the Radix Engine Toolkit and SBOR Encoding it.
+     * @param transactionIntent The transaction intent to compile
+     * @returns The compiled transaction intent
+     */
+    static async compileTransactionIntent(transactionIntent) {
+      return transactionIntent.compile();
+    }
+    /**
+     * Compiles the `SignedTransactionIntent` by calling the Radix Engine Toolkit and SBOR Encoding it.
+     * @param signedTransactionIntent The signed transaction intent to compile
+     * @returns The compiled signed transaction intent
+     */
+    static async compileSignedTransactionIntent(signedTransactionIntent) {
+      return signedTransactionIntent.compile();
+    }
+    /**
+     * Compiles the `NotarizedTransaction` by calling the Radix Engine Toolkit and SBOR Encoding it.
+     * @param notarizedTransactionIntent The signed transaction intent to compile
+     * @returns The compiled signed transaction intent
+     */
+    static async compileNotarizedTransactionIntent(notarizedTransactionIntent) {
+      return notarizedTransactionIntent.compile();
+    }
+    /**
+     * Decompiles and summarizes a compiled intent extracting information such as locked fees,
+     * deposits, and withdrawals.
+     * @param compiledIntent The compiled intent to produce a summary for. This function accepts any
+     * object that we can extract the compiled intent from.
+     * @returns A summary on the transaction of the various withdraws, deposits, and locked fees
+     * that can be statically obtained from the manifest.
+     *
+     * @remarks
+     * This function only works for manifests that perform simple transfers which were created
+     * through the SimpleTransactionBuilder class and will not work for any other more complex
+     * transactions since this information might not be available to obtain statically from the
+     * manifest.
+     */
+    static async summarizeTransaction(transaction) {
+      var _a2, _b2, _c2;
+      const transactionIntent = await resolveTransactionIntent(transaction);
+      const instructions = await RadixEngineToolkit.Instructions.convert(
+        transactionIntent.manifest.instructions,
+        transactionIntent.header.networkId,
+        "Parsed"
+      ).then((instructions2) => instructions2.value);
+      const [faucetComponentAddress, xrdResourceAddress] =
+        await RadixEngineToolkit.Utils.knownAddresses(
+          transactionIntent.header.networkId
+        ).then((knownAddresses) => [
+          knownAddresses.componentAddresses.faucet,
+          knownAddresses.resourceAddresses.xrd,
+        ]);
+      const bucketAmounts = {};
+      let bucketId = 0;
+      let feesLocked = void 0;
+      const withdraws = {};
+      const deposits = {};
+      for (const instruction of instructions) {
+        switch (instruction.kind) {
+          case "TakeFromWorktop":
+            const resourceAddress = instruction.resourceAddress;
+            const amount = instruction.amount;
+            bucketAmounts[bucketId++] = [resourceAddress, amount];
+            break;
+          case "CallMethod":
+            if (
+              await isLockFeeCallMethod(instruction, faucetComponentAddress)
+            ) {
+              const [amountValue] = destructManifestValueTuple(
+                instruction.args
+              );
+              feesLocked = {
+                account: resolveManifestAddress(instruction.address).value,
+                amount: castValue(amountValue, "Decimal").value,
+              };
+            } else if (await isAccountWithdrawCallMethod(instruction)) {
+              const [resourceAddressValue, amountValue] =
+                destructManifestValueTuple(instruction.args);
+              const accountAddress = resolveManifestAddress(
+                instruction.address
+              ).value;
+              const resourceAddress2 = resolveManifestAddress(
+                castValue(resourceAddressValue, "Address").value
+              ).value;
+              const amount2 = castValue(amountValue, "Decimal").value;
+              withdraws[accountAddress] ?? (withdraws[accountAddress] = {});
+              (_a2 = withdraws[accountAddress])[resourceAddress2] ??
+                (_a2[resourceAddress2] = new Decimal("0"));
+              withdraws[accountAddress][resourceAddress2] =
+                withdraws[accountAddress][resourceAddress2].add(amount2);
+            } else if (await isAccountDepositCallMethod(instruction)) {
+              const [bucketValue] = destructManifestValueTuple(
+                instruction.args
+              );
+              const accountAddress = resolveManifestAddress(
+                instruction.address
+              ).value;
+              const bucket2 = castValue(bucketValue, "Bucket").value;
+              const [resourceAddress2, amount2] = bucketAmounts[bucket2];
+              deposits[accountAddress] ?? (deposits[accountAddress] = {});
+              (_b2 = deposits[accountAddress])[resourceAddress2] ??
+                (_b2[resourceAddress2] = new Decimal("0"));
+              deposits[accountAddress][resourceAddress2] =
+                deposits[accountAddress][resourceAddress2].add(amount2);
+              delete bucketAmounts[bucket2];
+            } else if (
+              await isFreeXrdCallMethod(instruction, faucetComponentAddress)
+            ) {
+              withdraws[faucetComponentAddress] ??
+                (withdraws[faucetComponentAddress] = {});
+              (_c2 = withdraws[faucetComponentAddress])[xrdResourceAddress] ??
+                (_c2[xrdResourceAddress] = new Decimal("0"));
+              withdraws[faucetComponentAddress][xrdResourceAddress] = withdraws[
+                faucetComponentAddress
+              ][xrdResourceAddress].add(new Decimal("10000"));
+            } else {
+              throw new Error(`Unsupported CallMethod: ${instruction}`);
+            }
+            break;
+          case "TakeAllFromWorktop":
+          case "TakeNonFungiblesFromWorktop":
+          case "ReturnToWorktop":
+          case "AssertWorktopContainsAny":
+          case "AssertWorktopContains":
+          case "AssertWorktopContainsNonFungibles":
+          case "PopFromAuthZone":
+          case "PushToAuthZone":
+          case "DropAuthZoneProofs":
+          case "CreateProofFromAuthZoneOfAmount":
+          case "CreateProofFromAuthZoneOfNonFungibles":
+          case "CreateProofFromAuthZoneOfAll":
+          case "DropNamedProofs":
+          case "DropAuthZoneRegularProofs":
+          case "DropAuthZoneSignatureProofs":
+          case "CreateProofFromBucketOfAmount":
+          case "CreateProofFromBucketOfNonFungibles":
+          case "CreateProofFromBucketOfAll":
+          case "BurnResource":
+          case "CloneProof":
+          case "DropProof":
+          case "CallFunction":
+          case "CallRoyaltyMethod":
+          case "CallMetadataMethod":
+          case "CallRoleAssignmentMethod":
+          case "CallDirectVaultMethod":
+          case "DropAllProofs":
+          case "AllocateGlobalAddress":
+            throw new Error(
+              `LTS resolution of resource movements does not support this instructions: ${instruction.kind}`
             );
-            feesLocked = {
-              account: resolveManifestAddress(instruction.address).value,
-              amount: castValue(amountValue, "Decimal").value
-            };
-          } else if (await isAccountWithdrawCallMethod(instruction)) {
-            const [resourceAddressValue, amountValue] = destructManifestValueTuple(instruction.args);
-            const accountAddress = resolveManifestAddress(
-              instruction.address
-            ).value;
-            const resourceAddress2 = resolveManifestAddress(
-              castValue(resourceAddressValue, "Address").value
-            ).value;
-            const amount2 = castValue(amountValue, "Decimal").value;
-            withdraws[accountAddress] ?? (withdraws[accountAddress] = {});
-            (_a2 = withdraws[accountAddress])[resourceAddress2] ?? (_a2[resourceAddress2] = new Decimal("0"));
-            withdraws[accountAddress][resourceAddress2] = withdraws[accountAddress][resourceAddress2].add(amount2);
-          } else if (await isAccountDepositCallMethod(instruction)) {
-            const [bucketValue] = destructManifestValueTuple(
-              instruction.args
-            );
-            const accountAddress = resolveManifestAddress(
-              instruction.address
-            ).value;
-            const bucket2 = castValue(bucketValue, "Bucket").value;
-            const [resourceAddress2, amount2] = bucketAmounts[bucket2];
-            deposits[accountAddress] ?? (deposits[accountAddress] = {});
-            (_b2 = deposits[accountAddress])[resourceAddress2] ?? (_b2[resourceAddress2] = new Decimal("0"));
-            deposits[accountAddress][resourceAddress2] = deposits[accountAddress][resourceAddress2].add(amount2);
-            delete bucketAmounts[bucket2];
-          } else if (await isFreeXrdCallMethod(instruction, faucetComponentAddress)) {
-            withdraws[faucetComponentAddress] ?? (withdraws[faucetComponentAddress] = {});
-            (_c2 = withdraws[faucetComponentAddress])[xrdResourceAddress] ?? (_c2[xrdResourceAddress] = new Decimal("0"));
-            withdraws[faucetComponentAddress][xrdResourceAddress] = withdraws[faucetComponentAddress][xrdResourceAddress].add(new Decimal("10000"));
-          } else {
-            throw new Error(`Unsupported CallMethod: ${instruction}`);
-          }
-          break;
-        case "TakeAllFromWorktop":
-        case "TakeNonFungiblesFromWorktop":
-        case "ReturnToWorktop":
-        case "AssertWorktopContainsAny":
-        case "AssertWorktopContains":
-        case "AssertWorktopContainsNonFungibles":
-        case "PopFromAuthZone":
-        case "PushToAuthZone":
-        case "DropAuthZoneProofs":
-        case "CreateProofFromAuthZoneOfAmount":
-        case "CreateProofFromAuthZoneOfNonFungibles":
-        case "CreateProofFromAuthZoneOfAll":
-        case "DropNamedProofs":
-        case "DropAuthZoneRegularProofs":
-        case "DropAuthZoneSignatureProofs":
-        case "CreateProofFromBucketOfAmount":
-        case "CreateProofFromBucketOfNonFungibles":
-        case "CreateProofFromBucketOfAll":
-        case "BurnResource":
-        case "CloneProof":
-        case "DropProof":
-        case "CallFunction":
-        case "CallRoyaltyMethod":
-        case "CallMetadataMethod":
-        case "CallRoleAssignmentMethod":
-        case "CallDirectVaultMethod":
-        case "DropAllProofs":
-        case "AllocateGlobalAddress":
-          throw new Error(
-            `LTS resolution of resource movements does not support this instructions: ${instruction.kind}`
-          );
+        }
+      }
+      if (feesLocked !== void 0) {
+        return {
+          feesLocked,
+          withdraws,
+          deposits,
+        };
+      } else {
+        throw new Error("No lock_fee instruction found in the manifest");
       }
     }
-    if (feesLocked !== void 0) {
-      return {
-        feesLocked,
-        withdraws,
-        deposits
-      };
-    } else {
-      throw new Error("No lock_fee instruction found in the manifest");
+  }
+);
+__publicField(
+  LTSRadixEngineToolkit,
+  "Derive",
+  class {
+    /**
+     * Given a public key and network id, this function deterministically calculates the address of
+     * the virtual account component address associated with the public key.
+     * @param publicKey An Ecdsa Secp256k1 or EdDSA Ed25519 public key to derive the virtual account
+     * address for.
+     * @param networkId The network that the virtual account address is meant for. This will be used
+     * for the Bech32m encoding of the address.
+     * @returns The address of the virtual account as a string.
+     */
+    static async virtualAccountAddress(publicKey, networkId) {
+      return RadixEngineToolkit.Derive.virtualAccountAddressFromPublicKey(
+        publicKey,
+        networkId
+      );
     }
-  }
-});
-__publicField(LTSRadixEngineToolkit, "Derive", class {
-  /**
-   * Given a public key and network id, this function deterministically calculates the address of
-   * the virtual account component address associated with the public key.
-   * @param publicKey An Ecdsa Secp256k1 or EdDSA Ed25519 public key to derive the virtual account
-   * address for.
-   * @param networkId The network that the virtual account address is meant for. This will be used
-   * for the Bech32m encoding of the address.
-   * @returns The address of the virtual account as a string.
-   */
-  static async virtualAccountAddress(publicKey, networkId) {
-    return RadixEngineToolkit.Derive.virtualAccountAddressFromPublicKey(
-      publicKey,
-      networkId
-    );
-  }
-  /**
-   * Given an Olympia account address, this function deterministically calculates the address of
-   * the associated virtual account on a Babylon network of a given network id.
-   * @param olympiaAddress The Olympia account address to derive the associated Babylon virtual
-   * account address for.
-   * @param networkId The **Babylon** network id to derive the Babylon account address for. This is
-   * primarily used for the Bech32m encoding of addresses. This argument defaults to `1` which is
-   * the network id of the Babylon mainnet
-   * @returns An object containing all of the mapping information of the address
-   */
-  static async babylonAccountAddressFromOlympiaAccountAddress(olympiaAddress, networkId) {
-    const address2 = await RadixEngineToolkit.Derive.virtualAccountAddressFromOlympiaAccountAddress(
+    /**
+     * Given an Olympia account address, this function deterministically calculates the address of
+     * the associated virtual account on a Babylon network of a given network id.
+     * @param olympiaAddress The Olympia account address to derive the associated Babylon virtual
+     * account address for.
+     * @param networkId The **Babylon** network id to derive the Babylon account address for. This is
+     * primarily used for the Bech32m encoding of addresses. This argument defaults to `1` which is
+     * the network id of the Babylon mainnet
+     * @returns An object containing all of the mapping information of the address
+     */
+    static async babylonAccountAddressFromOlympiaAccountAddress(
       olympiaAddress,
       networkId
-    );
-    const publicKey = await RadixEngineToolkit.Derive.publicKeyFromOlympiaAccountAddress(
-      olympiaAddress
-    );
-    return {
-      publicKey: new PublicKey.Secp256k1(publicKey),
-      babylonAccountAddress: address2,
-      olympiaAccountAddress: olympiaAddress
-    };
-  }
-  /**
-   * Given an Olympia account address, this function deterministically calculates the address of
-   * the associated virtual account on a Babylon network of a given network id.
-   * @param olympiaResourceAddress The Olympia account address to derive the associated Babylon virtual
-   * account address for.
-   * @param networkId The **Babylon** network id to derive the Babylon account address for. This is
-   * primarily used for the Bech32m encoding of addresses. This argument defaults to `1` which is
-   * the network id of the Babylon mainnet
-   * @returns An object containing all of the mapping information of the address
-   */
-  static async babylonResourceAddressFromOlympiaResourceAddress(olympiaResourceAddress, networkId) {
-    return RadixEngineToolkit.Derive.resourceAddressFromOlympiaResourceAddress(
+    ) {
+      const address2 =
+        await RadixEngineToolkit.Derive.virtualAccountAddressFromOlympiaAccountAddress(
+          olympiaAddress,
+          networkId
+        );
+      const publicKey =
+        await RadixEngineToolkit.Derive.publicKeyFromOlympiaAccountAddress(
+          olympiaAddress
+        );
+      return {
+        publicKey: new PublicKey.Secp256k1(publicKey),
+        babylonAccountAddress: address2,
+        olympiaAccountAddress: olympiaAddress,
+      };
+    }
+    /**
+     * Given an Olympia account address, this function deterministically calculates the address of
+     * the associated virtual account on a Babylon network of a given network id.
+     * @param olympiaResourceAddress The Olympia account address to derive the associated Babylon virtual
+     * account address for.
+     * @param networkId The **Babylon** network id to derive the Babylon account address for. This is
+     * primarily used for the Bech32m encoding of addresses. This argument defaults to `1` which is
+     * the network id of the Babylon mainnet
+     * @returns An object containing all of the mapping information of the address
+     */
+    static async babylonResourceAddressFromOlympiaResourceAddress(
       olympiaResourceAddress,
       networkId
-    );
-  }
-  /**
-   * Derives the addresses of a set of known entities on the specified network.
-   * @param networkId The network id to ge the known entity addresses for.
-   * @returns An object containing the entity addresses on the network with the specified id.
-   */
-  static async knownAddresses(networkId) {
-    return RadixEngineToolkit.Utils.knownAddresses(networkId).then(
-      (knownAddresses) => {
-        return {
-          packages: {
-            faucet: knownAddresses.packageAddresses.faucetPackage,
-            account: knownAddresses.packageAddresses.accountPackage
-          },
-          components: {
-            faucet: knownAddresses.componentAddresses.faucet
-          },
-          resources: {
-            xrdResource: knownAddresses.resourceAddresses.xrd,
-            secp256k1Resource: knownAddresses.resourceAddresses.secp256k1SignatureVirtualBadge,
-            ed25519Resource: knownAddresses.resourceAddresses.ed25519SignatureVirtualBadge,
-            systemResource: knownAddresses.resourceAddresses.systemTransactionBadge,
-            packageBadgeResource: knownAddresses.resourceAddresses.packageOfDirectCallerVirtualBadge
-          }
-        };
-      }
-    );
-  }
-  static async bech32mTransactionIdentifierFromIntentHash(transactionHash, networkId) {
-    return RadixEngineToolkit.Derive.bech32mTransactionIdentifierFromIntentHash(
+    ) {
+      return RadixEngineToolkit.Derive.resourceAddressFromOlympiaResourceAddress(
+        olympiaResourceAddress,
+        networkId
+      );
+    }
+    /**
+     * Derives the addresses of a set of known entities on the specified network.
+     * @param networkId The network id to ge the known entity addresses for.
+     * @returns An object containing the entity addresses on the network with the specified id.
+     */
+    static async knownAddresses(networkId) {
+      return RadixEngineToolkit.Utils.knownAddresses(networkId).then(
+        (knownAddresses) => {
+          return {
+            packages: {
+              faucet: knownAddresses.packageAddresses.faucetPackage,
+              account: knownAddresses.packageAddresses.accountPackage,
+            },
+            components: {
+              faucet: knownAddresses.componentAddresses.faucet,
+            },
+            resources: {
+              xrdResource: knownAddresses.resourceAddresses.xrd,
+              secp256k1Resource:
+                knownAddresses.resourceAddresses.secp256k1SignatureVirtualBadge,
+              ed25519Resource:
+                knownAddresses.resourceAddresses.ed25519SignatureVirtualBadge,
+              systemResource:
+                knownAddresses.resourceAddresses.systemTransactionBadge,
+              packageBadgeResource:
+                knownAddresses.resourceAddresses
+                  .packageOfDirectCallerVirtualBadge,
+            },
+          };
+        }
+      );
+    }
+    static async bech32mTransactionIdentifierFromIntentHash(
       transactionHash,
       networkId
-    );
+    ) {
+      return RadixEngineToolkit.Derive.bech32mTransactionIdentifierFromIntentHash(
+        transactionHash,
+        networkId
+      );
+    }
   }
-});
-__publicField(LTSRadixEngineToolkit, "Address", class {
-  static async isGlobalAccount(address2) {
-    const entityType = await RadixEngineToolkit.Address.entityType(address2);
-    return entityType == EntityType.GlobalVirtualEd25519Account || entityType == EntityType.GlobalVirtualSecp256k1Account || entityType == EntityType.GlobalAccount;
+);
+__publicField(
+  LTSRadixEngineToolkit,
+  "Address",
+  class {
+    static async isGlobalAccount(address2) {
+      const entityType = await RadixEngineToolkit.Address.entityType(address2);
+      return (
+        entityType == EntityType.GlobalVirtualEd25519Account ||
+        entityType == EntityType.GlobalVirtualSecp256k1Account ||
+        entityType == EntityType.GlobalAccount
+      );
+    }
+    static async isFungibleResource(address2) {
+      const entityType = await RadixEngineToolkit.Address.entityType(address2);
+      return entityType == EntityType.GlobalFungibleResourceManager;
+    }
+    static async isNonFungibleResource(address2) {
+      const entityType = await RadixEngineToolkit.Address.entityType(address2);
+      return entityType == EntityType.GlobalNonFungibleResourceManager;
+    }
   }
-  static async isFungibleResource(address2) {
-    const entityType = await RadixEngineToolkit.Address.entityType(address2);
-    return entityType == EntityType.GlobalFungibleResourceManager;
+);
+__publicField(
+  LTSRadixEngineToolkit,
+  "Utils",
+  class {
+    /**
+     * This function hashes a given byte array of data through the hashing algorithm used by the
+     * Radix Engine and Scrypto. The hashing algorithm adopted by the Radix stack is Blake2b with 32
+     * byte digests.
+     * @param data The data to hash
+     * @returns The hash of the data
+     */
+    static hash(data) {
+      return hash2(data);
+    }
   }
-  static async isNonFungibleResource(address2) {
-    const entityType = await RadixEngineToolkit.Address.entityType(address2);
-    return entityType == EntityType.GlobalNonFungibleResourceManager;
-  }
-});
-__publicField(LTSRadixEngineToolkit, "Utils", class {
-  /**
-   * This function hashes a given byte array of data through the hashing algorithm used by the
-   * Radix Engine and Scrypto. The hashing algorithm adopted by the Radix stack is Blake2b with 32
-   * byte digests.
-   * @param data The data to hash
-   * @returns The hash of the data
-   */
-  static hash(data) {
-    return hash2(data);
-  }
-});
+);
 /**
  * A sub-API of the toolkit that includes contains utility functions used for testing.
  */
-__publicField(LTSRadixEngineToolkit, "TestUtils", class {
-  /**
-   * Creates a new account that has a default deposit rule of disallowing resource deposits. The
-   * created account is a virtual account derived from the public key of a pseudo-random private
-   * key. Thus, this function should only be used for testing.
-   * @param currentEpoch The current epoch of the network that this transaction will be submitted
-   * to.
-   * @param networkId The id of the network that this transaction is constructed for.
-   * @returns An object containing the address of the soon-to-be-created account with deposits
-   * disabled and the compiled notarized transaction to submit the ledger to create the account.
-   */
-  static async createAccountWithDisabledDeposits(currentEpoch, networkId) {
-    const ephemeralPrivateKey = new PrivateKey.Ed25519(
-      new Uint8Array(Array(32).map((_) => Math.floor(Math.random() * 255)))
-    );
-    const ephemeralPublicKey = ephemeralPrivateKey.publicKey();
-    const virtualAccount = await _LTSRadixEngineToolkit.Derive.virtualAccountAddress(
-      ephemeralPublicKey,
-      networkId
-    );
-    const faucetComponentAddress = await _LTSRadixEngineToolkit.Derive.knownAddresses(networkId).then(
-      (addresses) => addresses.components.faucet
-    );
-    const manifest = new ManifestBuilder().callMethod(faucetComponentAddress, "lock_fee", [decimal("10")]).callMethod(virtualAccount, "set_default_deposit_rule", [
-      enumeration(1)
-    ]).build();
-    const notarizedTransaction = await TransactionBuilder.new().then(
-      (builder) => builder.header({
-        networkId,
-        startEpochInclusive: currentEpoch,
-        endEpochExclusive: currentEpoch + 10,
-        nonce: generateRandomNonce(),
-        notaryPublicKey: ephemeralPublicKey,
-        notaryIsSignatory: true,
-        tipPercentage: 0
-      }).manifest(manifest).notarize(ephemeralPrivateKey)
-    );
-    const compiledNotarizedTransaction = new CompiledNotarizedTransaction(
-      await RadixEngineToolkit.Intent.hash(
-        notarizedTransaction.signedIntent.intent
-      ),
-      await RadixEngineToolkit.NotarizedTransaction.compile(
-        notarizedTransaction
-      ),
-      await RadixEngineToolkit.NotarizedTransaction.hash(notarizedTransaction)
-    );
-    return {
-      accountAddress: virtualAccount,
-      compiledNotarizedTransaction
-    };
+__publicField(
+  LTSRadixEngineToolkit,
+  "TestUtils",
+  class {
+    /**
+     * Creates a new account that has a default deposit rule of disallowing resource deposits. The
+     * created account is a virtual account derived from the public key of a pseudo-random private
+     * key. Thus, this function should only be used for testing.
+     * @param currentEpoch The current epoch of the network that this transaction will be submitted
+     * to.
+     * @param networkId The id of the network that this transaction is constructed for.
+     * @returns An object containing the address of the soon-to-be-created account with deposits
+     * disabled and the compiled notarized transaction to submit the ledger to create the account.
+     */
+    static async createAccountWithDisabledDeposits(currentEpoch, networkId) {
+      const ephemeralPrivateKey = new PrivateKey.Ed25519(
+        new Uint8Array(Array(32).map((_) => Math.floor(Math.random() * 255)))
+      );
+      const ephemeralPublicKey = ephemeralPrivateKey.publicKey();
+      const virtualAccount =
+        await _LTSRadixEngineToolkit.Derive.virtualAccountAddress(
+          ephemeralPublicKey,
+          networkId
+        );
+      const faucetComponentAddress =
+        await _LTSRadixEngineToolkit.Derive.knownAddresses(networkId).then(
+          (addresses) => addresses.components.faucet
+        );
+      const manifest = new ManifestBuilder()
+        .callMethod(faucetComponentAddress, "lock_fee", [decimal("10")])
+        .callMethod(virtualAccount, "set_default_deposit_rule", [
+          enumeration(1),
+        ])
+        .build();
+      const notarizedTransaction = await TransactionBuilder.new().then(
+        (builder) =>
+          builder
+            .header({
+              networkId,
+              startEpochInclusive: currentEpoch,
+              endEpochExclusive: currentEpoch + 10,
+              nonce: generateRandomNonce(),
+              notaryPublicKey: ephemeralPublicKey,
+              notaryIsSignatory: true,
+              tipPercentage: 0,
+            })
+            .manifest(manifest)
+            .notarize(ephemeralPrivateKey)
+      );
+      const compiledNotarizedTransaction = new CompiledNotarizedTransaction(
+        await RadixEngineToolkit.Intent.hash(
+          notarizedTransaction.signedIntent.intent
+        ),
+        await RadixEngineToolkit.NotarizedTransaction.compile(
+          notarizedTransaction
+        ),
+        await RadixEngineToolkit.NotarizedTransaction.hash(notarizedTransaction)
+      );
+      return {
+        accountAddress: virtualAccount,
+        compiledNotarizedTransaction,
+      };
+    }
   }
-});
+);
 const resolveManifestAddress = (address2) => {
   if (address2.kind == "Static") {
     return address2;
@@ -5278,11 +5867,13 @@ const resolveTransactionIntent = (intent) => {
 };
 const resolveUnknownCompiledIntent = (intent) => {
   return RadixEngineToolkit.Intent.decompile(intent).catch(() => {
-    return RadixEngineToolkit.SignedIntent.decompile(intent).then((signedIntent) => signedIntent.intent).catch(() => {
-      return RadixEngineToolkit.NotarizedTransaction.decompile(intent).then(
-        (transaction) => transaction.signedIntent.intent
-      );
-    });
+    return RadixEngineToolkit.SignedIntent.decompile(intent)
+      .then((signedIntent) => signedIntent.intent)
+      .catch(() => {
+        return RadixEngineToolkit.NotarizedTransaction.decompile(intent).then(
+          (transaction) => transaction.signedIntent.intent
+        );
+      });
   });
 };
 class LTSTransactionIntent {
@@ -5348,7 +5939,13 @@ class LTSNotarizedTransaction {
   }
 }
 class CompiledSignedTransactionIntent {
-  constructor(retWrapper, intentHash, signedIntent, compiledSignedIntent, signedIntentHash) {
+  constructor(
+    retWrapper,
+    intentHash,
+    signedIntent,
+    compiledSignedIntent,
+    signedIntentHash
+  ) {
     __publicField(this, "retWrapper");
     __publicField(this, "signedIntent");
     __publicField(this, "intentHash");
@@ -5400,12 +5997,13 @@ class CompiledSignedTransactionIntent {
   compileNotarizedInternal(notarySignature) {
     const notarizedTransaction = {
       signedIntent: this.signedIntent,
-      notarySignature
+      notarySignature,
     };
     const [compiledNotarizedTransaction, notarizedPayloadHash] = (() => {
-      const input = GeneratedConverter.NotarizedTransaction.toGenerated(
-        notarizedTransaction
-      );
+      const input =
+        GeneratedConverter.NotarizedTransaction.toGenerated(
+          notarizedTransaction
+        );
       const compiled = Convert.HexString.toUint8Array(
         this.retWrapper.notarizedTransactionCompile(input)
       );
@@ -5446,8 +6044,8 @@ class CompiledNotarizedTransaction {
   compiledIntent() {
     return RadixEngineToolkit.NotarizedTransaction.decompile(
       this.compiled
-    ).then(
-      (decompiled) => new LTSNotarizedTransaction(decompiled).compiledIntent()
+    ).then((decompiled) =>
+      new LTSNotarizedTransaction(decompiled).compiledIntent()
     );
   }
   /**
@@ -5481,32 +6079,33 @@ class CompiledNotarizedTransaction {
     return Convert.Uint8Array.toHexString(this.notarizedPayloadHash.hash);
   }
   async staticallyValidate(networkId) {
-    return RadixEngineToolkit.NotarizedTransaction.decompile(this.compiled).then(
-      (decompiled) => RadixEngineToolkit.NotarizedTransaction.staticallyValidate(
-        decompiled,
-        defaultValidationConfig(networkId)
+    return RadixEngineToolkit.NotarizedTransaction.decompile(this.compiled)
+      .then((decompiled) =>
+        RadixEngineToolkit.NotarizedTransaction.staticallyValidate(
+          decompiled,
+          defaultValidationConfig(networkId)
+        )
       )
-    ).then((validity) => {
-      switch (validity.kind) {
-        case "Valid":
-          return {
-            isValid: true,
-            errorMessage: void 0,
-            throwIfInvalid: () => {
-            }
-          };
-        case "Invalid":
-          return {
-            isValid: false,
-            errorMessage: validity.error,
-            throwIfInvalid: () => {
-              throw new Error(
-                `Static validation failed with error: ${validity.error}`
-              );
-            }
-          };
-      }
-    });
+      .then((validity) => {
+        switch (validity.kind) {
+          case "Valid":
+            return {
+              isValid: true,
+              errorMessage: void 0,
+              throwIfInvalid: () => {},
+            };
+          case "Invalid":
+            return {
+              isValid: false,
+              errorMessage: validity.error,
+              throwIfInvalid: () => {
+                throw new Error(
+                  `Static validation failed with error: ${validity.error}`
+                );
+              },
+            };
+        }
+      });
   }
   /**
    * Summarizes a compiled intent extracting information such as locked fees, deposits, and
@@ -5550,7 +6149,11 @@ const isLockFeeCallMethod = async (instruction, faucetComponentAddress) => {
       const entityType = await RadixEngineToolkit.Address.entityType(
         instruction.address.value
       );
-      const isAddressAccepted = entityType === EntityType.GlobalAccount || entityType === EntityType.GlobalVirtualEd25519Account || entityType === EntityType.GlobalVirtualSecp256k1Account || instruction.address.value === faucetComponentAddress;
+      const isAddressAccepted =
+        entityType === EntityType.GlobalAccount ||
+        entityType === EntityType.GlobalVirtualEd25519Account ||
+        entityType === EntityType.GlobalVirtualSecp256k1Account ||
+        instruction.address.value === faucetComponentAddress;
       const isMethodNameAccepted = instruction.methodName === "lock_fee";
       return isMethodNameAccepted && isAddressAccepted;
     case "Named":
@@ -5560,10 +6163,9 @@ const isLockFeeCallMethod = async (instruction, faucetComponentAddress) => {
 const isFreeXrdCallMethod = async (instruction, faucetComponentAddress) => {
   switch (instruction.address.kind) {
     case "Static":
-      await RadixEngineToolkit.Address.entityType(
-        instruction.address.value
-      );
-      const isAddressAccepted = instruction.address.value === faucetComponentAddress;
+      await RadixEngineToolkit.Address.entityType(instruction.address.value);
+      const isAddressAccepted =
+        instruction.address.value === faucetComponentAddress;
       const isMethodNameAccepted = instruction.methodName === "free";
       return isMethodNameAccepted && isAddressAccepted;
     case "Named":
@@ -5576,7 +6178,10 @@ const isAccountWithdrawCallMethod = async (instruction) => {
       const entityType = await RadixEngineToolkit.Address.entityType(
         instruction.address.value
       );
-      const isAddressAccepted = entityType === EntityType.GlobalAccount || entityType === EntityType.GlobalVirtualEd25519Account || entityType === EntityType.GlobalVirtualSecp256k1Account;
+      const isAddressAccepted =
+        entityType === EntityType.GlobalAccount ||
+        entityType === EntityType.GlobalVirtualEd25519Account ||
+        entityType === EntityType.GlobalVirtualSecp256k1Account;
       const isMethodNameAccepted = instruction.methodName === "withdraw";
       return isMethodNameAccepted && isAddressAccepted;
     case "Named":
@@ -5589,8 +6194,13 @@ const isAccountDepositCallMethod = async (instruction) => {
       const entityType = await RadixEngineToolkit.Address.entityType(
         instruction.address.value
       );
-      const isAddressAccepted = entityType === EntityType.GlobalAccount || entityType === EntityType.GlobalVirtualEd25519Account || entityType === EntityType.GlobalVirtualSecp256k1Account;
-      const isMethodNameAccepted = instruction.methodName === "try_deposit_or_abort" || instruction.methodName === "deposit";
+      const isAddressAccepted =
+        entityType === EntityType.GlobalAccount ||
+        entityType === EntityType.GlobalVirtualEd25519Account ||
+        entityType === EntityType.GlobalVirtualSecp256k1Account;
+      const isMethodNameAccepted =
+        instruction.methodName === "try_deposit_or_abort" ||
+        instruction.methodName === "deposit";
       return isMethodNameAccepted && isAddressAccepted;
     case "Named":
       return false;
@@ -5615,13 +6225,17 @@ var EntityType = /* @__PURE__ */ ((EntityType2) => {
   EntityType2["GlobalOneResourcePool"] = "GlobalOneResourcePool";
   EntityType2["GlobalTwoResourcePool"] = "GlobalTwoResourcePool";
   EntityType2["GlobalMultiResourcePool"] = "GlobalMultiResourcePool";
-  EntityType2["GlobalVirtualSecp256k1Account"] = "GlobalVirtualSecp256k1Account";
-  EntityType2["GlobalVirtualSecp256k1Identity"] = "GlobalVirtualSecp256k1Identity";
+  EntityType2["GlobalVirtualSecp256k1Account"] =
+    "GlobalVirtualSecp256k1Account";
+  EntityType2["GlobalVirtualSecp256k1Identity"] =
+    "GlobalVirtualSecp256k1Identity";
   EntityType2["GlobalVirtualEd25519Account"] = "GlobalVirtualEd25519Account";
   EntityType2["GlobalVirtualEd25519Identity"] = "GlobalVirtualEd25519Identity";
-  EntityType2["GlobalFungibleResourceManager"] = "GlobalFungibleResourceManager";
+  EntityType2["GlobalFungibleResourceManager"] =
+    "GlobalFungibleResourceManager";
   EntityType2["InternalFungibleVault"] = "InternalFungibleVault";
-  EntityType2["GlobalNonFungibleResourceManager"] = "GlobalNonFungibleResourceManager";
+  EntityType2["GlobalNonFungibleResourceManager"] =
+    "GlobalNonFungibleResourceManager";
   EntityType2["InternalNonFungibleVault"] = "InternalNonFungibleVault";
   EntityType2["InternalGenericComponent"] = "InternalGenericComponent";
   EntityType2["InternalKeyValueStore"] = "InternalKeyValueStore";
@@ -5645,24 +6259,26 @@ const CURVE = {
   n: N,
   h: 8,
   Gx,
-  Gy
+  Gy,
   // field prime, curve (group) order, cofactor
 };
 const err = (m2 = "") => {
   throw new Error(m2);
 };
 const str = (s2) => typeof s2 === "string";
-const au8 = (a, l) => (
+const au8 = (a, l) =>
   // is Uint8Array (of specific length)
-  !(a instanceof Uint8Array) || typeof l === "number" && l > 0 && a.length !== l ? err("Uint8Array expected") : a
-);
+  !(a instanceof Uint8Array) ||
+  (typeof l === "number" && l > 0 && a.length !== l)
+    ? err("Uint8Array expected")
+    : a;
 const u8n = (data) => new Uint8Array(data);
 const toU8 = (a, len) => au8(str(a) ? h2b(a) : u8n(a), len);
 const mod = (a, b = P) => {
   let r2 = a % b;
   return r2 >= 0n ? r2 : b + r2;
 };
-const isPoint = (p) => p instanceof Point$3 ? p : err("Point expected");
+const isPoint = (p) => (p instanceof Point$3 ? p : err("Point expected"));
 let Gpows = void 0;
 let Point$3 = class Point {
   constructor(ex, ey, ez, et) {
@@ -5680,24 +6296,19 @@ let Point$3 = class Point {
     const normed = hex.slice();
     normed[31] = hex[31] & ~128;
     const y = b2n_LE(normed);
-    if (y === 0n)
-      ;
+    if (y === 0n);
     else {
-      if (strict && !(0n < y && y < P))
-        err("bad y coord 1");
-      if (!strict && !(0n < y && y < 2n ** 256n))
-        err("bad y coord 2");
+      if (strict && !(0n < y && y < P)) err("bad y coord 1");
+      if (!strict && !(0n < y && y < 2n ** 256n)) err("bad y coord 2");
     }
     const y2 = mod(y * y);
     const u = mod(y2 - 1n);
     const v2 = mod(d * y2 + 1n);
     let { isValid, value: x } = uvRatio(u, v2);
-    if (!isValid)
-      err("bad y coordinate 3");
+    if (!isValid) err("bad y coordinate 3");
     const isXOdd = (x & 1n) === 1n;
     const isHeadOdd = (hex[31] & 128) !== 0;
-    if (isHeadOdd !== isXOdd)
-      x = mod(-x);
+    if (isHeadOdd !== isXOdd) x = mod(-x);
     return new Point(x, y, 1n, mod(x * y));
   }
   get x() {
@@ -5711,8 +6322,10 @@ let Point$3 = class Point {
   equals(other) {
     const { ex: X1, ey: Y1, ez: Z1 } = this;
     const { ex: X2, ey: Y2, ez: Z2 } = isPoint(other);
-    const X1Z2 = mod(X1 * Z2), X2Z1 = mod(X2 * Z1);
-    const Y1Z2 = mod(Y1 * Z2), Y2Z1 = mod(Y2 * Z1);
+    const X1Z2 = mod(X1 * Z2),
+      X2Z1 = mod(X2 * Z1);
+    const Y1Z2 = mod(Y1 * Z2),
+      Y2Z1 = mod(Y2 * Z1);
     return X1Z2 === X2Z1 && Y1Z2 === Y2Z1;
   }
   is0() {
@@ -5758,20 +6371,16 @@ let Point$3 = class Point {
     return new Point(X3, Y3, Z3, T3);
   }
   mul(n, safe = true) {
-    if (n === 0n)
-      return safe === true ? err("cannot multiply by 0") : I;
+    if (n === 0n) return safe === true ? err("cannot multiply by 0") : I;
     if (!(typeof n === "bigint" && 0n < n && n < N))
       err("invalid scalar, must be < L");
-    if (!safe && this.is0() || n === 1n)
-      return this;
-    if (this.equals(G))
-      return wNAF(n).p;
-    let p = I, f2 = G;
+    if ((!safe && this.is0()) || n === 1n) return this;
+    if (this.equals(G)) return wNAF(n).p;
+    let p = I,
+      f2 = G;
     for (let d = this; n > 0n; d = d.double(), n >>= 1n) {
-      if (n & 1n)
-        p = p.add(d);
-      else if (safe)
-        f2 = f2.add(d);
+      if (n & 1n) p = p.add(d);
+      else if (safe) f2 = f2.add(d);
     }
     return p;
   }
@@ -5789,17 +6398,14 @@ let Point$3 = class Point {
   // check if P is small order
   isTorsionFree() {
     let p = this.mul(N / 2n, false).double();
-    if (N % 2n)
-      p = p.add(this);
+    if (N % 2n) p = p.add(this);
     return p.is0();
   }
   toAffine() {
     const { ex: x, ey: y, ez: z } = this;
-    if (this.is0())
-      return { x: 0n, y: 0n };
+    if (this.is0()) return { x: 0n, y: 0n };
     const iz = invert(z);
-    if (mod(z * iz) !== 1n)
-      err("invalid inverse");
+    if (mod(z * iz) !== 1n) err("invalid inverse");
     return { x: mod(x * iz), y: mod(y * iz) };
   }
   toRawBytes() {
@@ -5817,18 +6423,19 @@ Point$3.BASE = new Point$3(Gx, Gy, 1n, mod(Gx * Gy));
 Point$3.ZERO = new Point$3(0n, 1n, 1n, 0n);
 const { BASE: G, ZERO: I } = Point$3;
 const padh = (num, pad2) => num.toString(16).padStart(pad2, "0");
-const b2h = (b) => Array.from(b).map((e) => padh(e, 2)).join("");
+const b2h = (b) =>
+  Array.from(b)
+    .map((e) => padh(e, 2))
+    .join("");
 const h2b = (hex) => {
   const l = hex.length;
-  if (!str(hex) || l % 2)
-    err("hex invalid 1");
+  if (!str(hex) || l % 2) err("hex invalid 1");
   const arr = u8n(l / 2);
   for (let i = 0; i < arr.length; i++) {
     const j = i * 2;
     const h = hex.slice(j, j + 2);
     const b = Number.parseInt(h, 16);
-    if (Number.isNaN(b) || b < 0)
-      err("hex invalid 2");
+    if (Number.isNaN(b) || b < 0) err("hex invalid 2");
     arr[i] = b;
   }
   return arr;
@@ -5845,13 +6452,16 @@ const concatB = (...arrs) => {
   return r2;
 };
 const invert = (num, md = P) => {
-  if (num === 0n || md <= 0n)
-    err("no inverse n=" + num + " mod=" + md);
-  let a = mod(num, md), b = md, x = 0n, u = 1n;
+  if (num === 0n || md <= 0n) err("no inverse n=" + num + " mod=" + md);
+  let a = mod(num, md),
+    b = md,
+    x = 0n,
+    u = 1n;
   while (a !== 0n) {
-    const q = b / a, r2 = b % a;
+    const q = b / a,
+      r2 = b % a;
     const m2 = x - u * q;
-    b = a, a = r2, x = u, u = m2;
+    (b = a), (a = r2), (x = u), (u = m2);
   }
   return b === 1n ? mod(x, md) : err("no inverse");
 };
@@ -5864,21 +6474,22 @@ const pow2 = (x, power) => {
   return r2;
 };
 const pow_2_252_3 = (x) => {
-  const x2 = x * x % P;
-  const b2 = x2 * x % P;
-  const b4 = pow2(b2, 2n) * b2 % P;
-  const b5 = pow2(b4, 1n) * x % P;
-  const b10 = pow2(b5, 5n) * b5 % P;
-  const b20 = pow2(b10, 10n) * b10 % P;
-  const b40 = pow2(b20, 20n) * b20 % P;
-  const b80 = pow2(b40, 40n) * b40 % P;
-  const b160 = pow2(b80, 80n) * b80 % P;
-  const b240 = pow2(b160, 80n) * b80 % P;
-  const b250 = pow2(b240, 10n) * b10 % P;
-  const pow_p_5_8 = pow2(b250, 2n) * x % P;
+  const x2 = (x * x) % P;
+  const b2 = (x2 * x) % P;
+  const b4 = (pow2(b2, 2n) * b2) % P;
+  const b5 = (pow2(b4, 1n) * x) % P;
+  const b10 = (pow2(b5, 5n) * b5) % P;
+  const b20 = (pow2(b10, 10n) * b10) % P;
+  const b40 = (pow2(b20, 20n) * b20) % P;
+  const b80 = (pow2(b40, 40n) * b40) % P;
+  const b160 = (pow2(b80, 80n) * b80) % P;
+  const b240 = (pow2(b160, 80n) * b80) % P;
+  const b250 = (pow2(b240, 10n) * b10) % P;
+  const pow_p_5_8 = (pow2(b250, 2n) * x) % P;
   return { pow_p_5_8, b2 };
 };
-const RM1 = 19681161376707505956807079304988542015446066515923890162744021073123829784752n;
+const RM1 =
+  19681161376707505956807079304988542015446066515923890162744021073123829784752n;
 const uvRatio = (u, v2) => {
   const v3 = mod(v2 * v2 * v2);
   const v7 = mod(v3 * v3 * v2);
@@ -5890,21 +6501,17 @@ const uvRatio = (u, v2) => {
   const useRoot1 = vx2 === u;
   const useRoot2 = vx2 === mod(-u);
   const noRoot = vx2 === mod(-u * RM1);
-  if (useRoot1)
-    x = root1;
-  if (useRoot2 || noRoot)
-    x = root2;
-  if ((mod(x) & 1n) === 1n)
-    x = mod(-x);
+  if (useRoot1) x = root1;
+  if (useRoot2 || noRoot) x = root2;
+  if ((mod(x) & 1n) === 1n) x = mod(-x);
   return { isValid: useRoot1 || useRoot2, value: x };
 };
 const modL_LE = (hash3) => mod(b2n_LE(hash3), N);
 let _shaS;
 const sha512a = (...m2) => etc.sha512Async(...m2);
-const sha512s = (...m2) => (
+const sha512s = (...m2) =>
   // Sync SHA512, not set by default
-  typeof _shaS === "function" ? _shaS(...m2) : err("etc.sha512Sync not set")
-);
+  typeof _shaS === "function" ? _shaS(...m2) : err("etc.sha512Sync not set");
 const hash2extK = (hashed) => {
   const head = hashed.slice(0, 32);
   head[0] &= 248;
@@ -5919,8 +6526,7 @@ const hash2extK = (hashed) => {
 const getExtendedPublicKey = (priv2) => hash2extK(sha512s(toU8(priv2, 32)));
 const getPublicKey = (priv2) => getExtendedPublicKey(priv2).pointBytes;
 function hashFinish(asynchronous, res) {
-  if (asynchronous)
-    return sha512a(res.hashable).then(res.finish);
+  if (asynchronous) return sha512a(res.hashable).then(res.finish);
   return res.finish(sha512s(res.hashable));
 }
 const _sign = (e, rBytes, msg) => {
@@ -5940,10 +6546,11 @@ const sign = (msg, privKey) => {
   const rBytes = sha512s(e.prefix, m2);
   return hashFinish(false, _sign(e, rBytes, m2));
 };
-const cr = () => (
+const cr = () =>
   // We support: 1) browsers 2) node.js 19+
-  typeof globalThis === "object" && "crypto" in globalThis ? globalThis.crypto : void 0
-);
+  typeof globalThis === "object" && "crypto" in globalThis
+    ? globalThis.crypto
+    : void 0;
 const etc = {
   bytesToHex: b2h,
   hexToBytes: h2b,
@@ -5952,35 +6559,35 @@ const etc = {
   invert,
   randomBytes: (len) => {
     const crypto2 = cr();
-    if (!crypto2)
-      err("crypto.getRandomValues must be defined");
+    if (!crypto2) err("crypto.getRandomValues must be defined");
     return crypto2.getRandomValues(u8n(len));
   },
   sha512Async: async (...messages) => {
     const crypto2 = cr();
-    if (!crypto2)
-      err("crypto.subtle or etc.sha512Async must be defined");
+    if (!crypto2) err("crypto.subtle or etc.sha512Async must be defined");
     const m2 = concatB(...messages);
     return u8n(await crypto2.subtle.digest("SHA-512", m2.buffer));
   },
-  sha512Sync: void 0
+  sha512Sync: void 0,
   // Actual logic below
 };
-Object.defineProperties(etc, { sha512Sync: {
-  configurable: false,
-  get() {
-    return _shaS;
+Object.defineProperties(etc, {
+  sha512Sync: {
+    configurable: false,
+    get() {
+      return _shaS;
+    },
+    set(f2) {
+      if (!_shaS) _shaS = f2;
+    },
   },
-  set(f2) {
-    if (!_shaS)
-      _shaS = f2;
-  }
-} });
+});
 const W = 8;
 const precompute = () => {
   const points = [];
   const windows = 256 / W + 1;
-  let p = G, b = p;
+  let p = G,
+    b = p;
   for (let w = 0; w < windows; w++) {
     b = p;
     points.push(b);
@@ -5998,7 +6605,8 @@ const wNAF = (n) => {
     let n2 = p2.negate();
     return cnd ? n2 : p2;
   };
-  let p = I, f2 = G;
+  let p = I,
+    f2 = G;
   const windows = 1 + 256 / W;
   const wsize = 2 ** (W - 1);
   const mask = BigInt(2 ** W - 1);
@@ -6012,8 +6620,10 @@ const wNAF = (n) => {
       wbits -= maxNum;
       n += 1n;
     }
-    const off1 = off, off2 = off + Math.abs(wbits) - 1;
-    const cnd1 = w % 2 !== 0, cnd2 = wbits < 0;
+    const off1 = off,
+      off2 = off + Math.abs(wbits) - 1;
+    const cnd1 = w % 2 !== 0,
+      cnd2 = wbits < 0;
     if (wbits === 0) {
       f2 = f2.add(neg4(cnd1, comp[off1]));
     } else {
@@ -6027,14 +6637,14 @@ function number(n) {
     throw new Error(`Wrong positive integer: ${n}`);
 }
 function bool(b) {
-  if (typeof b !== "boolean")
-    throw new Error(`Expected boolean, not ${b}`);
+  if (typeof b !== "boolean") throw new Error(`Expected boolean, not ${b}`);
 }
 function bytes(b, ...lengths) {
-  if (!(b instanceof Uint8Array))
-    throw new TypeError("Expected Uint8Array");
+  if (!(b instanceof Uint8Array)) throw new TypeError("Expected Uint8Array");
   if (lengths.length > 0 && !lengths.includes(b.length))
-    throw new TypeError(`Expected Uint8Array of length ${lengths}, not of length=${b.length}`);
+    throw new TypeError(
+      `Expected Uint8Array of length ${lengths}, not of length=${b.length}`
+    );
 }
 function hash$4(hash3) {
   if (typeof hash3 !== "function" || typeof hash3.create !== "function")
@@ -6043,8 +6653,7 @@ function hash$4(hash3) {
   number(hash3.blockLen);
 }
 function exists(instance, checkFinished = true) {
-  if (instance.destroyed)
-    throw new Error("Hash instance has been destroyed");
+  if (instance.destroyed) throw new Error("Hash instance has been destroyed");
   if (checkFinished && instance.finished)
     throw new Error("Hash#digest() has already been called");
 }
@@ -6052,7 +6661,9 @@ function output(out, instance) {
   bytes(out);
   const min2 = instance.outputLen;
   if (out.length < min2) {
-    throw new Error(`digestInto() expects output buffer of length at least ${min2}`);
+    throw new Error(
+      `digestInto() expects output buffer of length at least ${min2}`
+    );
   }
 }
 const assert$h = {
@@ -6061,13 +6672,13 @@ const assert$h = {
   bytes,
   hash: hash$4,
   exists,
-  output
+  output,
 };
 /*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */
-const createView = (arr) => new DataView(arr.buffer, arr.byteOffset, arr.byteLength);
+const createView = (arr) =>
+  new DataView(arr.buffer, arr.byteOffset, arr.byteLength);
 const isLE = new Uint8Array(new Uint32Array([287454020]).buffer)[0] === 68;
-if (!isLE)
-  throw new Error("Non little-endian hardware is not supported");
+if (!isLE) throw new Error("Non little-endian hardware is not supported");
 Array.from({ length: 256 }, (v2, i) => i.toString(16).padStart(2, "0"));
 function utf8ToBytes(str2) {
   if (typeof str2 !== "string") {
@@ -6076,10 +6687,11 @@ function utf8ToBytes(str2) {
   return new TextEncoder().encode(str2);
 }
 function toBytes(data) {
-  if (typeof data === "string")
-    data = utf8ToBytes(data);
+  if (typeof data === "string") data = utf8ToBytes(data);
   if (!(data instanceof Uint8Array))
-    throw new TypeError(`Expected input type is Uint8Array (got ${typeof data})`);
+    throw new TypeError(
+      `Expected input type is Uint8Array (got ${typeof data})`
+    );
   return data;
 }
 class Hash {
@@ -6089,7 +6701,8 @@ class Hash {
   }
 }
 function wrapConstructor(hashConstructor) {
-  const hashC = (message) => hashConstructor().update(toBytes(message)).digest();
+  const hashC = (message) =>
+    hashConstructor().update(toBytes(message)).digest();
   const tmp = hashConstructor();
   hashC.outputLen = tmp.outputLen;
   hashC.blockLen = tmp.blockLen;
@@ -6101,7 +6714,7 @@ function setBigUint64(view, byteOffset, value, isLE2) {
     return view.setBigUint64(byteOffset, value, isLE2);
   const _32n2 = BigInt(32);
   const _u32_max = BigInt(4294967295);
-  const wh = Number(value >> _32n2 & _u32_max);
+  const wh = Number((value >> _32n2) & _u32_max);
   const wl = Number(value & _u32_max);
   const h = isLE2 ? 4 : 0;
   const l = isLE2 ? 0 : 4;
@@ -6159,20 +6772,17 @@ class SHA2 extends Hash {
       this.process(view, 0);
       pos = 0;
     }
-    for (let i = pos; i < blockLen; i++)
-      buffer[i] = 0;
+    for (let i = pos; i < blockLen; i++) buffer[i] = 0;
     setBigUint64(view, blockLen - 8, BigInt(this.length * 8), isLE2);
     this.process(view, 0);
     const oview = createView(out);
     const len = this.outputLen;
-    if (len % 4)
-      throw new Error("_sha2: outputLen should be aligned to 32bit");
+    if (len % 4) throw new Error("_sha2: outputLen should be aligned to 32bit");
     const outLen = len / 4;
     const state = this.get();
     if (outLen > state.length)
       throw new Error("_sha2: outputLen bigger than state");
-    for (let i = 0; i < outLen; i++)
-      oview.setUint32(4 * i, state[i], isLE2);
+    for (let i = 0; i < outLen; i++) oview.setUint32(4 * i, state[i], isLE2);
   }
   digest() {
     const { buffer, outputLen } = this;
@@ -6189,8 +6799,7 @@ class SHA2 extends Hash {
     to.pos = pos;
     to.finished = finished;
     to.destroyed = destroyed;
-    if (length % blockLen)
-      to.buffer.set(buffer);
+    if (length % blockLen) to.buffer.set(buffer);
     return to;
   }
 }
@@ -6198,8 +6807,11 @@ const U32_MASK64 = BigInt(2 ** 32 - 1);
 const _32n = BigInt(32);
 function fromBig(n, le = false) {
   if (le)
-    return { h: Number(n & U32_MASK64), l: Number(n >> _32n & U32_MASK64) };
-  return { h: Number(n >> _32n & U32_MASK64) | 0, l: Number(n & U32_MASK64) | 0 };
+    return { h: Number(n & U32_MASK64), l: Number((n >> _32n) & U32_MASK64) };
+  return {
+    h: Number((n >> _32n) & U32_MASK64) | 0,
+    l: Number(n & U32_MASK64) | 0,
+  };
 }
 function split(lst, le = false) {
   let Ah = new Uint32Array(lst.length);
@@ -6210,29 +6822,33 @@ function split(lst, le = false) {
   }
   return [Ah, Al];
 }
-const toBig = (h, l) => BigInt(h >>> 0) << _32n | BigInt(l >>> 0);
+const toBig = (h, l) => (BigInt(h >>> 0) << _32n) | BigInt(l >>> 0);
 const shrSH = (h, l, s2) => h >>> s2;
-const shrSL = (h, l, s2) => h << 32 - s2 | l >>> s2;
-const rotrSH = (h, l, s2) => h >>> s2 | l << 32 - s2;
-const rotrSL = (h, l, s2) => h << 32 - s2 | l >>> s2;
-const rotrBH = (h, l, s2) => h << 64 - s2 | l >>> s2 - 32;
-const rotrBL = (h, l, s2) => h >>> s2 - 32 | l << 64 - s2;
+const shrSL = (h, l, s2) => (h << (32 - s2)) | (l >>> s2);
+const rotrSH = (h, l, s2) => (h >>> s2) | (l << (32 - s2));
+const rotrSL = (h, l, s2) => (h << (32 - s2)) | (l >>> s2);
+const rotrBH = (h, l, s2) => (h << (64 - s2)) | (l >>> (s2 - 32));
+const rotrBL = (h, l, s2) => (h >>> (s2 - 32)) | (l << (64 - s2));
 const rotr32H = (h, l) => l;
 const rotr32L = (h, l) => h;
-const rotlSH = (h, l, s2) => h << s2 | l >>> 32 - s2;
-const rotlSL = (h, l, s2) => l << s2 | h >>> 32 - s2;
-const rotlBH = (h, l, s2) => l << s2 - 32 | h >>> 64 - s2;
-const rotlBL = (h, l, s2) => h << s2 - 32 | l >>> 64 - s2;
+const rotlSH = (h, l, s2) => (h << s2) | (l >>> (32 - s2));
+const rotlSL = (h, l, s2) => (l << s2) | (h >>> (32 - s2));
+const rotlBH = (h, l, s2) => (l << (s2 - 32)) | (h >>> (64 - s2));
+const rotlBL = (h, l, s2) => (h << (s2 - 32)) | (l >>> (64 - s2));
 function add(Ah, Al, Bh, Bl) {
   const l = (Al >>> 0) + (Bl >>> 0);
-  return { h: Ah + Bh + (l / 2 ** 32 | 0) | 0, l: l | 0 };
+  return { h: (Ah + Bh + ((l / 2 ** 32) | 0)) | 0, l: l | 0 };
 }
 const add3L = (Al, Bl, Cl) => (Al >>> 0) + (Bl >>> 0) + (Cl >>> 0);
-const add3H = (low, Ah, Bh, Ch) => Ah + Bh + Ch + (low / 2 ** 32 | 0) | 0;
-const add4L = (Al, Bl, Cl, Dl) => (Al >>> 0) + (Bl >>> 0) + (Cl >>> 0) + (Dl >>> 0);
-const add4H = (low, Ah, Bh, Ch, Dh) => Ah + Bh + Ch + Dh + (low / 2 ** 32 | 0) | 0;
-const add5L = (Al, Bl, Cl, Dl, El) => (Al >>> 0) + (Bl >>> 0) + (Cl >>> 0) + (Dl >>> 0) + (El >>> 0);
-const add5H = (low, Ah, Bh, Ch, Dh, Eh) => Ah + Bh + Ch + Dh + Eh + (low / 2 ** 32 | 0) | 0;
+const add3H = (low, Ah, Bh, Ch) => (Ah + Bh + Ch + ((low / 2 ** 32) | 0)) | 0;
+const add4L = (Al, Bl, Cl, Dl) =>
+  (Al >>> 0) + (Bl >>> 0) + (Cl >>> 0) + (Dl >>> 0);
+const add4H = (low, Ah, Bh, Ch, Dh) =>
+  (Ah + Bh + Ch + Dh + ((low / 2 ** 32) | 0)) | 0;
+const add5L = (Al, Bl, Cl, Dl, El) =>
+  (Al >>> 0) + (Bl >>> 0) + (Cl >>> 0) + (Dl >>> 0) + (El >>> 0);
+const add5H = (low, Ah, Bh, Ch, Dh, Eh) =>
+  (Ah + Bh + Ch + Dh + Eh + ((low / 2 ** 32) | 0)) | 0;
 const u64 = {
   fromBig,
   split,
@@ -6255,90 +6871,92 @@ const u64 = {
   add4L,
   add4H,
   add5H,
-  add5L
+  add5L,
 };
-const [SHA512_Kh, SHA512_Kl] = u64.split([
-  "0x428a2f98d728ae22",
-  "0x7137449123ef65cd",
-  "0xb5c0fbcfec4d3b2f",
-  "0xe9b5dba58189dbbc",
-  "0x3956c25bf348b538",
-  "0x59f111f1b605d019",
-  "0x923f82a4af194f9b",
-  "0xab1c5ed5da6d8118",
-  "0xd807aa98a3030242",
-  "0x12835b0145706fbe",
-  "0x243185be4ee4b28c",
-  "0x550c7dc3d5ffb4e2",
-  "0x72be5d74f27b896f",
-  "0x80deb1fe3b1696b1",
-  "0x9bdc06a725c71235",
-  "0xc19bf174cf692694",
-  "0xe49b69c19ef14ad2",
-  "0xefbe4786384f25e3",
-  "0x0fc19dc68b8cd5b5",
-  "0x240ca1cc77ac9c65",
-  "0x2de92c6f592b0275",
-  "0x4a7484aa6ea6e483",
-  "0x5cb0a9dcbd41fbd4",
-  "0x76f988da831153b5",
-  "0x983e5152ee66dfab",
-  "0xa831c66d2db43210",
-  "0xb00327c898fb213f",
-  "0xbf597fc7beef0ee4",
-  "0xc6e00bf33da88fc2",
-  "0xd5a79147930aa725",
-  "0x06ca6351e003826f",
-  "0x142929670a0e6e70",
-  "0x27b70a8546d22ffc",
-  "0x2e1b21385c26c926",
-  "0x4d2c6dfc5ac42aed",
-  "0x53380d139d95b3df",
-  "0x650a73548baf63de",
-  "0x766a0abb3c77b2a8",
-  "0x81c2c92e47edaee6",
-  "0x92722c851482353b",
-  "0xa2bfe8a14cf10364",
-  "0xa81a664bbc423001",
-  "0xc24b8b70d0f89791",
-  "0xc76c51a30654be30",
-  "0xd192e819d6ef5218",
-  "0xd69906245565a910",
-  "0xf40e35855771202a",
-  "0x106aa07032bbd1b8",
-  "0x19a4c116b8d2d0c8",
-  "0x1e376c085141ab53",
-  "0x2748774cdf8eeb99",
-  "0x34b0bcb5e19b48a8",
-  "0x391c0cb3c5c95a63",
-  "0x4ed8aa4ae3418acb",
-  "0x5b9cca4f7763e373",
-  "0x682e6ff3d6b2b8a3",
-  "0x748f82ee5defb2fc",
-  "0x78a5636f43172f60",
-  "0x84c87814a1f0ab72",
-  "0x8cc702081a6439ec",
-  "0x90befffa23631e28",
-  "0xa4506cebde82bde9",
-  "0xbef9a3f7b2c67915",
-  "0xc67178f2e372532b",
-  "0xca273eceea26619c",
-  "0xd186b8c721c0c207",
-  "0xeada7dd6cde0eb1e",
-  "0xf57d4f7fee6ed178",
-  "0x06f067aa72176fba",
-  "0x0a637dc5a2c898a6",
-  "0x113f9804bef90dae",
-  "0x1b710b35131c471b",
-  "0x28db77f523047d84",
-  "0x32caab7b40c72493",
-  "0x3c9ebe0a15c9bebc",
-  "0x431d67c49c100d4c",
-  "0x4cc5d4becb3e42b6",
-  "0x597f299cfc657e2a",
-  "0x5fcb6fab3ad6faec",
-  "0x6c44198c4a475817"
-].map((n) => BigInt(n)));
+const [SHA512_Kh, SHA512_Kl] = u64.split(
+  [
+    "0x428a2f98d728ae22",
+    "0x7137449123ef65cd",
+    "0xb5c0fbcfec4d3b2f",
+    "0xe9b5dba58189dbbc",
+    "0x3956c25bf348b538",
+    "0x59f111f1b605d019",
+    "0x923f82a4af194f9b",
+    "0xab1c5ed5da6d8118",
+    "0xd807aa98a3030242",
+    "0x12835b0145706fbe",
+    "0x243185be4ee4b28c",
+    "0x550c7dc3d5ffb4e2",
+    "0x72be5d74f27b896f",
+    "0x80deb1fe3b1696b1",
+    "0x9bdc06a725c71235",
+    "0xc19bf174cf692694",
+    "0xe49b69c19ef14ad2",
+    "0xefbe4786384f25e3",
+    "0x0fc19dc68b8cd5b5",
+    "0x240ca1cc77ac9c65",
+    "0x2de92c6f592b0275",
+    "0x4a7484aa6ea6e483",
+    "0x5cb0a9dcbd41fbd4",
+    "0x76f988da831153b5",
+    "0x983e5152ee66dfab",
+    "0xa831c66d2db43210",
+    "0xb00327c898fb213f",
+    "0xbf597fc7beef0ee4",
+    "0xc6e00bf33da88fc2",
+    "0xd5a79147930aa725",
+    "0x06ca6351e003826f",
+    "0x142929670a0e6e70",
+    "0x27b70a8546d22ffc",
+    "0x2e1b21385c26c926",
+    "0x4d2c6dfc5ac42aed",
+    "0x53380d139d95b3df",
+    "0x650a73548baf63de",
+    "0x766a0abb3c77b2a8",
+    "0x81c2c92e47edaee6",
+    "0x92722c851482353b",
+    "0xa2bfe8a14cf10364",
+    "0xa81a664bbc423001",
+    "0xc24b8b70d0f89791",
+    "0xc76c51a30654be30",
+    "0xd192e819d6ef5218",
+    "0xd69906245565a910",
+    "0xf40e35855771202a",
+    "0x106aa07032bbd1b8",
+    "0x19a4c116b8d2d0c8",
+    "0x1e376c085141ab53",
+    "0x2748774cdf8eeb99",
+    "0x34b0bcb5e19b48a8",
+    "0x391c0cb3c5c95a63",
+    "0x4ed8aa4ae3418acb",
+    "0x5b9cca4f7763e373",
+    "0x682e6ff3d6b2b8a3",
+    "0x748f82ee5defb2fc",
+    "0x78a5636f43172f60",
+    "0x84c87814a1f0ab72",
+    "0x8cc702081a6439ec",
+    "0x90befffa23631e28",
+    "0xa4506cebde82bde9",
+    "0xbef9a3f7b2c67915",
+    "0xc67178f2e372532b",
+    "0xca273eceea26619c",
+    "0xd186b8c721c0c207",
+    "0xeada7dd6cde0eb1e",
+    "0xf57d4f7fee6ed178",
+    "0x06f067aa72176fba",
+    "0x0a637dc5a2c898a6",
+    "0x113f9804bef90dae",
+    "0x1b710b35131c471b",
+    "0x28db77f523047d84",
+    "0x32caab7b40c72493",
+    "0x3c9ebe0a15c9bebc",
+    "0x431d67c49c100d4c",
+    "0x4cc5d4becb3e42b6",
+    "0x597f299cfc657e2a",
+    "0x5fcb6fab3ad6faec",
+    "0x6c44198c4a475817",
+  ].map((n) => BigInt(n))
+);
 const SHA512_W_H = new Uint32Array(80);
 const SHA512_W_L = new Uint32Array(80);
 let SHA512$2 = class SHA512 extends SHA2 {
@@ -6388,35 +7006,73 @@ let SHA512$2 = class SHA512 extends SHA2 {
   process(view, offset) {
     for (let i = 0; i < 16; i++, offset += 4) {
       SHA512_W_H[i] = view.getUint32(offset);
-      SHA512_W_L[i] = view.getUint32(offset += 4);
+      SHA512_W_L[i] = view.getUint32((offset += 4));
     }
     for (let i = 16; i < 80; i++) {
       const W15h = SHA512_W_H[i - 15] | 0;
       const W15l = SHA512_W_L[i - 15] | 0;
-      const s0h = u64.rotrSH(W15h, W15l, 1) ^ u64.rotrSH(W15h, W15l, 8) ^ u64.shrSH(W15h, W15l, 7);
-      const s0l = u64.rotrSL(W15h, W15l, 1) ^ u64.rotrSL(W15h, W15l, 8) ^ u64.shrSL(W15h, W15l, 7);
+      const s0h =
+        u64.rotrSH(W15h, W15l, 1) ^
+        u64.rotrSH(W15h, W15l, 8) ^
+        u64.shrSH(W15h, W15l, 7);
+      const s0l =
+        u64.rotrSL(W15h, W15l, 1) ^
+        u64.rotrSL(W15h, W15l, 8) ^
+        u64.shrSL(W15h, W15l, 7);
       const W2h = SHA512_W_H[i - 2] | 0;
       const W2l = SHA512_W_L[i - 2] | 0;
-      const s1h = u64.rotrSH(W2h, W2l, 19) ^ u64.rotrBH(W2h, W2l, 61) ^ u64.shrSH(W2h, W2l, 6);
-      const s1l = u64.rotrSL(W2h, W2l, 19) ^ u64.rotrBL(W2h, W2l, 61) ^ u64.shrSL(W2h, W2l, 6);
+      const s1h =
+        u64.rotrSH(W2h, W2l, 19) ^
+        u64.rotrBH(W2h, W2l, 61) ^
+        u64.shrSH(W2h, W2l, 6);
+      const s1l =
+        u64.rotrSL(W2h, W2l, 19) ^
+        u64.rotrBL(W2h, W2l, 61) ^
+        u64.shrSL(W2h, W2l, 6);
       const SUMl = u64.add4L(s0l, s1l, SHA512_W_L[i - 7], SHA512_W_L[i - 16]);
-      const SUMh = u64.add4H(SUMl, s0h, s1h, SHA512_W_H[i - 7], SHA512_W_H[i - 16]);
+      const SUMh = u64.add4H(
+        SUMl,
+        s0h,
+        s1h,
+        SHA512_W_H[i - 7],
+        SHA512_W_H[i - 16]
+      );
       SHA512_W_H[i] = SUMh | 0;
       SHA512_W_L[i] = SUMl | 0;
     }
-    let { Ah, Al, Bh, Bl, Ch, Cl, Dh, Dl, Eh, El, Fh, Fl, Gh, Gl, Hh, Hl } = this;
+    let { Ah, Al, Bh, Bl, Ch, Cl, Dh, Dl, Eh, El, Fh, Fl, Gh, Gl, Hh, Hl } =
+      this;
     for (let i = 0; i < 80; i++) {
-      const sigma1h = u64.rotrSH(Eh, El, 14) ^ u64.rotrSH(Eh, El, 18) ^ u64.rotrBH(Eh, El, 41);
-      const sigma1l = u64.rotrSL(Eh, El, 14) ^ u64.rotrSL(Eh, El, 18) ^ u64.rotrBL(Eh, El, 41);
-      const CHIh = Eh & Fh ^ ~Eh & Gh;
-      const CHIl = El & Fl ^ ~El & Gl;
+      const sigma1h =
+        u64.rotrSH(Eh, El, 14) ^
+        u64.rotrSH(Eh, El, 18) ^
+        u64.rotrBH(Eh, El, 41);
+      const sigma1l =
+        u64.rotrSL(Eh, El, 14) ^
+        u64.rotrSL(Eh, El, 18) ^
+        u64.rotrBL(Eh, El, 41);
+      const CHIh = (Eh & Fh) ^ (~Eh & Gh);
+      const CHIl = (El & Fl) ^ (~El & Gl);
       const T1ll = u64.add5L(Hl, sigma1l, CHIl, SHA512_Kl[i], SHA512_W_L[i]);
-      const T1h = u64.add5H(T1ll, Hh, sigma1h, CHIh, SHA512_Kh[i], SHA512_W_H[i]);
+      const T1h = u64.add5H(
+        T1ll,
+        Hh,
+        sigma1h,
+        CHIh,
+        SHA512_Kh[i],
+        SHA512_W_H[i]
+      );
       const T1l = T1ll | 0;
-      const sigma0h = u64.rotrSH(Ah, Al, 28) ^ u64.rotrBH(Ah, Al, 34) ^ u64.rotrBH(Ah, Al, 39);
-      const sigma0l = u64.rotrSL(Ah, Al, 28) ^ u64.rotrBL(Ah, Al, 34) ^ u64.rotrBL(Ah, Al, 39);
-      const MAJh = Ah & Bh ^ Ah & Ch ^ Bh & Ch;
-      const MAJl = Al & Bl ^ Al & Cl ^ Bl & Cl;
+      const sigma0h =
+        u64.rotrSH(Ah, Al, 28) ^
+        u64.rotrBH(Ah, Al, 34) ^
+        u64.rotrBH(Ah, Al, 39);
+      const sigma0l =
+        u64.rotrSL(Ah, Al, 28) ^
+        u64.rotrBL(Ah, Al, 34) ^
+        u64.rotrBL(Ah, Al, 39);
+      const MAJh = (Ah & Bh) ^ (Ah & Ch) ^ (Bh & Ch);
+      const MAJl = (Al & Bl) ^ (Al & Cl) ^ (Bl & Cl);
       Hh = Gh | 0;
       Hl = Gl | 0;
       Gh = Fh | 0;
@@ -6523,10 +7179,18 @@ const sha512 = wrapConstructor(() => new SHA512$2());
 wrapConstructor(() => new SHA512_224());
 wrapConstructor(() => new SHA512_256());
 wrapConstructor(() => new SHA384$1());
-var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+var commonjsGlobal =
+  typeof globalThis !== "undefined"
+    ? globalThis
+    : typeof window !== "undefined"
+    ? window
+    : typeof global !== "undefined"
+    ? global
+    : typeof self !== "undefined"
+    ? self
+    : {};
 function getAugmentedNamespace(n) {
-  if (n.__esModule)
-    return n;
+  if (n.__esModule) return n;
   var f2 = n.default;
   if (typeof f2 == "function") {
     var a = function a2() {
@@ -6539,23 +7203,29 @@ function getAugmentedNamespace(n) {
       return f2.apply(this, arguments);
     };
     a.prototype = f2.prototype;
-  } else
-    a = {};
+  } else a = {};
   Object.defineProperty(a, "__esModule", { value: true });
-  Object.keys(n).forEach(function(k) {
+  Object.keys(n).forEach(function (k) {
     var d = Object.getOwnPropertyDescriptor(n, k);
-    Object.defineProperty(a, k, d.get ? d : {
-      enumerable: true,
-      get: function() {
-        return n[k];
-      }
-    });
+    Object.defineProperty(
+      a,
+      k,
+      d.get
+        ? d
+        : {
+            enumerable: true,
+            get: function () {
+              return n[k];
+            },
+          }
+    );
   });
   return a;
 }
 const errors = {
   IMPOSSIBLE_CASE: "Impossible case. Please create issue.",
-  TWEAK_ADD: "The tweak was out of range or the resulted private key is invalid",
+  TWEAK_ADD:
+    "The tweak was out of range or the resulted private key is invalid",
   TWEAK_MUL: "The tweak was out of range or equal to zero",
   CONTEXT_RANDOMIZE_UNKNOW: "Unknow error on context randomization",
   SECKEY_INVALID: "Private Key is invalid",
@@ -6565,14 +7235,16 @@ const errors = {
   SIG_PARSE: "Signature could not be parsed",
   SIGN: "The nonce generation function failed, or the private key was invalid",
   RECOVER: "Public key could not be recover",
-  ECDH: "Scalar was invalid (zero or overflow)"
+  ECDH: "Scalar was invalid (zero or overflow)",
 };
 function assert$g(cond, msg) {
-  if (!cond)
-    throw new Error(msg);
+  if (!cond) throw new Error(msg);
 }
 function isUint8Array(name2, value, length) {
-  assert$g(value instanceof Uint8Array, `Expected ${name2} to be an Uint8Array`);
+  assert$g(
+    value instanceof Uint8Array,
+    `Expected ${name2} to be an Uint8Array`
+  );
   if (length !== void 0) {
     if (Array.isArray(length)) {
       const numbers = length.join(", ");
@@ -6585,11 +7257,13 @@ function isUint8Array(name2, value, length) {
   }
 }
 function isCompressed(value) {
-  assert$g(toTypeString(value) === "Boolean", "Expected compressed to be a Boolean");
+  assert$g(
+    toTypeString(value) === "Boolean",
+    "Expected compressed to be a Boolean"
+  );
 }
 function getAssertedOutput(output2 = (len) => new Uint8Array(len), length) {
-  if (typeof output2 === "function")
-    output2 = output2(length);
+  if (typeof output2 === "function") output2 = output2(length);
   isUint8Array("output", output2, length);
   return output2;
 }
@@ -6603,8 +7277,7 @@ var lib = (secp256k12) => {
         seed === null || seed instanceof Uint8Array,
         "Expected seed to be an Uint8Array or null"
       );
-      if (seed !== null)
-        isUint8Array("seed", seed, 32);
+      if (seed !== null) isUint8Array("seed", seed, 32);
       switch (secp256k12.contextRandomize(seed)) {
         case 1:
           throw new Error(errors.CONTEXT_RANDOMIZE_UNKNOW);
@@ -6690,7 +7363,10 @@ var lib = (secp256k12) => {
     },
     publicKeyCombine(pubkeys, compressed = true, output2) {
       assert$g(Array.isArray(pubkeys), "Expected public keys to be an Array");
-      assert$g(pubkeys.length > 0, "Expected public keys array will have more than zero items");
+      assert$g(
+        pubkeys.length > 0,
+        "Expected public keys array will have more than zero items"
+      );
       for (const pubkey of pubkeys) {
         isUint8Array("public key", pubkey, [33, 65]);
       }
@@ -6772,14 +7448,21 @@ var lib = (secp256k12) => {
     ecdsaSign(msg32, seckey, options = {}, output2) {
       isUint8Array("message", msg32, 32);
       isUint8Array("private key", seckey, 32);
-      assert$g(toTypeString(options) === "Object", "Expected options to be an Object");
-      if (options.data !== void 0)
-        isUint8Array("options.data", options.data);
+      assert$g(
+        toTypeString(options) === "Object",
+        "Expected options to be an Object"
+      );
+      if (options.data !== void 0) isUint8Array("options.data", options.data);
       if (options.noncefn !== void 0)
-        assert$g(toTypeString(options.noncefn) === "Function", "Expected options.noncefn to be a Function");
+        assert$g(
+          toTypeString(options.noncefn) === "Function",
+          "Expected options.noncefn to be a Function"
+        );
       output2 = getAssertedOutput(output2, 64);
       const obj = { signature: output2, recid: null };
-      switch (secp256k12.ecdsaSign(obj, msg32, seckey, options.data, options.noncefn)) {
+      switch (
+        secp256k12.ecdsaSign(obj, msg32, seckey, options.data, options.noncefn)
+      ) {
         case 0:
           return obj;
         case 1:
@@ -6826,11 +7509,16 @@ var lib = (secp256k12) => {
     ecdh(pubkey, seckey, options = {}, output2) {
       isUint8Array("public key", pubkey, [33, 65]);
       isUint8Array("private key", seckey, 32);
-      assert$g(toTypeString(options) === "Object", "Expected options to be an Object");
-      if (options.data !== void 0)
-        isUint8Array("options.data", options.data);
+      assert$g(
+        toTypeString(options) === "Object",
+        "Expected options to be an Object"
+      );
+      if (options.data !== void 0) isUint8Array("options.data", options.data);
       if (options.hashfn !== void 0) {
-        assert$g(toTypeString(options.hashfn) === "Function", "Expected options.hashfn to be a Function");
+        assert$g(
+          toTypeString(options.hashfn) === "Function",
+          "Expected options.hashfn to be a Function"
+        );
         if (options.xbuf !== void 0)
           isUint8Array("options.xbuf", options.xbuf, 32);
         if (options.ybuf !== void 0)
@@ -6839,7 +7527,17 @@ var lib = (secp256k12) => {
       } else {
         output2 = getAssertedOutput(output2, 32);
       }
-      switch (secp256k12.ecdh(output2, pubkey, seckey, options.data, options.hashfn, options.xbuf, options.ybuf)) {
+      switch (
+        secp256k12.ecdh(
+          output2,
+          pubkey,
+          seckey,
+          options.data,
+          options.hashfn,
+          options.xbuf,
+          options.ybuf
+        )
+      ) {
         case 0:
           return output2;
         case 1:
@@ -6847,7 +7545,7 @@ var lib = (secp256k12) => {
         case 2:
           throw new Error(errors.ECDH);
       }
-    }
+    },
   };
 };
 var elliptic$2 = {};
@@ -6855,30 +7553,23 @@ const name = "elliptic";
 const version = "6.5.4";
 const description = "EC cryptography";
 const main = "lib/elliptic.js";
-const files = [
-  "lib"
-];
+const files = ["lib"];
 const scripts = {
   lint: "eslint lib test",
   "lint:fix": "npm run lint -- --fix",
   unit: "istanbul test _mocha --reporter=spec test/index.js",
   test: "npm run lint && npm run unit",
-  version: "grunt dist && git add dist/"
+  version: "grunt dist && git add dist/",
 };
 const repository = {
   type: "git",
-  url: "git@github.com:indutny/elliptic"
+  url: "git@github.com:indutny/elliptic",
 };
-const keywords = [
-  "EC",
-  "Elliptic",
-  "curve",
-  "Cryptography"
-];
+const keywords = ["EC", "Elliptic", "curve", "Cryptography"];
 const author = "Fedor Indutny <fedor@indutny.com>";
 const license = "MIT";
 const bugs = {
-  url: "https://github.com/indutny/elliptic/issues"
+  url: "https://github.com/indutny/elliptic/issues",
 };
 const homepage = "https://github.com/indutny/elliptic";
 const devDependencies = {
@@ -6894,7 +7585,7 @@ const devDependencies = {
   "grunt-mocha-istanbul": "^5.0.2",
   "grunt-saucelabs": "^9.0.1",
   istanbul: "^0.4.5",
-  mocha: "^8.0.1"
+  mocha: "^8.0.1",
 };
 const dependencies = {
   "bn.js": "^4.11.9",
@@ -6903,7 +7594,7 @@ const dependencies = {
   "hmac-drbg": "^1.0.1",
   inherits: "^2.0.4",
   "minimalistic-assert": "^1.0.1",
-  "minimalistic-crypto-utils": "^1.0.1"
+  "minimalistic-crypto-utils": "^1.0.1",
 };
 const require$$0$1 = {
   name,
@@ -6919,7 +7610,7 @@ const require$$0$1 = {
   bugs,
   homepage,
   devDependencies,
-  dependencies
+  dependencies,
 };
 var utils$m = {};
 var bnExports = {};
@@ -6929,24 +7620,30 @@ var bn = {
   },
   set exports(v2) {
     bnExports = v2;
-  }
+  },
 };
 const __viteBrowserExternal = {};
-const __viteBrowserExternal$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: __viteBrowserExternal
-}, Symbol.toStringTag, { value: "Module" }));
-const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1);
-(function(module) {
-  (function(module2, exports) {
+const __viteBrowserExternal$1 = /* @__PURE__ */ Object.freeze(
+  /* @__PURE__ */ Object.defineProperty(
+    {
+      __proto__: null,
+      default: __viteBrowserExternal,
+    },
+    Symbol.toStringTag,
+    { value: "Module" }
+  )
+);
+const require$$0 = /* @__PURE__ */ getAugmentedNamespace(
+  __viteBrowserExternal$1
+);
+(function (module) {
+  (function (module2, exports) {
     function assert2(val, msg) {
-      if (!val)
-        throw new Error(msg || "Assertion failed");
+      if (!val) throw new Error(msg || "Assertion failed");
     }
     function inherits2(ctor, superCtor) {
       ctor.super_ = superCtor;
-      var TempCtor = function() {
-      };
+      var TempCtor = function () {};
       TempCtor.prototype = superCtor.prototype;
       ctor.prototype = new TempCtor();
       ctor.prototype.constructor = ctor;
@@ -6976,27 +7673,32 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     BN2.wordSize = 26;
     var Buffer2;
     try {
-      if (typeof window !== "undefined" && typeof window.Buffer !== "undefined") {
+      if (
+        typeof window !== "undefined" &&
+        typeof window.Buffer !== "undefined"
+      ) {
         Buffer2 = window.Buffer;
       } else {
         Buffer2 = require$$0.Buffer;
       }
-    } catch (e) {
-    }
+    } catch (e) {}
     BN2.isBN = function isBN(num) {
       if (num instanceof BN2) {
         return true;
       }
-      return num !== null && typeof num === "object" && num.constructor.wordSize === BN2.wordSize && Array.isArray(num.words);
+      return (
+        num !== null &&
+        typeof num === "object" &&
+        num.constructor.wordSize === BN2.wordSize &&
+        Array.isArray(num.words)
+      );
     };
     BN2.max = function max2(left, right) {
-      if (left.cmp(right) > 0)
-        return left;
+      if (left.cmp(right) > 0) return left;
       return right;
     };
     BN2.min = function min2(left, right) {
-      if (left.cmp(right) < 0)
-        return left;
+      if (left.cmp(right) < 0) return left;
       return right;
     };
     BN2.prototype._init = function init3(number2, base2, endian) {
@@ -7036,22 +7738,14 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         this.words = [number2 & 67108863];
         this.length = 1;
       } else if (number2 < 4503599627370496) {
-        this.words = [
-          number2 & 67108863,
-          number2 / 67108864 & 67108863
-        ];
+        this.words = [number2 & 67108863, (number2 / 67108864) & 67108863];
         this.length = 2;
       } else {
         assert2(number2 < 9007199254740992);
-        this.words = [
-          number2 & 67108863,
-          number2 / 67108864 & 67108863,
-          1
-        ];
+        this.words = [number2 & 67108863, (number2 / 67108864) & 67108863, 1];
         this.length = 3;
       }
-      if (endian !== "le")
-        return;
+      if (endian !== "le") return;
       this._initArray(this.toArray(), base2, endian);
     };
     BN2.prototype._initArray = function _initArray(number2, base2, endian) {
@@ -7070,9 +7764,9 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       var off = 0;
       if (endian === "be") {
         for (i = number2.length - 1, j = 0; i >= 0; i -= 3) {
-          w = number2[i] | number2[i - 1] << 8 | number2[i - 2] << 16;
-          this.words[j] |= w << off & 67108863;
-          this.words[j + 1] = w >>> 26 - off & 67108863;
+          w = number2[i] | (number2[i - 1] << 8) | (number2[i - 2] << 16);
+          this.words[j] |= (w << off) & 67108863;
+          this.words[j + 1] = (w >>> (26 - off)) & 67108863;
           off += 24;
           if (off >= 26) {
             off -= 26;
@@ -7081,9 +7775,9 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         }
       } else if (endian === "le") {
         for (i = 0, j = 0; i < number2.length; i += 3) {
-          w = number2[i] | number2[i + 1] << 8 | number2[i + 2] << 16;
-          this.words[j] |= w << off & 67108863;
-          this.words[j + 1] = w >>> 26 - off & 67108863;
+          w = number2[i] | (number2[i + 1] << 8) | (number2[i + 2] << 16);
+          this.words[j] |= (w << off) & 67108863;
+          this.words[j + 1] = (w >>> (26 - off)) & 67108863;
           off += 24;
           if (off >= 26) {
             off -= 26;
@@ -7100,7 +7794,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       } else if (c >= 97 && c <= 102) {
         return c - 87;
       } else {
-        return c - 48 & 15;
+        return (c - 48) & 15;
       }
     }
     function parseHexByte(string, lowerBound, index) {
@@ -7133,7 +7827,11 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         }
       } else {
         var parseLength = number2.length - start;
-        for (i = parseLength % 2 === 0 ? start + 1 : start; i < number2.length; i += 2) {
+        for (
+          i = parseLength % 2 === 0 ? start + 1 : start;
+          i < number2.length;
+          i += 2
+        ) {
           w = parseHexByte(number2, start, i) << off;
           this.words[j] |= w & 67108863;
           if (off >= 18) {
@@ -7166,11 +7864,15 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     BN2.prototype._parseBase = function _parseBase(number2, base2, start) {
       this.words = [0];
       this.length = 1;
-      for (var limbLen = 0, limbPow = 1; limbPow <= 67108863; limbPow *= base2) {
+      for (
+        var limbLen = 0, limbPow = 1;
+        limbPow <= 67108863;
+        limbPow *= base2
+      ) {
         limbLen++;
       }
       limbLen--;
-      limbPow = limbPow / base2 | 0;
+      limbPow = (limbPow / base2) | 0;
       var total = number2.length - start;
       var mod2 = total % limbLen;
       var end = Math.min(total, total - mod2) + start;
@@ -7260,85 +7962,18 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       "0000000000000000000000",
       "00000000000000000000000",
       "000000000000000000000000",
-      "0000000000000000000000000"
+      "0000000000000000000000000",
     ];
     var groupSizes = [
-      0,
-      0,
-      25,
-      16,
-      12,
-      11,
-      10,
-      9,
-      8,
-      8,
-      7,
-      7,
-      7,
-      7,
-      6,
-      6,
-      6,
-      6,
-      6,
-      6,
-      6,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5
+      0, 0, 25, 16, 12, 11, 10, 9, 8, 8, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
     ];
     var groupBases = [
-      0,
-      0,
-      33554432,
-      43046721,
-      16777216,
-      48828125,
-      60466176,
-      40353607,
-      16777216,
-      43046721,
-      1e7,
-      19487171,
-      35831808,
-      62748517,
-      7529536,
-      11390625,
-      16777216,
-      24137569,
-      34012224,
-      47045881,
-      64e6,
-      4084101,
-      5153632,
-      6436343,
-      7962624,
-      9765625,
-      11881376,
-      14348907,
-      17210368,
-      20511149,
-      243e5,
-      28629151,
-      33554432,
-      39135393,
-      45435424,
-      52521875,
-      60466176
+      0, 0, 33554432, 43046721, 16777216, 48828125, 60466176, 40353607,
+      16777216, 43046721, 1e7, 19487171, 35831808, 62748517, 7529536, 11390625,
+      16777216, 24137569, 34012224, 47045881, 64e6, 4084101, 5153632, 6436343,
+      7962624, 9765625, 11881376, 14348907, 17210368, 20511149, 243e5, 28629151,
+      33554432, 39135393, 45435424, 52521875, 60466176,
     ];
     BN2.prototype.toString = function toString(base2, padding) {
       base2 = base2 || 10;
@@ -7350,8 +7985,8 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         var carry = 0;
         for (var i = 0; i < this.length; i++) {
           var w = this.words[i];
-          var word = ((w << off | carry) & 16777215).toString(16);
-          carry = w >>> 24 - off & 16777215;
+          var word = (((w << off) | carry) & 16777215).toString(16);
+          carry = (w >>> (24 - off)) & 16777215;
           if (carry !== 0 || i !== this.length - 1) {
             out = zeros[6 - word.length] + word + out;
           } else {
@@ -7423,7 +8058,11 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     BN2.prototype.toArray = function toArray2(endian, length) {
       return this.toArrayLike(Array, endian, length);
     };
-    BN2.prototype.toArrayLike = function toArrayLike(ArrayType, endian, length) {
+    BN2.prototype.toArrayLike = function toArrayLike(
+      ArrayType,
+      endian,
+      length
+    ) {
       var byteLength = this.byteLength();
       var reqLength = length || Math.max(1, byteLength);
       assert2(byteLength <= reqLength, "byte array longer than desired length");
@@ -7482,8 +8121,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       };
     }
     BN2.prototype._zeroBits = function _zeroBits(w) {
-      if (w === 0)
-        return 26;
+      if (w === 0) return 26;
       var t = w;
       var r2 = 0;
       if ((t & 8191) === 0) {
@@ -7515,21 +8153,19 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     function toBitArray(num) {
       var w = new Array(num.bitLength());
       for (var bit = 0; bit < w.length; bit++) {
-        var off = bit / 26 | 0;
+        var off = (bit / 26) | 0;
         var wbit = bit % 26;
-        w[bit] = (num.words[off] & 1 << wbit) >>> wbit;
+        w[bit] = (num.words[off] & (1 << wbit)) >>> wbit;
       }
       return w;
     }
     BN2.prototype.zeroBits = function zeroBits() {
-      if (this.isZero())
-        return 0;
+      if (this.isZero()) return 0;
       var r2 = 0;
       for (var i = 0; i < this.length; i++) {
         var b = this._zeroBits(this.words[i]);
         r2 += b;
-        if (b !== 26)
-          break;
+        if (b !== 26) break;
       }
       return r2;
     };
@@ -7574,13 +8210,11 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       return this.iuor(num);
     };
     BN2.prototype.or = function or(num) {
-      if (this.length > num.length)
-        return this.clone().ior(num);
+      if (this.length > num.length) return this.clone().ior(num);
       return num.clone().ior(this);
     };
     BN2.prototype.uor = function uor(num) {
-      if (this.length > num.length)
-        return this.clone().iuor(num);
+      if (this.length > num.length) return this.clone().iuor(num);
       return num.clone().iuor(this);
     };
     BN2.prototype.iuand = function iuand(num) {
@@ -7601,13 +8235,11 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       return this.iuand(num);
     };
     BN2.prototype.and = function and(num) {
-      if (this.length > num.length)
-        return this.clone().iand(num);
+      if (this.length > num.length) return this.clone().iand(num);
       return num.clone().iand(this);
     };
     BN2.prototype.uand = function uand(num) {
-      if (this.length > num.length)
-        return this.clone().iuand(num);
+      if (this.length > num.length) return this.clone().iuand(num);
       return num.clone().iuand(this);
     };
     BN2.prototype.iuxor = function iuxor(num) {
@@ -7636,13 +8268,11 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       return this.iuxor(num);
     };
     BN2.prototype.xor = function xor(num) {
-      if (this.length > num.length)
-        return this.clone().ixor(num);
+      if (this.length > num.length) return this.clone().ixor(num);
       return num.clone().ixor(this);
     };
     BN2.prototype.uxor = function uxor(num) {
-      if (this.length > num.length)
-        return this.clone().iuxor(num);
+      if (this.length > num.length) return this.clone().iuxor(num);
       return num.clone().iuxor(this);
     };
     BN2.prototype.inotn = function inotn(width) {
@@ -7657,7 +8287,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         this.words[i] = ~this.words[i] & 67108863;
       }
       if (bitsLeft > 0) {
-        this.words[i] = ~this.words[i] & 67108863 >> 26 - bitsLeft;
+        this.words[i] = ~this.words[i] & (67108863 >> (26 - bitsLeft));
       }
       return this.strip();
     };
@@ -7666,11 +8296,11 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     };
     BN2.prototype.setn = function setn(bit, val) {
       assert2(typeof bit === "number" && bit >= 0);
-      var off = bit / 26 | 0;
+      var off = (bit / 26) | 0;
       var wbit = bit % 26;
       this._expand(off + 1);
       if (val) {
-        this.words[off] = this.words[off] | 1 << wbit;
+        this.words[off] = this.words[off] | (1 << wbit);
       } else {
         this.words[off] = this.words[off] & ~(1 << wbit);
       }
@@ -7732,8 +8362,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         this.negative = 1;
         return res;
       }
-      if (this.length > num.length)
-        return this.clone().iadd(num);
+      if (this.length > num.length) return this.clone().iadd(num);
       return num.clone().iadd(this);
     };
     BN2.prototype.isub = function isub(num) {
@@ -7790,25 +8419,25 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     };
     function smallMulTo(self2, num, out) {
       out.negative = num.negative ^ self2.negative;
-      var len = self2.length + num.length | 0;
+      var len = (self2.length + num.length) | 0;
       out.length = len;
-      len = len - 1 | 0;
+      len = (len - 1) | 0;
       var a = self2.words[0] | 0;
       var b = num.words[0] | 0;
       var r2 = a * b;
       var lo = r2 & 67108863;
-      var carry = r2 / 67108864 | 0;
+      var carry = (r2 / 67108864) | 0;
       out.words[0] = lo;
       for (var k = 1; k < len; k++) {
         var ncarry = carry >>> 26;
         var rword = carry & 67108863;
         var maxJ = Math.min(k, num.length - 1);
         for (var j = Math.max(0, k - self2.length + 1); j <= maxJ; j++) {
-          var i = k - j | 0;
+          var i = (k - j) | 0;
           a = self2.words[i] | 0;
           b = num.words[j] | 0;
           r2 = a * b + rword;
-          ncarry += r2 / 67108864 | 0;
+          ncarry += (r2 / 67108864) | 0;
           rword = r2 & 67108863;
         }
         out.words[k] = rword | 0;
@@ -7893,460 +8522,460 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       out.length = 19;
       lo = Math.imul(al0, bl0);
       mid = Math.imul(al0, bh0);
-      mid = mid + Math.imul(ah0, bl0) | 0;
+      mid = (mid + Math.imul(ah0, bl0)) | 0;
       hi = Math.imul(ah0, bh0);
-      var w0 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w0 >>> 26) | 0;
+      var w0 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w0 >>> 26)) | 0;
       w0 &= 67108863;
       lo = Math.imul(al1, bl0);
       mid = Math.imul(al1, bh0);
-      mid = mid + Math.imul(ah1, bl0) | 0;
+      mid = (mid + Math.imul(ah1, bl0)) | 0;
       hi = Math.imul(ah1, bh0);
-      lo = lo + Math.imul(al0, bl1) | 0;
-      mid = mid + Math.imul(al0, bh1) | 0;
-      mid = mid + Math.imul(ah0, bl1) | 0;
-      hi = hi + Math.imul(ah0, bh1) | 0;
-      var w1 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w1 >>> 26) | 0;
+      lo = (lo + Math.imul(al0, bl1)) | 0;
+      mid = (mid + Math.imul(al0, bh1)) | 0;
+      mid = (mid + Math.imul(ah0, bl1)) | 0;
+      hi = (hi + Math.imul(ah0, bh1)) | 0;
+      var w1 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w1 >>> 26)) | 0;
       w1 &= 67108863;
       lo = Math.imul(al2, bl0);
       mid = Math.imul(al2, bh0);
-      mid = mid + Math.imul(ah2, bl0) | 0;
+      mid = (mid + Math.imul(ah2, bl0)) | 0;
       hi = Math.imul(ah2, bh0);
-      lo = lo + Math.imul(al1, bl1) | 0;
-      mid = mid + Math.imul(al1, bh1) | 0;
-      mid = mid + Math.imul(ah1, bl1) | 0;
-      hi = hi + Math.imul(ah1, bh1) | 0;
-      lo = lo + Math.imul(al0, bl2) | 0;
-      mid = mid + Math.imul(al0, bh2) | 0;
-      mid = mid + Math.imul(ah0, bl2) | 0;
-      hi = hi + Math.imul(ah0, bh2) | 0;
-      var w2 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w2 >>> 26) | 0;
+      lo = (lo + Math.imul(al1, bl1)) | 0;
+      mid = (mid + Math.imul(al1, bh1)) | 0;
+      mid = (mid + Math.imul(ah1, bl1)) | 0;
+      hi = (hi + Math.imul(ah1, bh1)) | 0;
+      lo = (lo + Math.imul(al0, bl2)) | 0;
+      mid = (mid + Math.imul(al0, bh2)) | 0;
+      mid = (mid + Math.imul(ah0, bl2)) | 0;
+      hi = (hi + Math.imul(ah0, bh2)) | 0;
+      var w2 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w2 >>> 26)) | 0;
       w2 &= 67108863;
       lo = Math.imul(al3, bl0);
       mid = Math.imul(al3, bh0);
-      mid = mid + Math.imul(ah3, bl0) | 0;
+      mid = (mid + Math.imul(ah3, bl0)) | 0;
       hi = Math.imul(ah3, bh0);
-      lo = lo + Math.imul(al2, bl1) | 0;
-      mid = mid + Math.imul(al2, bh1) | 0;
-      mid = mid + Math.imul(ah2, bl1) | 0;
-      hi = hi + Math.imul(ah2, bh1) | 0;
-      lo = lo + Math.imul(al1, bl2) | 0;
-      mid = mid + Math.imul(al1, bh2) | 0;
-      mid = mid + Math.imul(ah1, bl2) | 0;
-      hi = hi + Math.imul(ah1, bh2) | 0;
-      lo = lo + Math.imul(al0, bl3) | 0;
-      mid = mid + Math.imul(al0, bh3) | 0;
-      mid = mid + Math.imul(ah0, bl3) | 0;
-      hi = hi + Math.imul(ah0, bh3) | 0;
-      var w3 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w3 >>> 26) | 0;
+      lo = (lo + Math.imul(al2, bl1)) | 0;
+      mid = (mid + Math.imul(al2, bh1)) | 0;
+      mid = (mid + Math.imul(ah2, bl1)) | 0;
+      hi = (hi + Math.imul(ah2, bh1)) | 0;
+      lo = (lo + Math.imul(al1, bl2)) | 0;
+      mid = (mid + Math.imul(al1, bh2)) | 0;
+      mid = (mid + Math.imul(ah1, bl2)) | 0;
+      hi = (hi + Math.imul(ah1, bh2)) | 0;
+      lo = (lo + Math.imul(al0, bl3)) | 0;
+      mid = (mid + Math.imul(al0, bh3)) | 0;
+      mid = (mid + Math.imul(ah0, bl3)) | 0;
+      hi = (hi + Math.imul(ah0, bh3)) | 0;
+      var w3 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w3 >>> 26)) | 0;
       w3 &= 67108863;
       lo = Math.imul(al4, bl0);
       mid = Math.imul(al4, bh0);
-      mid = mid + Math.imul(ah4, bl0) | 0;
+      mid = (mid + Math.imul(ah4, bl0)) | 0;
       hi = Math.imul(ah4, bh0);
-      lo = lo + Math.imul(al3, bl1) | 0;
-      mid = mid + Math.imul(al3, bh1) | 0;
-      mid = mid + Math.imul(ah3, bl1) | 0;
-      hi = hi + Math.imul(ah3, bh1) | 0;
-      lo = lo + Math.imul(al2, bl2) | 0;
-      mid = mid + Math.imul(al2, bh2) | 0;
-      mid = mid + Math.imul(ah2, bl2) | 0;
-      hi = hi + Math.imul(ah2, bh2) | 0;
-      lo = lo + Math.imul(al1, bl3) | 0;
-      mid = mid + Math.imul(al1, bh3) | 0;
-      mid = mid + Math.imul(ah1, bl3) | 0;
-      hi = hi + Math.imul(ah1, bh3) | 0;
-      lo = lo + Math.imul(al0, bl4) | 0;
-      mid = mid + Math.imul(al0, bh4) | 0;
-      mid = mid + Math.imul(ah0, bl4) | 0;
-      hi = hi + Math.imul(ah0, bh4) | 0;
-      var w4 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w4 >>> 26) | 0;
+      lo = (lo + Math.imul(al3, bl1)) | 0;
+      mid = (mid + Math.imul(al3, bh1)) | 0;
+      mid = (mid + Math.imul(ah3, bl1)) | 0;
+      hi = (hi + Math.imul(ah3, bh1)) | 0;
+      lo = (lo + Math.imul(al2, bl2)) | 0;
+      mid = (mid + Math.imul(al2, bh2)) | 0;
+      mid = (mid + Math.imul(ah2, bl2)) | 0;
+      hi = (hi + Math.imul(ah2, bh2)) | 0;
+      lo = (lo + Math.imul(al1, bl3)) | 0;
+      mid = (mid + Math.imul(al1, bh3)) | 0;
+      mid = (mid + Math.imul(ah1, bl3)) | 0;
+      hi = (hi + Math.imul(ah1, bh3)) | 0;
+      lo = (lo + Math.imul(al0, bl4)) | 0;
+      mid = (mid + Math.imul(al0, bh4)) | 0;
+      mid = (mid + Math.imul(ah0, bl4)) | 0;
+      hi = (hi + Math.imul(ah0, bh4)) | 0;
+      var w4 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w4 >>> 26)) | 0;
       w4 &= 67108863;
       lo = Math.imul(al5, bl0);
       mid = Math.imul(al5, bh0);
-      mid = mid + Math.imul(ah5, bl0) | 0;
+      mid = (mid + Math.imul(ah5, bl0)) | 0;
       hi = Math.imul(ah5, bh0);
-      lo = lo + Math.imul(al4, bl1) | 0;
-      mid = mid + Math.imul(al4, bh1) | 0;
-      mid = mid + Math.imul(ah4, bl1) | 0;
-      hi = hi + Math.imul(ah4, bh1) | 0;
-      lo = lo + Math.imul(al3, bl2) | 0;
-      mid = mid + Math.imul(al3, bh2) | 0;
-      mid = mid + Math.imul(ah3, bl2) | 0;
-      hi = hi + Math.imul(ah3, bh2) | 0;
-      lo = lo + Math.imul(al2, bl3) | 0;
-      mid = mid + Math.imul(al2, bh3) | 0;
-      mid = mid + Math.imul(ah2, bl3) | 0;
-      hi = hi + Math.imul(ah2, bh3) | 0;
-      lo = lo + Math.imul(al1, bl4) | 0;
-      mid = mid + Math.imul(al1, bh4) | 0;
-      mid = mid + Math.imul(ah1, bl4) | 0;
-      hi = hi + Math.imul(ah1, bh4) | 0;
-      lo = lo + Math.imul(al0, bl5) | 0;
-      mid = mid + Math.imul(al0, bh5) | 0;
-      mid = mid + Math.imul(ah0, bl5) | 0;
-      hi = hi + Math.imul(ah0, bh5) | 0;
-      var w5 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w5 >>> 26) | 0;
+      lo = (lo + Math.imul(al4, bl1)) | 0;
+      mid = (mid + Math.imul(al4, bh1)) | 0;
+      mid = (mid + Math.imul(ah4, bl1)) | 0;
+      hi = (hi + Math.imul(ah4, bh1)) | 0;
+      lo = (lo + Math.imul(al3, bl2)) | 0;
+      mid = (mid + Math.imul(al3, bh2)) | 0;
+      mid = (mid + Math.imul(ah3, bl2)) | 0;
+      hi = (hi + Math.imul(ah3, bh2)) | 0;
+      lo = (lo + Math.imul(al2, bl3)) | 0;
+      mid = (mid + Math.imul(al2, bh3)) | 0;
+      mid = (mid + Math.imul(ah2, bl3)) | 0;
+      hi = (hi + Math.imul(ah2, bh3)) | 0;
+      lo = (lo + Math.imul(al1, bl4)) | 0;
+      mid = (mid + Math.imul(al1, bh4)) | 0;
+      mid = (mid + Math.imul(ah1, bl4)) | 0;
+      hi = (hi + Math.imul(ah1, bh4)) | 0;
+      lo = (lo + Math.imul(al0, bl5)) | 0;
+      mid = (mid + Math.imul(al0, bh5)) | 0;
+      mid = (mid + Math.imul(ah0, bl5)) | 0;
+      hi = (hi + Math.imul(ah0, bh5)) | 0;
+      var w5 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w5 >>> 26)) | 0;
       w5 &= 67108863;
       lo = Math.imul(al6, bl0);
       mid = Math.imul(al6, bh0);
-      mid = mid + Math.imul(ah6, bl0) | 0;
+      mid = (mid + Math.imul(ah6, bl0)) | 0;
       hi = Math.imul(ah6, bh0);
-      lo = lo + Math.imul(al5, bl1) | 0;
-      mid = mid + Math.imul(al5, bh1) | 0;
-      mid = mid + Math.imul(ah5, bl1) | 0;
-      hi = hi + Math.imul(ah5, bh1) | 0;
-      lo = lo + Math.imul(al4, bl2) | 0;
-      mid = mid + Math.imul(al4, bh2) | 0;
-      mid = mid + Math.imul(ah4, bl2) | 0;
-      hi = hi + Math.imul(ah4, bh2) | 0;
-      lo = lo + Math.imul(al3, bl3) | 0;
-      mid = mid + Math.imul(al3, bh3) | 0;
-      mid = mid + Math.imul(ah3, bl3) | 0;
-      hi = hi + Math.imul(ah3, bh3) | 0;
-      lo = lo + Math.imul(al2, bl4) | 0;
-      mid = mid + Math.imul(al2, bh4) | 0;
-      mid = mid + Math.imul(ah2, bl4) | 0;
-      hi = hi + Math.imul(ah2, bh4) | 0;
-      lo = lo + Math.imul(al1, bl5) | 0;
-      mid = mid + Math.imul(al1, bh5) | 0;
-      mid = mid + Math.imul(ah1, bl5) | 0;
-      hi = hi + Math.imul(ah1, bh5) | 0;
-      lo = lo + Math.imul(al0, bl6) | 0;
-      mid = mid + Math.imul(al0, bh6) | 0;
-      mid = mid + Math.imul(ah0, bl6) | 0;
-      hi = hi + Math.imul(ah0, bh6) | 0;
-      var w6 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w6 >>> 26) | 0;
+      lo = (lo + Math.imul(al5, bl1)) | 0;
+      mid = (mid + Math.imul(al5, bh1)) | 0;
+      mid = (mid + Math.imul(ah5, bl1)) | 0;
+      hi = (hi + Math.imul(ah5, bh1)) | 0;
+      lo = (lo + Math.imul(al4, bl2)) | 0;
+      mid = (mid + Math.imul(al4, bh2)) | 0;
+      mid = (mid + Math.imul(ah4, bl2)) | 0;
+      hi = (hi + Math.imul(ah4, bh2)) | 0;
+      lo = (lo + Math.imul(al3, bl3)) | 0;
+      mid = (mid + Math.imul(al3, bh3)) | 0;
+      mid = (mid + Math.imul(ah3, bl3)) | 0;
+      hi = (hi + Math.imul(ah3, bh3)) | 0;
+      lo = (lo + Math.imul(al2, bl4)) | 0;
+      mid = (mid + Math.imul(al2, bh4)) | 0;
+      mid = (mid + Math.imul(ah2, bl4)) | 0;
+      hi = (hi + Math.imul(ah2, bh4)) | 0;
+      lo = (lo + Math.imul(al1, bl5)) | 0;
+      mid = (mid + Math.imul(al1, bh5)) | 0;
+      mid = (mid + Math.imul(ah1, bl5)) | 0;
+      hi = (hi + Math.imul(ah1, bh5)) | 0;
+      lo = (lo + Math.imul(al0, bl6)) | 0;
+      mid = (mid + Math.imul(al0, bh6)) | 0;
+      mid = (mid + Math.imul(ah0, bl6)) | 0;
+      hi = (hi + Math.imul(ah0, bh6)) | 0;
+      var w6 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w6 >>> 26)) | 0;
       w6 &= 67108863;
       lo = Math.imul(al7, bl0);
       mid = Math.imul(al7, bh0);
-      mid = mid + Math.imul(ah7, bl0) | 0;
+      mid = (mid + Math.imul(ah7, bl0)) | 0;
       hi = Math.imul(ah7, bh0);
-      lo = lo + Math.imul(al6, bl1) | 0;
-      mid = mid + Math.imul(al6, bh1) | 0;
-      mid = mid + Math.imul(ah6, bl1) | 0;
-      hi = hi + Math.imul(ah6, bh1) | 0;
-      lo = lo + Math.imul(al5, bl2) | 0;
-      mid = mid + Math.imul(al5, bh2) | 0;
-      mid = mid + Math.imul(ah5, bl2) | 0;
-      hi = hi + Math.imul(ah5, bh2) | 0;
-      lo = lo + Math.imul(al4, bl3) | 0;
-      mid = mid + Math.imul(al4, bh3) | 0;
-      mid = mid + Math.imul(ah4, bl3) | 0;
-      hi = hi + Math.imul(ah4, bh3) | 0;
-      lo = lo + Math.imul(al3, bl4) | 0;
-      mid = mid + Math.imul(al3, bh4) | 0;
-      mid = mid + Math.imul(ah3, bl4) | 0;
-      hi = hi + Math.imul(ah3, bh4) | 0;
-      lo = lo + Math.imul(al2, bl5) | 0;
-      mid = mid + Math.imul(al2, bh5) | 0;
-      mid = mid + Math.imul(ah2, bl5) | 0;
-      hi = hi + Math.imul(ah2, bh5) | 0;
-      lo = lo + Math.imul(al1, bl6) | 0;
-      mid = mid + Math.imul(al1, bh6) | 0;
-      mid = mid + Math.imul(ah1, bl6) | 0;
-      hi = hi + Math.imul(ah1, bh6) | 0;
-      lo = lo + Math.imul(al0, bl7) | 0;
-      mid = mid + Math.imul(al0, bh7) | 0;
-      mid = mid + Math.imul(ah0, bl7) | 0;
-      hi = hi + Math.imul(ah0, bh7) | 0;
-      var w7 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w7 >>> 26) | 0;
+      lo = (lo + Math.imul(al6, bl1)) | 0;
+      mid = (mid + Math.imul(al6, bh1)) | 0;
+      mid = (mid + Math.imul(ah6, bl1)) | 0;
+      hi = (hi + Math.imul(ah6, bh1)) | 0;
+      lo = (lo + Math.imul(al5, bl2)) | 0;
+      mid = (mid + Math.imul(al5, bh2)) | 0;
+      mid = (mid + Math.imul(ah5, bl2)) | 0;
+      hi = (hi + Math.imul(ah5, bh2)) | 0;
+      lo = (lo + Math.imul(al4, bl3)) | 0;
+      mid = (mid + Math.imul(al4, bh3)) | 0;
+      mid = (mid + Math.imul(ah4, bl3)) | 0;
+      hi = (hi + Math.imul(ah4, bh3)) | 0;
+      lo = (lo + Math.imul(al3, bl4)) | 0;
+      mid = (mid + Math.imul(al3, bh4)) | 0;
+      mid = (mid + Math.imul(ah3, bl4)) | 0;
+      hi = (hi + Math.imul(ah3, bh4)) | 0;
+      lo = (lo + Math.imul(al2, bl5)) | 0;
+      mid = (mid + Math.imul(al2, bh5)) | 0;
+      mid = (mid + Math.imul(ah2, bl5)) | 0;
+      hi = (hi + Math.imul(ah2, bh5)) | 0;
+      lo = (lo + Math.imul(al1, bl6)) | 0;
+      mid = (mid + Math.imul(al1, bh6)) | 0;
+      mid = (mid + Math.imul(ah1, bl6)) | 0;
+      hi = (hi + Math.imul(ah1, bh6)) | 0;
+      lo = (lo + Math.imul(al0, bl7)) | 0;
+      mid = (mid + Math.imul(al0, bh7)) | 0;
+      mid = (mid + Math.imul(ah0, bl7)) | 0;
+      hi = (hi + Math.imul(ah0, bh7)) | 0;
+      var w7 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w7 >>> 26)) | 0;
       w7 &= 67108863;
       lo = Math.imul(al8, bl0);
       mid = Math.imul(al8, bh0);
-      mid = mid + Math.imul(ah8, bl0) | 0;
+      mid = (mid + Math.imul(ah8, bl0)) | 0;
       hi = Math.imul(ah8, bh0);
-      lo = lo + Math.imul(al7, bl1) | 0;
-      mid = mid + Math.imul(al7, bh1) | 0;
-      mid = mid + Math.imul(ah7, bl1) | 0;
-      hi = hi + Math.imul(ah7, bh1) | 0;
-      lo = lo + Math.imul(al6, bl2) | 0;
-      mid = mid + Math.imul(al6, bh2) | 0;
-      mid = mid + Math.imul(ah6, bl2) | 0;
-      hi = hi + Math.imul(ah6, bh2) | 0;
-      lo = lo + Math.imul(al5, bl3) | 0;
-      mid = mid + Math.imul(al5, bh3) | 0;
-      mid = mid + Math.imul(ah5, bl3) | 0;
-      hi = hi + Math.imul(ah5, bh3) | 0;
-      lo = lo + Math.imul(al4, bl4) | 0;
-      mid = mid + Math.imul(al4, bh4) | 0;
-      mid = mid + Math.imul(ah4, bl4) | 0;
-      hi = hi + Math.imul(ah4, bh4) | 0;
-      lo = lo + Math.imul(al3, bl5) | 0;
-      mid = mid + Math.imul(al3, bh5) | 0;
-      mid = mid + Math.imul(ah3, bl5) | 0;
-      hi = hi + Math.imul(ah3, bh5) | 0;
-      lo = lo + Math.imul(al2, bl6) | 0;
-      mid = mid + Math.imul(al2, bh6) | 0;
-      mid = mid + Math.imul(ah2, bl6) | 0;
-      hi = hi + Math.imul(ah2, bh6) | 0;
-      lo = lo + Math.imul(al1, bl7) | 0;
-      mid = mid + Math.imul(al1, bh7) | 0;
-      mid = mid + Math.imul(ah1, bl7) | 0;
-      hi = hi + Math.imul(ah1, bh7) | 0;
-      lo = lo + Math.imul(al0, bl8) | 0;
-      mid = mid + Math.imul(al0, bh8) | 0;
-      mid = mid + Math.imul(ah0, bl8) | 0;
-      hi = hi + Math.imul(ah0, bh8) | 0;
-      var w8 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w8 >>> 26) | 0;
+      lo = (lo + Math.imul(al7, bl1)) | 0;
+      mid = (mid + Math.imul(al7, bh1)) | 0;
+      mid = (mid + Math.imul(ah7, bl1)) | 0;
+      hi = (hi + Math.imul(ah7, bh1)) | 0;
+      lo = (lo + Math.imul(al6, bl2)) | 0;
+      mid = (mid + Math.imul(al6, bh2)) | 0;
+      mid = (mid + Math.imul(ah6, bl2)) | 0;
+      hi = (hi + Math.imul(ah6, bh2)) | 0;
+      lo = (lo + Math.imul(al5, bl3)) | 0;
+      mid = (mid + Math.imul(al5, bh3)) | 0;
+      mid = (mid + Math.imul(ah5, bl3)) | 0;
+      hi = (hi + Math.imul(ah5, bh3)) | 0;
+      lo = (lo + Math.imul(al4, bl4)) | 0;
+      mid = (mid + Math.imul(al4, bh4)) | 0;
+      mid = (mid + Math.imul(ah4, bl4)) | 0;
+      hi = (hi + Math.imul(ah4, bh4)) | 0;
+      lo = (lo + Math.imul(al3, bl5)) | 0;
+      mid = (mid + Math.imul(al3, bh5)) | 0;
+      mid = (mid + Math.imul(ah3, bl5)) | 0;
+      hi = (hi + Math.imul(ah3, bh5)) | 0;
+      lo = (lo + Math.imul(al2, bl6)) | 0;
+      mid = (mid + Math.imul(al2, bh6)) | 0;
+      mid = (mid + Math.imul(ah2, bl6)) | 0;
+      hi = (hi + Math.imul(ah2, bh6)) | 0;
+      lo = (lo + Math.imul(al1, bl7)) | 0;
+      mid = (mid + Math.imul(al1, bh7)) | 0;
+      mid = (mid + Math.imul(ah1, bl7)) | 0;
+      hi = (hi + Math.imul(ah1, bh7)) | 0;
+      lo = (lo + Math.imul(al0, bl8)) | 0;
+      mid = (mid + Math.imul(al0, bh8)) | 0;
+      mid = (mid + Math.imul(ah0, bl8)) | 0;
+      hi = (hi + Math.imul(ah0, bh8)) | 0;
+      var w8 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w8 >>> 26)) | 0;
       w8 &= 67108863;
       lo = Math.imul(al9, bl0);
       mid = Math.imul(al9, bh0);
-      mid = mid + Math.imul(ah9, bl0) | 0;
+      mid = (mid + Math.imul(ah9, bl0)) | 0;
       hi = Math.imul(ah9, bh0);
-      lo = lo + Math.imul(al8, bl1) | 0;
-      mid = mid + Math.imul(al8, bh1) | 0;
-      mid = mid + Math.imul(ah8, bl1) | 0;
-      hi = hi + Math.imul(ah8, bh1) | 0;
-      lo = lo + Math.imul(al7, bl2) | 0;
-      mid = mid + Math.imul(al7, bh2) | 0;
-      mid = mid + Math.imul(ah7, bl2) | 0;
-      hi = hi + Math.imul(ah7, bh2) | 0;
-      lo = lo + Math.imul(al6, bl3) | 0;
-      mid = mid + Math.imul(al6, bh3) | 0;
-      mid = mid + Math.imul(ah6, bl3) | 0;
-      hi = hi + Math.imul(ah6, bh3) | 0;
-      lo = lo + Math.imul(al5, bl4) | 0;
-      mid = mid + Math.imul(al5, bh4) | 0;
-      mid = mid + Math.imul(ah5, bl4) | 0;
-      hi = hi + Math.imul(ah5, bh4) | 0;
-      lo = lo + Math.imul(al4, bl5) | 0;
-      mid = mid + Math.imul(al4, bh5) | 0;
-      mid = mid + Math.imul(ah4, bl5) | 0;
-      hi = hi + Math.imul(ah4, bh5) | 0;
-      lo = lo + Math.imul(al3, bl6) | 0;
-      mid = mid + Math.imul(al3, bh6) | 0;
-      mid = mid + Math.imul(ah3, bl6) | 0;
-      hi = hi + Math.imul(ah3, bh6) | 0;
-      lo = lo + Math.imul(al2, bl7) | 0;
-      mid = mid + Math.imul(al2, bh7) | 0;
-      mid = mid + Math.imul(ah2, bl7) | 0;
-      hi = hi + Math.imul(ah2, bh7) | 0;
-      lo = lo + Math.imul(al1, bl8) | 0;
-      mid = mid + Math.imul(al1, bh8) | 0;
-      mid = mid + Math.imul(ah1, bl8) | 0;
-      hi = hi + Math.imul(ah1, bh8) | 0;
-      lo = lo + Math.imul(al0, bl9) | 0;
-      mid = mid + Math.imul(al0, bh9) | 0;
-      mid = mid + Math.imul(ah0, bl9) | 0;
-      hi = hi + Math.imul(ah0, bh9) | 0;
-      var w9 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w9 >>> 26) | 0;
+      lo = (lo + Math.imul(al8, bl1)) | 0;
+      mid = (mid + Math.imul(al8, bh1)) | 0;
+      mid = (mid + Math.imul(ah8, bl1)) | 0;
+      hi = (hi + Math.imul(ah8, bh1)) | 0;
+      lo = (lo + Math.imul(al7, bl2)) | 0;
+      mid = (mid + Math.imul(al7, bh2)) | 0;
+      mid = (mid + Math.imul(ah7, bl2)) | 0;
+      hi = (hi + Math.imul(ah7, bh2)) | 0;
+      lo = (lo + Math.imul(al6, bl3)) | 0;
+      mid = (mid + Math.imul(al6, bh3)) | 0;
+      mid = (mid + Math.imul(ah6, bl3)) | 0;
+      hi = (hi + Math.imul(ah6, bh3)) | 0;
+      lo = (lo + Math.imul(al5, bl4)) | 0;
+      mid = (mid + Math.imul(al5, bh4)) | 0;
+      mid = (mid + Math.imul(ah5, bl4)) | 0;
+      hi = (hi + Math.imul(ah5, bh4)) | 0;
+      lo = (lo + Math.imul(al4, bl5)) | 0;
+      mid = (mid + Math.imul(al4, bh5)) | 0;
+      mid = (mid + Math.imul(ah4, bl5)) | 0;
+      hi = (hi + Math.imul(ah4, bh5)) | 0;
+      lo = (lo + Math.imul(al3, bl6)) | 0;
+      mid = (mid + Math.imul(al3, bh6)) | 0;
+      mid = (mid + Math.imul(ah3, bl6)) | 0;
+      hi = (hi + Math.imul(ah3, bh6)) | 0;
+      lo = (lo + Math.imul(al2, bl7)) | 0;
+      mid = (mid + Math.imul(al2, bh7)) | 0;
+      mid = (mid + Math.imul(ah2, bl7)) | 0;
+      hi = (hi + Math.imul(ah2, bh7)) | 0;
+      lo = (lo + Math.imul(al1, bl8)) | 0;
+      mid = (mid + Math.imul(al1, bh8)) | 0;
+      mid = (mid + Math.imul(ah1, bl8)) | 0;
+      hi = (hi + Math.imul(ah1, bh8)) | 0;
+      lo = (lo + Math.imul(al0, bl9)) | 0;
+      mid = (mid + Math.imul(al0, bh9)) | 0;
+      mid = (mid + Math.imul(ah0, bl9)) | 0;
+      hi = (hi + Math.imul(ah0, bh9)) | 0;
+      var w9 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w9 >>> 26)) | 0;
       w9 &= 67108863;
       lo = Math.imul(al9, bl1);
       mid = Math.imul(al9, bh1);
-      mid = mid + Math.imul(ah9, bl1) | 0;
+      mid = (mid + Math.imul(ah9, bl1)) | 0;
       hi = Math.imul(ah9, bh1);
-      lo = lo + Math.imul(al8, bl2) | 0;
-      mid = mid + Math.imul(al8, bh2) | 0;
-      mid = mid + Math.imul(ah8, bl2) | 0;
-      hi = hi + Math.imul(ah8, bh2) | 0;
-      lo = lo + Math.imul(al7, bl3) | 0;
-      mid = mid + Math.imul(al7, bh3) | 0;
-      mid = mid + Math.imul(ah7, bl3) | 0;
-      hi = hi + Math.imul(ah7, bh3) | 0;
-      lo = lo + Math.imul(al6, bl4) | 0;
-      mid = mid + Math.imul(al6, bh4) | 0;
-      mid = mid + Math.imul(ah6, bl4) | 0;
-      hi = hi + Math.imul(ah6, bh4) | 0;
-      lo = lo + Math.imul(al5, bl5) | 0;
-      mid = mid + Math.imul(al5, bh5) | 0;
-      mid = mid + Math.imul(ah5, bl5) | 0;
-      hi = hi + Math.imul(ah5, bh5) | 0;
-      lo = lo + Math.imul(al4, bl6) | 0;
-      mid = mid + Math.imul(al4, bh6) | 0;
-      mid = mid + Math.imul(ah4, bl6) | 0;
-      hi = hi + Math.imul(ah4, bh6) | 0;
-      lo = lo + Math.imul(al3, bl7) | 0;
-      mid = mid + Math.imul(al3, bh7) | 0;
-      mid = mid + Math.imul(ah3, bl7) | 0;
-      hi = hi + Math.imul(ah3, bh7) | 0;
-      lo = lo + Math.imul(al2, bl8) | 0;
-      mid = mid + Math.imul(al2, bh8) | 0;
-      mid = mid + Math.imul(ah2, bl8) | 0;
-      hi = hi + Math.imul(ah2, bh8) | 0;
-      lo = lo + Math.imul(al1, bl9) | 0;
-      mid = mid + Math.imul(al1, bh9) | 0;
-      mid = mid + Math.imul(ah1, bl9) | 0;
-      hi = hi + Math.imul(ah1, bh9) | 0;
-      var w10 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w10 >>> 26) | 0;
+      lo = (lo + Math.imul(al8, bl2)) | 0;
+      mid = (mid + Math.imul(al8, bh2)) | 0;
+      mid = (mid + Math.imul(ah8, bl2)) | 0;
+      hi = (hi + Math.imul(ah8, bh2)) | 0;
+      lo = (lo + Math.imul(al7, bl3)) | 0;
+      mid = (mid + Math.imul(al7, bh3)) | 0;
+      mid = (mid + Math.imul(ah7, bl3)) | 0;
+      hi = (hi + Math.imul(ah7, bh3)) | 0;
+      lo = (lo + Math.imul(al6, bl4)) | 0;
+      mid = (mid + Math.imul(al6, bh4)) | 0;
+      mid = (mid + Math.imul(ah6, bl4)) | 0;
+      hi = (hi + Math.imul(ah6, bh4)) | 0;
+      lo = (lo + Math.imul(al5, bl5)) | 0;
+      mid = (mid + Math.imul(al5, bh5)) | 0;
+      mid = (mid + Math.imul(ah5, bl5)) | 0;
+      hi = (hi + Math.imul(ah5, bh5)) | 0;
+      lo = (lo + Math.imul(al4, bl6)) | 0;
+      mid = (mid + Math.imul(al4, bh6)) | 0;
+      mid = (mid + Math.imul(ah4, bl6)) | 0;
+      hi = (hi + Math.imul(ah4, bh6)) | 0;
+      lo = (lo + Math.imul(al3, bl7)) | 0;
+      mid = (mid + Math.imul(al3, bh7)) | 0;
+      mid = (mid + Math.imul(ah3, bl7)) | 0;
+      hi = (hi + Math.imul(ah3, bh7)) | 0;
+      lo = (lo + Math.imul(al2, bl8)) | 0;
+      mid = (mid + Math.imul(al2, bh8)) | 0;
+      mid = (mid + Math.imul(ah2, bl8)) | 0;
+      hi = (hi + Math.imul(ah2, bh8)) | 0;
+      lo = (lo + Math.imul(al1, bl9)) | 0;
+      mid = (mid + Math.imul(al1, bh9)) | 0;
+      mid = (mid + Math.imul(ah1, bl9)) | 0;
+      hi = (hi + Math.imul(ah1, bh9)) | 0;
+      var w10 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w10 >>> 26)) | 0;
       w10 &= 67108863;
       lo = Math.imul(al9, bl2);
       mid = Math.imul(al9, bh2);
-      mid = mid + Math.imul(ah9, bl2) | 0;
+      mid = (mid + Math.imul(ah9, bl2)) | 0;
       hi = Math.imul(ah9, bh2);
-      lo = lo + Math.imul(al8, bl3) | 0;
-      mid = mid + Math.imul(al8, bh3) | 0;
-      mid = mid + Math.imul(ah8, bl3) | 0;
-      hi = hi + Math.imul(ah8, bh3) | 0;
-      lo = lo + Math.imul(al7, bl4) | 0;
-      mid = mid + Math.imul(al7, bh4) | 0;
-      mid = mid + Math.imul(ah7, bl4) | 0;
-      hi = hi + Math.imul(ah7, bh4) | 0;
-      lo = lo + Math.imul(al6, bl5) | 0;
-      mid = mid + Math.imul(al6, bh5) | 0;
-      mid = mid + Math.imul(ah6, bl5) | 0;
-      hi = hi + Math.imul(ah6, bh5) | 0;
-      lo = lo + Math.imul(al5, bl6) | 0;
-      mid = mid + Math.imul(al5, bh6) | 0;
-      mid = mid + Math.imul(ah5, bl6) | 0;
-      hi = hi + Math.imul(ah5, bh6) | 0;
-      lo = lo + Math.imul(al4, bl7) | 0;
-      mid = mid + Math.imul(al4, bh7) | 0;
-      mid = mid + Math.imul(ah4, bl7) | 0;
-      hi = hi + Math.imul(ah4, bh7) | 0;
-      lo = lo + Math.imul(al3, bl8) | 0;
-      mid = mid + Math.imul(al3, bh8) | 0;
-      mid = mid + Math.imul(ah3, bl8) | 0;
-      hi = hi + Math.imul(ah3, bh8) | 0;
-      lo = lo + Math.imul(al2, bl9) | 0;
-      mid = mid + Math.imul(al2, bh9) | 0;
-      mid = mid + Math.imul(ah2, bl9) | 0;
-      hi = hi + Math.imul(ah2, bh9) | 0;
-      var w11 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w11 >>> 26) | 0;
+      lo = (lo + Math.imul(al8, bl3)) | 0;
+      mid = (mid + Math.imul(al8, bh3)) | 0;
+      mid = (mid + Math.imul(ah8, bl3)) | 0;
+      hi = (hi + Math.imul(ah8, bh3)) | 0;
+      lo = (lo + Math.imul(al7, bl4)) | 0;
+      mid = (mid + Math.imul(al7, bh4)) | 0;
+      mid = (mid + Math.imul(ah7, bl4)) | 0;
+      hi = (hi + Math.imul(ah7, bh4)) | 0;
+      lo = (lo + Math.imul(al6, bl5)) | 0;
+      mid = (mid + Math.imul(al6, bh5)) | 0;
+      mid = (mid + Math.imul(ah6, bl5)) | 0;
+      hi = (hi + Math.imul(ah6, bh5)) | 0;
+      lo = (lo + Math.imul(al5, bl6)) | 0;
+      mid = (mid + Math.imul(al5, bh6)) | 0;
+      mid = (mid + Math.imul(ah5, bl6)) | 0;
+      hi = (hi + Math.imul(ah5, bh6)) | 0;
+      lo = (lo + Math.imul(al4, bl7)) | 0;
+      mid = (mid + Math.imul(al4, bh7)) | 0;
+      mid = (mid + Math.imul(ah4, bl7)) | 0;
+      hi = (hi + Math.imul(ah4, bh7)) | 0;
+      lo = (lo + Math.imul(al3, bl8)) | 0;
+      mid = (mid + Math.imul(al3, bh8)) | 0;
+      mid = (mid + Math.imul(ah3, bl8)) | 0;
+      hi = (hi + Math.imul(ah3, bh8)) | 0;
+      lo = (lo + Math.imul(al2, bl9)) | 0;
+      mid = (mid + Math.imul(al2, bh9)) | 0;
+      mid = (mid + Math.imul(ah2, bl9)) | 0;
+      hi = (hi + Math.imul(ah2, bh9)) | 0;
+      var w11 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w11 >>> 26)) | 0;
       w11 &= 67108863;
       lo = Math.imul(al9, bl3);
       mid = Math.imul(al9, bh3);
-      mid = mid + Math.imul(ah9, bl3) | 0;
+      mid = (mid + Math.imul(ah9, bl3)) | 0;
       hi = Math.imul(ah9, bh3);
-      lo = lo + Math.imul(al8, bl4) | 0;
-      mid = mid + Math.imul(al8, bh4) | 0;
-      mid = mid + Math.imul(ah8, bl4) | 0;
-      hi = hi + Math.imul(ah8, bh4) | 0;
-      lo = lo + Math.imul(al7, bl5) | 0;
-      mid = mid + Math.imul(al7, bh5) | 0;
-      mid = mid + Math.imul(ah7, bl5) | 0;
-      hi = hi + Math.imul(ah7, bh5) | 0;
-      lo = lo + Math.imul(al6, bl6) | 0;
-      mid = mid + Math.imul(al6, bh6) | 0;
-      mid = mid + Math.imul(ah6, bl6) | 0;
-      hi = hi + Math.imul(ah6, bh6) | 0;
-      lo = lo + Math.imul(al5, bl7) | 0;
-      mid = mid + Math.imul(al5, bh7) | 0;
-      mid = mid + Math.imul(ah5, bl7) | 0;
-      hi = hi + Math.imul(ah5, bh7) | 0;
-      lo = lo + Math.imul(al4, bl8) | 0;
-      mid = mid + Math.imul(al4, bh8) | 0;
-      mid = mid + Math.imul(ah4, bl8) | 0;
-      hi = hi + Math.imul(ah4, bh8) | 0;
-      lo = lo + Math.imul(al3, bl9) | 0;
-      mid = mid + Math.imul(al3, bh9) | 0;
-      mid = mid + Math.imul(ah3, bl9) | 0;
-      hi = hi + Math.imul(ah3, bh9) | 0;
-      var w12 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w12 >>> 26) | 0;
+      lo = (lo + Math.imul(al8, bl4)) | 0;
+      mid = (mid + Math.imul(al8, bh4)) | 0;
+      mid = (mid + Math.imul(ah8, bl4)) | 0;
+      hi = (hi + Math.imul(ah8, bh4)) | 0;
+      lo = (lo + Math.imul(al7, bl5)) | 0;
+      mid = (mid + Math.imul(al7, bh5)) | 0;
+      mid = (mid + Math.imul(ah7, bl5)) | 0;
+      hi = (hi + Math.imul(ah7, bh5)) | 0;
+      lo = (lo + Math.imul(al6, bl6)) | 0;
+      mid = (mid + Math.imul(al6, bh6)) | 0;
+      mid = (mid + Math.imul(ah6, bl6)) | 0;
+      hi = (hi + Math.imul(ah6, bh6)) | 0;
+      lo = (lo + Math.imul(al5, bl7)) | 0;
+      mid = (mid + Math.imul(al5, bh7)) | 0;
+      mid = (mid + Math.imul(ah5, bl7)) | 0;
+      hi = (hi + Math.imul(ah5, bh7)) | 0;
+      lo = (lo + Math.imul(al4, bl8)) | 0;
+      mid = (mid + Math.imul(al4, bh8)) | 0;
+      mid = (mid + Math.imul(ah4, bl8)) | 0;
+      hi = (hi + Math.imul(ah4, bh8)) | 0;
+      lo = (lo + Math.imul(al3, bl9)) | 0;
+      mid = (mid + Math.imul(al3, bh9)) | 0;
+      mid = (mid + Math.imul(ah3, bl9)) | 0;
+      hi = (hi + Math.imul(ah3, bh9)) | 0;
+      var w12 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w12 >>> 26)) | 0;
       w12 &= 67108863;
       lo = Math.imul(al9, bl4);
       mid = Math.imul(al9, bh4);
-      mid = mid + Math.imul(ah9, bl4) | 0;
+      mid = (mid + Math.imul(ah9, bl4)) | 0;
       hi = Math.imul(ah9, bh4);
-      lo = lo + Math.imul(al8, bl5) | 0;
-      mid = mid + Math.imul(al8, bh5) | 0;
-      mid = mid + Math.imul(ah8, bl5) | 0;
-      hi = hi + Math.imul(ah8, bh5) | 0;
-      lo = lo + Math.imul(al7, bl6) | 0;
-      mid = mid + Math.imul(al7, bh6) | 0;
-      mid = mid + Math.imul(ah7, bl6) | 0;
-      hi = hi + Math.imul(ah7, bh6) | 0;
-      lo = lo + Math.imul(al6, bl7) | 0;
-      mid = mid + Math.imul(al6, bh7) | 0;
-      mid = mid + Math.imul(ah6, bl7) | 0;
-      hi = hi + Math.imul(ah6, bh7) | 0;
-      lo = lo + Math.imul(al5, bl8) | 0;
-      mid = mid + Math.imul(al5, bh8) | 0;
-      mid = mid + Math.imul(ah5, bl8) | 0;
-      hi = hi + Math.imul(ah5, bh8) | 0;
-      lo = lo + Math.imul(al4, bl9) | 0;
-      mid = mid + Math.imul(al4, bh9) | 0;
-      mid = mid + Math.imul(ah4, bl9) | 0;
-      hi = hi + Math.imul(ah4, bh9) | 0;
-      var w13 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w13 >>> 26) | 0;
+      lo = (lo + Math.imul(al8, bl5)) | 0;
+      mid = (mid + Math.imul(al8, bh5)) | 0;
+      mid = (mid + Math.imul(ah8, bl5)) | 0;
+      hi = (hi + Math.imul(ah8, bh5)) | 0;
+      lo = (lo + Math.imul(al7, bl6)) | 0;
+      mid = (mid + Math.imul(al7, bh6)) | 0;
+      mid = (mid + Math.imul(ah7, bl6)) | 0;
+      hi = (hi + Math.imul(ah7, bh6)) | 0;
+      lo = (lo + Math.imul(al6, bl7)) | 0;
+      mid = (mid + Math.imul(al6, bh7)) | 0;
+      mid = (mid + Math.imul(ah6, bl7)) | 0;
+      hi = (hi + Math.imul(ah6, bh7)) | 0;
+      lo = (lo + Math.imul(al5, bl8)) | 0;
+      mid = (mid + Math.imul(al5, bh8)) | 0;
+      mid = (mid + Math.imul(ah5, bl8)) | 0;
+      hi = (hi + Math.imul(ah5, bh8)) | 0;
+      lo = (lo + Math.imul(al4, bl9)) | 0;
+      mid = (mid + Math.imul(al4, bh9)) | 0;
+      mid = (mid + Math.imul(ah4, bl9)) | 0;
+      hi = (hi + Math.imul(ah4, bh9)) | 0;
+      var w13 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w13 >>> 26)) | 0;
       w13 &= 67108863;
       lo = Math.imul(al9, bl5);
       mid = Math.imul(al9, bh5);
-      mid = mid + Math.imul(ah9, bl5) | 0;
+      mid = (mid + Math.imul(ah9, bl5)) | 0;
       hi = Math.imul(ah9, bh5);
-      lo = lo + Math.imul(al8, bl6) | 0;
-      mid = mid + Math.imul(al8, bh6) | 0;
-      mid = mid + Math.imul(ah8, bl6) | 0;
-      hi = hi + Math.imul(ah8, bh6) | 0;
-      lo = lo + Math.imul(al7, bl7) | 0;
-      mid = mid + Math.imul(al7, bh7) | 0;
-      mid = mid + Math.imul(ah7, bl7) | 0;
-      hi = hi + Math.imul(ah7, bh7) | 0;
-      lo = lo + Math.imul(al6, bl8) | 0;
-      mid = mid + Math.imul(al6, bh8) | 0;
-      mid = mid + Math.imul(ah6, bl8) | 0;
-      hi = hi + Math.imul(ah6, bh8) | 0;
-      lo = lo + Math.imul(al5, bl9) | 0;
-      mid = mid + Math.imul(al5, bh9) | 0;
-      mid = mid + Math.imul(ah5, bl9) | 0;
-      hi = hi + Math.imul(ah5, bh9) | 0;
-      var w14 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w14 >>> 26) | 0;
+      lo = (lo + Math.imul(al8, bl6)) | 0;
+      mid = (mid + Math.imul(al8, bh6)) | 0;
+      mid = (mid + Math.imul(ah8, bl6)) | 0;
+      hi = (hi + Math.imul(ah8, bh6)) | 0;
+      lo = (lo + Math.imul(al7, bl7)) | 0;
+      mid = (mid + Math.imul(al7, bh7)) | 0;
+      mid = (mid + Math.imul(ah7, bl7)) | 0;
+      hi = (hi + Math.imul(ah7, bh7)) | 0;
+      lo = (lo + Math.imul(al6, bl8)) | 0;
+      mid = (mid + Math.imul(al6, bh8)) | 0;
+      mid = (mid + Math.imul(ah6, bl8)) | 0;
+      hi = (hi + Math.imul(ah6, bh8)) | 0;
+      lo = (lo + Math.imul(al5, bl9)) | 0;
+      mid = (mid + Math.imul(al5, bh9)) | 0;
+      mid = (mid + Math.imul(ah5, bl9)) | 0;
+      hi = (hi + Math.imul(ah5, bh9)) | 0;
+      var w14 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w14 >>> 26)) | 0;
       w14 &= 67108863;
       lo = Math.imul(al9, bl6);
       mid = Math.imul(al9, bh6);
-      mid = mid + Math.imul(ah9, bl6) | 0;
+      mid = (mid + Math.imul(ah9, bl6)) | 0;
       hi = Math.imul(ah9, bh6);
-      lo = lo + Math.imul(al8, bl7) | 0;
-      mid = mid + Math.imul(al8, bh7) | 0;
-      mid = mid + Math.imul(ah8, bl7) | 0;
-      hi = hi + Math.imul(ah8, bh7) | 0;
-      lo = lo + Math.imul(al7, bl8) | 0;
-      mid = mid + Math.imul(al7, bh8) | 0;
-      mid = mid + Math.imul(ah7, bl8) | 0;
-      hi = hi + Math.imul(ah7, bh8) | 0;
-      lo = lo + Math.imul(al6, bl9) | 0;
-      mid = mid + Math.imul(al6, bh9) | 0;
-      mid = mid + Math.imul(ah6, bl9) | 0;
-      hi = hi + Math.imul(ah6, bh9) | 0;
-      var w15 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w15 >>> 26) | 0;
+      lo = (lo + Math.imul(al8, bl7)) | 0;
+      mid = (mid + Math.imul(al8, bh7)) | 0;
+      mid = (mid + Math.imul(ah8, bl7)) | 0;
+      hi = (hi + Math.imul(ah8, bh7)) | 0;
+      lo = (lo + Math.imul(al7, bl8)) | 0;
+      mid = (mid + Math.imul(al7, bh8)) | 0;
+      mid = (mid + Math.imul(ah7, bl8)) | 0;
+      hi = (hi + Math.imul(ah7, bh8)) | 0;
+      lo = (lo + Math.imul(al6, bl9)) | 0;
+      mid = (mid + Math.imul(al6, bh9)) | 0;
+      mid = (mid + Math.imul(ah6, bl9)) | 0;
+      hi = (hi + Math.imul(ah6, bh9)) | 0;
+      var w15 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w15 >>> 26)) | 0;
       w15 &= 67108863;
       lo = Math.imul(al9, bl7);
       mid = Math.imul(al9, bh7);
-      mid = mid + Math.imul(ah9, bl7) | 0;
+      mid = (mid + Math.imul(ah9, bl7)) | 0;
       hi = Math.imul(ah9, bh7);
-      lo = lo + Math.imul(al8, bl8) | 0;
-      mid = mid + Math.imul(al8, bh8) | 0;
-      mid = mid + Math.imul(ah8, bl8) | 0;
-      hi = hi + Math.imul(ah8, bh8) | 0;
-      lo = lo + Math.imul(al7, bl9) | 0;
-      mid = mid + Math.imul(al7, bh9) | 0;
-      mid = mid + Math.imul(ah7, bl9) | 0;
-      hi = hi + Math.imul(ah7, bh9) | 0;
-      var w16 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w16 >>> 26) | 0;
+      lo = (lo + Math.imul(al8, bl8)) | 0;
+      mid = (mid + Math.imul(al8, bh8)) | 0;
+      mid = (mid + Math.imul(ah8, bl8)) | 0;
+      hi = (hi + Math.imul(ah8, bh8)) | 0;
+      lo = (lo + Math.imul(al7, bl9)) | 0;
+      mid = (mid + Math.imul(al7, bh9)) | 0;
+      mid = (mid + Math.imul(ah7, bl9)) | 0;
+      hi = (hi + Math.imul(ah7, bh9)) | 0;
+      var w16 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w16 >>> 26)) | 0;
       w16 &= 67108863;
       lo = Math.imul(al9, bl8);
       mid = Math.imul(al9, bh8);
-      mid = mid + Math.imul(ah9, bl8) | 0;
+      mid = (mid + Math.imul(ah9, bl8)) | 0;
       hi = Math.imul(ah9, bh8);
-      lo = lo + Math.imul(al8, bl9) | 0;
-      mid = mid + Math.imul(al8, bh9) | 0;
-      mid = mid + Math.imul(ah8, bl9) | 0;
-      hi = hi + Math.imul(ah8, bh9) | 0;
-      var w17 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w17 >>> 26) | 0;
+      lo = (lo + Math.imul(al8, bl9)) | 0;
+      mid = (mid + Math.imul(al8, bh9)) | 0;
+      mid = (mid + Math.imul(ah8, bl9)) | 0;
+      hi = (hi + Math.imul(ah8, bh9)) | 0;
+      var w17 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w17 >>> 26)) | 0;
       w17 &= 67108863;
       lo = Math.imul(al9, bl9);
       mid = Math.imul(al9, bh9);
-      mid = mid + Math.imul(ah9, bl9) | 0;
+      mid = (mid + Math.imul(ah9, bl9)) | 0;
       hi = Math.imul(ah9, bh9);
-      var w18 = (c + lo | 0) + ((mid & 8191) << 13) | 0;
-      c = (hi + (mid >>> 13) | 0) + (w18 >>> 26) | 0;
+      var w18 = (((c + lo) | 0) + ((mid & 8191) << 13)) | 0;
+      c = (((hi + (mid >>> 13)) | 0) + (w18 >>> 26)) | 0;
       w18 &= 67108863;
       o[0] = w0;
       o[1] = w1;
@@ -8392,10 +9021,10 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
           var b = num.words[j] | 0;
           var r2 = a * b;
           var lo = r2 & 67108863;
-          ncarry = ncarry + (r2 / 67108864 | 0) | 0;
-          lo = lo + rword | 0;
+          ncarry = (ncarry + ((r2 / 67108864) | 0)) | 0;
+          lo = (lo + rword) | 0;
           rword = lo & 67108863;
-          ncarry = ncarry + (lo >>> 26) | 0;
+          ncarry = (ncarry + (lo >>> 26)) | 0;
           hncarry += ncarry >>> 26;
           ncarry &= 67108863;
         }
@@ -8441,11 +9070,10 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       return t;
     };
     FFTM.prototype.revBin = function revBin(x, l, N2) {
-      if (x === 0 || x === N2 - 1)
-        return x;
+      if (x === 0 || x === N2 - 1) return x;
       var rb = 0;
       for (var i = 0; i < l; i++) {
-        rb |= (x & 1) << l - i - 1;
+        rb |= (x & 1) << (l - i - 1);
         x >>= 1;
       }
       return rb;
@@ -8456,12 +9084,19 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         itws[i] = iws[rbt[i]];
       }
     };
-    FFTM.prototype.transform = function transform(rws, iws, rtws, itws, N2, rbt) {
+    FFTM.prototype.transform = function transform(
+      rws,
+      iws,
+      rtws,
+      itws,
+      N2,
+      rbt
+    ) {
       this.permute(rbt, rws, iws, rtws, itws, N2);
       for (var s2 = 1; s2 < N2; s2 <<= 1) {
         var l = s2 << 1;
-        var rtwdf = Math.cos(2 * Math.PI / l);
-        var itwdf = Math.sin(2 * Math.PI / l);
+        var rtwdf = Math.cos((2 * Math.PI) / l);
+        var itwdf = Math.sin((2 * Math.PI) / l);
         for (var p = 0; p < N2; p += l) {
           var rtwdf_ = rtwdf;
           var itwdf_ = itwdf;
@@ -8490,14 +9125,13 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       var N2 = Math.max(m2, n) | 1;
       var odd = N2 & 1;
       var i = 0;
-      for (N2 = N2 / 2 | 0; N2; N2 = N2 >>> 1) {
+      for (N2 = (N2 / 2) | 0; N2; N2 = N2 >>> 1) {
         i++;
       }
-      return 1 << i + 1 + odd;
+      return 1 << (i + 1 + odd);
     };
     FFTM.prototype.conjugate = function conjugate(rws, iws, N2) {
-      if (N2 <= 1)
-        return;
+      if (N2 <= 1) return;
       for (var i = 0; i < N2 / 2; i++) {
         var t = rws[i];
         rws[i] = rws[N2 - i - 1];
@@ -8510,12 +9144,15 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     FFTM.prototype.normalize13b = function normalize13b(ws, N2) {
       var carry = 0;
       for (var i = 0; i < N2 / 2; i++) {
-        var w = Math.round(ws[2 * i + 1] / N2) * 8192 + Math.round(ws[2 * i] / N2) + carry;
+        var w =
+          Math.round(ws[2 * i + 1] / N2) * 8192 +
+          Math.round(ws[2 * i] / N2) +
+          carry;
         ws[i] = w & 67108863;
         if (w < 67108864) {
           carry = 0;
         } else {
-          carry = w / 67108864 | 0;
+          carry = (w / 67108864) | 0;
         }
       }
       return ws;
@@ -8592,7 +9229,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         var w = (this.words[i] | 0) * num;
         var lo = (w & 67108863) + (carry & 67108863);
         carry >>= 26;
-        carry += w / 67108864 | 0;
+        carry += (w / 67108864) | 0;
         carry += lo >>> 26;
         this.words[i] = lo & 67108863;
       }
@@ -8613,17 +9250,14 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     };
     BN2.prototype.pow = function pow3(num) {
       var w = toBitArray(num);
-      if (w.length === 0)
-        return new BN2(1);
+      if (w.length === 0) return new BN2(1);
       var res = this;
       for (var i = 0; i < w.length; i++, res = res.sqr()) {
-        if (w[i] !== 0)
-          break;
+        if (w[i] !== 0) break;
       }
       if (++i < w.length) {
         for (var q = res.sqr(); i < w.length; i++, q = q.sqr()) {
-          if (w[i] === 0)
-            continue;
+          if (w[i] === 0) continue;
           res = res.mul(q);
         }
       }
@@ -8633,15 +9267,15 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       assert2(typeof bits === "number" && bits >= 0);
       var r2 = bits % 26;
       var s2 = (bits - r2) / 26;
-      var carryMask = 67108863 >>> 26 - r2 << 26 - r2;
+      var carryMask = (67108863 >>> (26 - r2)) << (26 - r2);
       var i;
       if (r2 !== 0) {
         var carry = 0;
         for (i = 0; i < this.length; i++) {
           var newCarry = this.words[i] & carryMask;
-          var c = (this.words[i] | 0) - newCarry << r2;
+          var c = ((this.words[i] | 0) - newCarry) << r2;
           this.words[i] = c | carry;
-          carry = newCarry >>> 26 - r2;
+          carry = newCarry >>> (26 - r2);
         }
         if (carry) {
           this.words[i] = carry;
@@ -8667,13 +9301,13 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       assert2(typeof bits === "number" && bits >= 0);
       var h;
       if (hint) {
-        h = (hint - hint % 26) / 26;
+        h = (hint - (hint % 26)) / 26;
       } else {
         h = 0;
       }
       var r2 = bits % 26;
       var s2 = Math.min((bits - r2) / 26, this.length);
-      var mask = 67108863 ^ 67108863 >>> r2 << r2;
+      var mask = 67108863 ^ ((67108863 >>> r2) << r2);
       var maskedWords = extended;
       h -= s2;
       h = Math.max(0, h);
@@ -8683,8 +9317,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         }
         maskedWords.length = s2;
       }
-      if (s2 === 0)
-        ;
+      if (s2 === 0);
       else if (this.length > s2) {
         this.length -= s2;
         for (i = 0; i < this.length; i++) {
@@ -8697,7 +9330,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       var carry = 0;
       for (i = this.length - 1; i >= 0 && (carry !== 0 || i >= h); i--) {
         var word = this.words[i] | 0;
-        this.words[i] = carry << 26 - r2 | word >>> r2;
+        this.words[i] = (carry << (26 - r2)) | (word >>> r2);
         carry = word & mask;
       }
       if (maskedWords && carry !== 0) {
@@ -8730,8 +9363,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       var r2 = bit % 26;
       var s2 = (bit - r2) / 26;
       var q = 1 << r2;
-      if (this.length <= s2)
-        return false;
+      if (this.length <= s2) return false;
       var w = this.words[s2];
       return !!(w & q);
     };
@@ -8748,7 +9380,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       }
       this.length = Math.min(s2, this.length);
       if (r2 !== 0) {
-        var mask = 67108863 ^ 67108863 >>> r2 << r2;
+        var mask = 67108863 ^ ((67108863 >>> r2) << r2);
         this.words[this.length - 1] &= mask;
       }
       return this.strip();
@@ -8759,8 +9391,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     BN2.prototype.iaddn = function iaddn(num) {
       assert2(typeof num === "number");
       assert2(num < 67108864);
-      if (num < 0)
-        return this.isubn(-num);
+      if (num < 0) return this.isubn(-num);
       if (this.negative !== 0) {
         if (this.length === 1 && (this.words[0] | 0) < num) {
           this.words[0] = num - (this.words[0] | 0);
@@ -8790,8 +9421,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     BN2.prototype.isubn = function isubn(num) {
       assert2(typeof num === "number");
       assert2(num < 67108864);
-      if (num < 0)
-        return this.iaddn(-num);
+      if (num < 0) return this.iaddn(-num);
       if (this.negative !== 0) {
         this.negative = 0;
         this.iaddn(num);
@@ -8833,7 +9463,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         w = (this.words[i + shift] | 0) + carry;
         var right = (num.words[i] | 0) * mul6;
         w -= right & 67108863;
-        carry = (w >> 26) - (right / 67108864 | 0);
+        carry = (w >> 26) - ((right / 67108864) | 0);
         this.words[i + shift] = w & 67108863;
       }
       for (; i < this.length - shift; i++) {
@@ -8841,8 +9471,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         carry = w >> 26;
         this.words[i + shift] = w & 67108863;
       }
-      if (carry === 0)
-        return this.strip();
+      if (carry === 0) return this.strip();
       assert2(carry === -1);
       carry = 0;
       for (i = 0; i < this.length; i++) {
@@ -8883,8 +9512,10 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         }
       }
       for (var j = m2 - 1; j >= 0; j--) {
-        var qj = (a.words[b.length + j] | 0) * 67108864 + (a.words[b.length + j - 1] | 0);
-        qj = Math.min(qj / bhi | 0, 67108863);
+        var qj =
+          (a.words[b.length + j] | 0) * 67108864 +
+          (a.words[b.length + j - 1] | 0);
+        qj = Math.min((qj / bhi) | 0, 67108863);
         a._ishlnsubmul(b, qj, j);
         while (a.negative !== 0) {
           qj--;
@@ -8907,7 +9538,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       }
       return {
         div: q || null,
-        mod: a
+        mod: a,
       };
     };
     BN2.prototype.divmod = function divmod(num, mode, positive) {
@@ -8915,7 +9546,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       if (this.isZero()) {
         return {
           div: new BN2(0),
-          mod: new BN2(0)
+          mod: new BN2(0),
         };
       }
       var div2, mod2, res;
@@ -8932,7 +9563,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         }
         return {
           div: div2,
-          mod: mod2
+          mod: mod2,
         };
       }
       if (this.negative === 0 && num.negative !== 0) {
@@ -8942,7 +9573,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         }
         return {
           div: div2,
-          mod: res.mod
+          mod: res.mod,
         };
       }
       if ((this.negative & num.negative) !== 0) {
@@ -8955,31 +9586,31 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         }
         return {
           div: res.div,
-          mod: mod2
+          mod: mod2,
         };
       }
       if (num.length > this.length || this.cmp(num) < 0) {
         return {
           div: new BN2(0),
-          mod: this
+          mod: this,
         };
       }
       if (num.length === 1) {
         if (mode === "div") {
           return {
             div: this.divn(num.words[0]),
-            mod: null
+            mod: null,
           };
         }
         if (mode === "mod") {
           return {
             div: null,
-            mod: new BN2(this.modn(num.words[0]))
+            mod: new BN2(this.modn(num.words[0])),
           };
         }
         return {
           div: this.divn(num.words[0]),
-          mod: new BN2(this.modn(num.words[0]))
+          mod: new BN2(this.modn(num.words[0])),
         };
       }
       return this._wordDiv(num, mode);
@@ -8995,14 +9626,12 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     };
     BN2.prototype.divRound = function divRound(num) {
       var dm = this.divmod(num);
-      if (dm.mod.isZero())
-        return dm.div;
+      if (dm.mod.isZero()) return dm.div;
       var mod2 = dm.div.negative !== 0 ? dm.mod.isub(num) : dm.mod;
       var half = num.ushrn(1);
       var r2 = num.andln(1);
       var cmp = mod2.cmp(half);
-      if (cmp < 0 || r2 === 1 && cmp === 0)
-        return dm.div;
+      if (cmp < 0 || (r2 === 1 && cmp === 0)) return dm.div;
       return dm.div.negative !== 0 ? dm.div.isubn(1) : dm.div.iaddn(1);
     };
     BN2.prototype.modn = function modn(num) {
@@ -9019,7 +9648,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       var carry = 0;
       for (var i = this.length - 1; i >= 0; i--) {
         var w = (this.words[i] | 0) + carry * 67108864;
-        this.words[i] = w / num | 0;
+        this.words[i] = (w / num) | 0;
         carry = w % num;
       }
       return this.strip();
@@ -9050,8 +9679,11 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       var yp = y.clone();
       var xp = x.clone();
       while (!x.isZero()) {
-        for (var i = 0, im = 1; (x.words[0] & im) === 0 && i < 26; ++i, im <<= 1)
-          ;
+        for (
+          var i = 0, im = 1;
+          (x.words[0] & im) === 0 && i < 26;
+          ++i, im <<= 1
+        );
         if (i > 0) {
           x.iushrn(i);
           while (i-- > 0) {
@@ -9063,8 +9695,11 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
             B.iushrn(1);
           }
         }
-        for (var j = 0, jm = 1; (y.words[0] & jm) === 0 && j < 26; ++j, jm <<= 1)
-          ;
+        for (
+          var j = 0, jm = 1;
+          (y.words[0] & jm) === 0 && j < 26;
+          ++j, jm <<= 1
+        );
         if (j > 0) {
           y.iushrn(j);
           while (j-- > 0) {
@@ -9089,7 +9724,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       return {
         a: C,
         b: D,
-        gcd: y.iushln(g)
+        gcd: y.iushln(g),
       };
     };
     BN2.prototype._invmp = function _invmp(p) {
@@ -9106,8 +9741,11 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       var x2 = new BN2(0);
       var delta = b.clone();
       while (a.cmpn(1) > 0 && b.cmpn(1) > 0) {
-        for (var i = 0, im = 1; (a.words[0] & im) === 0 && i < 26; ++i, im <<= 1)
-          ;
+        for (
+          var i = 0, im = 1;
+          (a.words[0] & im) === 0 && i < 26;
+          ++i, im <<= 1
+        );
         if (i > 0) {
           a.iushrn(i);
           while (i-- > 0) {
@@ -9117,8 +9755,11 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
             x1.iushrn(1);
           }
         }
-        for (var j = 0, jm = 1; (b.words[0] & jm) === 0 && j < 26; ++j, jm <<= 1)
-          ;
+        for (
+          var j = 0, jm = 1;
+          (b.words[0] & jm) === 0 && j < 26;
+          ++j, jm <<= 1
+        );
         if (j > 0) {
           b.iushrn(j);
           while (j-- > 0) {
@@ -9148,10 +9789,8 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       return res;
     };
     BN2.prototype.gcd = function gcd(num) {
-      if (this.isZero())
-        return num.abs();
-      if (num.isZero())
-        return this.abs();
+      if (this.isZero()) return num.abs();
+      if (num.isZero()) return this.abs();
       var a = this.clone();
       var b = num.clone();
       a.negative = 0;
@@ -9220,10 +9859,8 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     };
     BN2.prototype.cmpn = function cmpn(num) {
       var negative = num < 0;
-      if (this.negative !== 0 && !negative)
-        return -1;
-      if (this.negative === 0 && negative)
-        return 1;
+      if (this.negative !== 0 && !negative) return -1;
+      if (this.negative === 0 && negative) return 1;
       this.strip();
       var res;
       if (this.length > 1) {
@@ -9236,31 +9873,24 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         var w = this.words[0] | 0;
         res = w === num ? 0 : w < num ? -1 : 1;
       }
-      if (this.negative !== 0)
-        return -res | 0;
+      if (this.negative !== 0) return -res | 0;
       return res;
     };
     BN2.prototype.cmp = function cmp(num) {
-      if (this.negative !== 0 && num.negative === 0)
-        return -1;
-      if (this.negative === 0 && num.negative !== 0)
-        return 1;
+      if (this.negative !== 0 && num.negative === 0) return -1;
+      if (this.negative === 0 && num.negative !== 0) return 1;
       var res = this.ucmp(num);
-      if (this.negative !== 0)
-        return -res | 0;
+      if (this.negative !== 0) return -res | 0;
       return res;
     };
     BN2.prototype.ucmp = function ucmp(num) {
-      if (this.length > num.length)
-        return 1;
-      if (this.length < num.length)
-        return -1;
+      if (this.length > num.length) return 1;
+      if (this.length < num.length) return -1;
       var res = 0;
       for (var i = this.length - 1; i >= 0; i--) {
         var a = this.words[i] | 0;
         var b = num.words[i] | 0;
-        if (a === b)
-          continue;
+        if (a === b) continue;
         if (a < b) {
           res = -1;
         } else if (a > b) {
@@ -9384,7 +10014,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       k256: null,
       p224: null,
       p192: null,
-      p25519: null
+      p25519: null,
     };
     function MPrime(name2, p) {
       this.name = name2;
@@ -9452,7 +10082,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       output2.words[output2.length++] = prev & mask;
       for (i = 10; i < input.length; i++) {
         var next = input.words[i] | 0;
-        input.words[i - 10] = (next & mask) << 4 | prev >>> 22;
+        input.words[i - 10] = ((next & mask) << 4) | (prev >>> 22);
         prev = next;
       }
       prev >>>= 22;
@@ -9472,7 +10102,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
         var w = num.words[i] | 0;
         lo += w * 977;
         num.words[i] = lo & 67108863;
-        lo = w * 64 + (lo / 67108864 | 0);
+        lo = w * 64 + ((lo / 67108864) | 0);
       }
       if (num.words[num.length - 1] === 0) {
         num.length--;
@@ -9521,8 +10151,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       return num;
     };
     BN2._prime = function prime(name2) {
-      if (primes[name2])
-        return primes[name2];
+      if (primes[name2]) return primes[name2];
       var prime2;
       if (name2 === "k256") {
         prime2 = new K256();
@@ -9555,14 +10184,10 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
     };
     Red.prototype._verify2 = function _verify2(a, b) {
       assert2((a.negative | b.negative) === 0, "red works only with positives");
-      assert2(
-        a.red && a.red === b.red,
-        "red works only with red numbers"
-      );
+      assert2(a.red && a.red === b.red, "red works only with red numbers");
     };
     Red.prototype.imod = function imod(a) {
-      if (this.prime)
-        return this.prime.ireduce(a)._forceRed(this);
+      if (this.prime) return this.prime.ireduce(a)._forceRed(this);
       return a.umod(this.m)._forceRed(this);
     };
     Red.prototype.neg = function neg4(a) {
@@ -9622,8 +10247,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       return this.mul(a, a);
     };
     Red.prototype.sqrt = function sqrt2(a) {
-      if (a.isZero())
-        return a.clone();
+      if (a.isZero()) return a.clone();
       var mod3 = this.m.andln(3);
       assert2(mod3 % 2 === 1);
       if (mod3 === 3) {
@@ -9673,10 +10297,8 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       }
     };
     Red.prototype.pow = function pow3(a, num) {
-      if (num.isZero())
-        return new BN2(1).toRed(this);
-      if (num.cmpn(1) === 0)
-        return a.clone();
+      if (num.isZero()) return new BN2(1).toRed(this);
+      if (num.cmpn(1) === 0) return a.clone();
       var windowSize = 4;
       var wnd = new Array(1 << windowSize);
       wnd[0] = new BN2(1).toRed(this);
@@ -9694,7 +10316,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       for (i = num.length - 1; i >= 0; i--) {
         var word = num.words[i];
         for (var j = start - 1; j >= 0; j--) {
-          var bit = word >> j & 1;
+          var bit = (word >> j) & 1;
           if (res !== wnd[0]) {
             res = this.sqr(res);
           }
@@ -9705,8 +10327,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
           current <<= 1;
           current |= bit;
           currentLen++;
-          if (currentLen !== windowSize && (i !== 0 || j !== 0))
-            continue;
+          if (currentLen !== windowSize && (i !== 0 || j !== 0)) continue;
           res = this.mul(res, wnd[current]);
           currentLen = 0;
           current = 0;
@@ -9731,7 +10352,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       Red.call(this, m2);
       this.shift = this.m.bitLength();
       if (this.shift % 26 !== 0) {
-        this.shift += 26 - this.shift % 26;
+        this.shift += 26 - (this.shift % 26);
       }
       this.r = new BN2(1).iushln(this.shift);
       this.r2 = this.imod(this.r.sqr());
@@ -9767,8 +10388,7 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
       return res._forceRed(this);
     };
     Mont.prototype.mul = function mul6(a, b) {
-      if (a.isZero() || b.isZero())
-        return new BN2(0)._forceRed(this);
+      if (a.isZero() || b.isZero()) return new BN2(0)._forceRed(this);
       var t = a.mul(b);
       var c = t.maskn(this.shift).mul(this.minv).imaskn(this.shift).mul(this.m);
       var u = t.isub(c).iushrn(this.shift);
@@ -9788,31 +10408,25 @@ const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1
 })(bn);
 var minimalisticAssert = assert$f;
 function assert$f(val, msg) {
-  if (!val)
-    throw new Error(msg || "Assertion failed");
+  if (!val) throw new Error(msg || "Assertion failed");
 }
 assert$f.equal = function assertEqual(l, r2, msg) {
-  if (l != r2)
-    throw new Error(msg || "Assertion failed: " + l + " != " + r2);
+  if (l != r2) throw new Error(msg || "Assertion failed: " + l + " != " + r2);
 };
 var utils$l = {};
-(function(exports) {
+(function (exports) {
   var utils2 = exports;
   function toArray2(msg, enc) {
-    if (Array.isArray(msg))
-      return msg.slice();
-    if (!msg)
-      return [];
+    if (Array.isArray(msg)) return msg.slice();
+    if (!msg) return [];
     var res = [];
     if (typeof msg !== "string") {
-      for (var i = 0; i < msg.length; i++)
-        res[i] = msg[i] | 0;
+      for (var i = 0; i < msg.length; i++) res[i] = msg[i] | 0;
       return res;
     }
     if (enc === "hex") {
-      msg = msg.replace(/[^a-z0-9]+/ig, "");
-      if (msg.length % 2 !== 0)
-        msg = "0" + msg;
+      msg = msg.replace(/[^a-z0-9]+/gi, "");
+      if (msg.length % 2 !== 0) msg = "0" + msg;
       for (var i = 0; i < msg.length; i += 2)
         res.push(parseInt(msg[i] + msg[i + 1], 16));
     } else {
@@ -9820,37 +10434,30 @@ var utils$l = {};
         var c = msg.charCodeAt(i);
         var hi = c >> 8;
         var lo = c & 255;
-        if (hi)
-          res.push(hi, lo);
-        else
-          res.push(lo);
+        if (hi) res.push(hi, lo);
+        else res.push(lo);
       }
     }
     return res;
   }
   utils2.toArray = toArray2;
   function zero22(word) {
-    if (word.length === 1)
-      return "0" + word;
-    else
-      return word;
+    if (word.length === 1) return "0" + word;
+    else return word;
   }
   utils2.zero2 = zero22;
   function toHex3(msg) {
     var res = "";
-    for (var i = 0; i < msg.length; i++)
-      res += zero22(msg[i].toString(16));
+    for (var i = 0; i < msg.length; i++) res += zero22(msg[i].toString(16));
     return res;
   }
   utils2.toHex = toHex3;
   utils2.encode = function encode2(arr, enc) {
-    if (enc === "hex")
-      return toHex3(arr);
-    else
-      return arr;
+    if (enc === "hex") return toHex3(arr);
+    else return arr;
   };
 })(utils$l);
-(function(exports) {
+(function (exports) {
   var utils2 = exports;
   var BN2 = bnExports;
   var minAssert = minimalisticAssert;
@@ -9863,16 +10470,14 @@ var utils$l = {};
   function getNAF2(num, w, bits) {
     var naf = new Array(Math.max(num.bitLength(), bits) + 1);
     naf.fill(0);
-    var ws = 1 << w + 1;
+    var ws = 1 << (w + 1);
     var k = num.clone();
     for (var i = 0; i < naf.length; i++) {
       var z;
       var mod2 = k.andln(ws - 1);
       if (k.isOdd()) {
-        if (mod2 > (ws >> 1) - 1)
-          z = (ws >> 1) - mod2;
-        else
-          z = mod2;
+        if (mod2 > (ws >> 1) - 1) z = (ws >> 1) - mod2;
+        else z = mod2;
         k.isubn(z);
       } else {
         z = 0;
@@ -9884,48 +10489,37 @@ var utils$l = {};
   }
   utils2.getNAF = getNAF2;
   function getJSF2(k1, k2) {
-    var jsf = [
-      [],
-      []
-    ];
+    var jsf = [[], []];
     k1 = k1.clone();
     k2 = k2.clone();
     var d1 = 0;
     var d2 = 0;
     var m8;
     while (k1.cmpn(-d1) > 0 || k2.cmpn(-d2) > 0) {
-      var m14 = k1.andln(3) + d1 & 3;
-      var m24 = k2.andln(3) + d2 & 3;
-      if (m14 === 3)
-        m14 = -1;
-      if (m24 === 3)
-        m24 = -1;
+      var m14 = (k1.andln(3) + d1) & 3;
+      var m24 = (k2.andln(3) + d2) & 3;
+      if (m14 === 3) m14 = -1;
+      if (m24 === 3) m24 = -1;
       var u1;
       if ((m14 & 1) === 0) {
         u1 = 0;
       } else {
-        m8 = k1.andln(7) + d1 & 7;
-        if ((m8 === 3 || m8 === 5) && m24 === 2)
-          u1 = -m14;
-        else
-          u1 = m14;
+        m8 = (k1.andln(7) + d1) & 7;
+        if ((m8 === 3 || m8 === 5) && m24 === 2) u1 = -m14;
+        else u1 = m14;
       }
       jsf[0].push(u1);
       var u2;
       if ((m24 & 1) === 0) {
         u2 = 0;
       } else {
-        m8 = k2.andln(7) + d2 & 7;
-        if ((m8 === 3 || m8 === 5) && m14 === 2)
-          u2 = -m24;
-        else
-          u2 = m24;
+        m8 = (k2.andln(7) + d2) & 7;
+        if ((m8 === 3 || m8 === 5) && m14 === 2) u2 = -m24;
+        else u2 = m24;
       }
       jsf[1].push(u2);
-      if (2 * d1 === u1 + 1)
-        d1 = 1 - d1;
-      if (2 * d2 === u2 + 1)
-        d2 = 1 - d2;
+      if (2 * d1 === u1 + 1) d1 = 1 - d1;
+      if (2 * d2 === u2 + 1) d2 = 1 - d2;
       k1.iushrn(1);
       k2.iushrn(1);
     }
@@ -9935,7 +10529,9 @@ var utils$l = {};
   function cachedProperty2(obj, name2, computer) {
     var key2 = "_" + name2;
     obj.prototype[name2] = function cachedProperty3() {
-      return this[key2] !== void 0 ? this[key2] : this[key2] = computer.call(this);
+      return this[key2] !== void 0
+        ? this[key2]
+        : (this[key2] = computer.call(this));
     };
   }
   utils2.cachedProperty = cachedProperty2;
@@ -9955,12 +10551,11 @@ var brorand = {
   },
   set exports(v2) {
     brorandExports = v2;
-  }
+  },
 };
 var r$1;
 brorand.exports = function rand(len) {
-  if (!r$1)
-    r$1 = new Rand(null);
+  if (!r$1) r$1 = new Rand(null);
   return r$1.generate(len);
 };
 function Rand(rand3) {
@@ -9971,11 +10566,9 @@ Rand.prototype.generate = function generate(len) {
   return this._rand(len);
 };
 Rand.prototype._rand = function _rand(n) {
-  if (this.rand.getBytes)
-    return this.rand.getBytes(n);
+  if (this.rand.getBytes) return this.rand.getBytes(n);
   var res = new Uint8Array(n);
-  for (var i = 0; i < res.length; i++)
-    res[i] = this.rand.getByte();
+  for (var i = 0; i < res.length; i++) res[i] = this.rand.getByte();
   return res;
 };
 if (typeof self === "object") {
@@ -9992,7 +10585,7 @@ if (typeof self === "object") {
       return arr;
     };
   } else if (typeof window === "object") {
-    Rand.prototype._rand = function() {
+    Rand.prototype._rand = function () {
       throw new Error("Not implemented yet");
     };
   }
@@ -10004,8 +10597,7 @@ if (typeof self === "object") {
     Rand.prototype._rand = function _rand2(n) {
       return crypto$1.randomBytes(n);
     };
-  } catch (e) {
-  }
+  } catch (e) {}
 }
 var curve = {};
 var BN$8 = bnExports;
@@ -10046,15 +10638,14 @@ BaseCurve.prototype._fixedNafMul = function _fixedNafMul(p, k) {
   assert$e(p.precomputed);
   var doubles = p._getDoubles();
   var naf = getNAF(k, 1, this._bitLength);
-  var I2 = (1 << doubles.step + 1) - (doubles.step % 2 === 0 ? 2 : 1);
+  var I2 = (1 << (doubles.step + 1)) - (doubles.step % 2 === 0 ? 2 : 1);
   I2 /= 3;
   var repr = [];
   var j;
   var nafW;
   for (j = 0; j < naf.length; j += doubles.step) {
     nafW = 0;
-    for (var l = j + doubles.step - 1; l >= j; l--)
-      nafW = (nafW << 1) + naf[l];
+    for (var l = j + doubles.step - 1; l >= j; l--) nafW = (nafW << 1) + naf[l];
     repr.push(nafW);
   }
   var a = this.jpoint(null, null, null);
@@ -10062,10 +10653,8 @@ BaseCurve.prototype._fixedNafMul = function _fixedNafMul(p, k) {
   for (var i = I2; i > 0; i--) {
     for (j = 0; j < repr.length; j++) {
       nafW = repr[j];
-      if (nafW === i)
-        b = b.mixedAdd(doubles.points[j]);
-      else if (nafW === -i)
-        b = b.mixedAdd(doubles.points[j].neg());
+      if (nafW === i) b = b.mixedAdd(doubles.points[j]);
+      else if (nafW === -i) b = b.mixedAdd(doubles.points[j].neg());
     }
     a = a.add(b);
   }
@@ -10079,30 +10668,29 @@ BaseCurve.prototype._wnafMul = function _wnafMul(p, k) {
   var naf = getNAF(k, w, this._bitLength);
   var acc = this.jpoint(null, null, null);
   for (var i = naf.length - 1; i >= 0; i--) {
-    for (var l = 0; i >= 0 && naf[i] === 0; i--)
-      l++;
-    if (i >= 0)
-      l++;
+    for (var l = 0; i >= 0 && naf[i] === 0; i--) l++;
+    if (i >= 0) l++;
     acc = acc.dblp(l);
-    if (i < 0)
-      break;
+    if (i < 0) break;
     var z = naf[i];
     assert$e(z !== 0);
     if (p.type === "affine") {
-      if (z > 0)
-        acc = acc.mixedAdd(wnd[z - 1 >> 1]);
-      else
-        acc = acc.mixedAdd(wnd[-z - 1 >> 1].neg());
+      if (z > 0) acc = acc.mixedAdd(wnd[(z - 1) >> 1]);
+      else acc = acc.mixedAdd(wnd[(-z - 1) >> 1].neg());
     } else {
-      if (z > 0)
-        acc = acc.add(wnd[z - 1 >> 1]);
-      else
-        acc = acc.add(wnd[-z - 1 >> 1].neg());
+      if (z > 0) acc = acc.add(wnd[(z - 1) >> 1]);
+      else acc = acc.add(wnd[(-z - 1) >> 1].neg());
     }
   }
   return p.type === "affine" ? acc.toP() : acc;
 };
-BaseCurve.prototype._wnafMulAdd = function _wnafMulAdd(defW, points, coeffs, len, jacobianResult) {
+BaseCurve.prototype._wnafMulAdd = function _wnafMulAdd(
+  defW,
+  points,
+  coeffs,
+  len,
+  jacobianResult
+) {
   var wndWidth = this._wnafT1;
   var wnd = this._wnafT2;
   var naf = this._wnafT3;
@@ -10133,7 +10721,7 @@ BaseCurve.prototype._wnafMulAdd = function _wnafMulAdd(defW, points, coeffs, len
       /* 3 */
       null,
       /* 5 */
-      points[b]
+      points[b],
       /* 7 */
     ];
     if (points[a].y.cmp(points[b].y) === 0) {
@@ -10147,23 +10735,15 @@ BaseCurve.prototype._wnafMulAdd = function _wnafMulAdd(defW, points, coeffs, len
       comb[2] = points[a].toJ().mixedAdd(points[b].neg());
     }
     var index = [
-      -3,
-      /* -1 -1 */
-      -1,
-      /* -1 0 */
-      -5,
-      /* -1 1 */
-      -7,
-      /* 0 -1 */
-      0,
-      /* 0 0 */
-      7,
-      /* 0 1 */
-      5,
-      /* 1 -1 */
-      1,
-      /* 1 0 */
-      3
+      -3, /* -1 -1 */
+      -1, /* -1 0 */
+      -5, /* -1 1 */
+      -7, /* 0 -1 */
+      0, /* 0 0 */
+      7, /* 0 1 */
+      5, /* 1 -1 */
+      1, /* 1 0 */
+      3,
       /* 1 1 */
     ];
     var jsf = getJSF(coeffs[a], coeffs[b]);
@@ -10186,39 +10766,27 @@ BaseCurve.prototype._wnafMulAdd = function _wnafMulAdd(defW, points, coeffs, len
       var zero = true;
       for (j = 0; j < len; j++) {
         tmp[j] = naf[j][i] | 0;
-        if (tmp[j] !== 0)
-          zero = false;
+        if (tmp[j] !== 0) zero = false;
       }
-      if (!zero)
-        break;
+      if (!zero) break;
       k++;
       i--;
     }
-    if (i >= 0)
-      k++;
+    if (i >= 0) k++;
     acc = acc.dblp(k);
-    if (i < 0)
-      break;
+    if (i < 0) break;
     for (j = 0; j < len; j++) {
       var z = tmp[j];
-      if (z === 0)
-        continue;
-      else if (z > 0)
-        p = wnd[j][z - 1 >> 1];
-      else if (z < 0)
-        p = wnd[j][-z - 1 >> 1].neg();
-      if (p.type === "affine")
-        acc = acc.mixedAdd(p);
-      else
-        acc = acc.add(p);
+      if (z === 0) continue;
+      else if (z > 0) p = wnd[j][(z - 1) >> 1];
+      else if (z < 0) p = wnd[j][(-z - 1) >> 1].neg();
+      if (p.type === "affine") acc = acc.mixedAdd(p);
+      else acc = acc.add(p);
     }
   }
-  for (i = 0; i < len; i++)
-    wnd[i] = null;
-  if (jacobianResult)
-    return acc;
-  else
-    return acc.toP();
+  for (i = 0; i < len; i++) wnd[i] = null;
+  if (jacobianResult) return acc;
+  else return acc.toP();
 };
 function BasePoint(curve2, type) {
   this.curve = curve2;
@@ -10235,17 +10803,21 @@ BasePoint.prototype.validate = function validate2() {
 BaseCurve.prototype.decodePoint = function decodePoint(bytes2, enc) {
   bytes2 = utils$k.toArray(bytes2, enc);
   var len = this.p.byteLength();
-  if ((bytes2[0] === 4 || bytes2[0] === 6 || bytes2[0] === 7) && bytes2.length - 1 === 2 * len) {
-    if (bytes2[0] === 6)
-      assert$e(bytes2[bytes2.length - 1] % 2 === 0);
-    else if (bytes2[0] === 7)
-      assert$e(bytes2[bytes2.length - 1] % 2 === 1);
+  if (
+    (bytes2[0] === 4 || bytes2[0] === 6 || bytes2[0] === 7) &&
+    bytes2.length - 1 === 2 * len
+  ) {
+    if (bytes2[0] === 6) assert$e(bytes2[bytes2.length - 1] % 2 === 0);
+    else if (bytes2[0] === 7) assert$e(bytes2[bytes2.length - 1] % 2 === 1);
     var res = this.point(
       bytes2.slice(1, 1 + len),
       bytes2.slice(1 + len, 1 + 2 * len)
     );
     return res;
-  } else if ((bytes2[0] === 2 || bytes2[0] === 3) && bytes2.length - 1 === len) {
+  } else if (
+    (bytes2[0] === 2 || bytes2[0] === 3) &&
+    bytes2.length - 1 === len
+  ) {
     return this.pointFromX(bytes2.slice(1, 1 + len), bytes2[0] === 3);
   }
   throw new Error("Unknown point format");
@@ -10256,20 +10828,18 @@ BasePoint.prototype.encodeCompressed = function encodeCompressed(enc) {
 BasePoint.prototype._encode = function _encode(compact) {
   var len = this.curve.p.byteLength();
   var x = this.getX().toArray("be", len);
-  if (compact)
-    return [this.getY().isEven() ? 2 : 3].concat(x);
+  if (compact) return [this.getY().isEven() ? 2 : 3].concat(x);
   return [4].concat(x, this.getY().toArray("be", len));
 };
 BasePoint.prototype.encode = function encode(enc, compact) {
   return utils$k.encode(this._encode(compact), enc);
 };
 BasePoint.prototype.precompute = function precompute2(power) {
-  if (this.precomputed)
-    return this;
+  if (this.precomputed) return this;
   var precomputed = {
     doubles: null,
     naf: null,
-    beta: null
+    beta: null,
   };
   precomputed.naf = this._getNAFPoints(8);
   precomputed.doubles = this._getDoubles(4, power);
@@ -10278,11 +10848,9 @@ BasePoint.prototype.precompute = function precompute2(power) {
   return this;
 };
 BasePoint.prototype._hasDoubles = function _hasDoubles(k) {
-  if (!this.precomputed)
-    return false;
+  if (!this.precomputed) return false;
   var doubles = this.precomputed.doubles;
-  if (!doubles)
-    return false;
+  if (!doubles) return false;
   return doubles.points.length >= Math.ceil((k.bitLength() + 1) / doubles.step);
 };
 BasePoint.prototype._getDoubles = function _getDoubles(step, power) {
@@ -10291,26 +10859,23 @@ BasePoint.prototype._getDoubles = function _getDoubles(step, power) {
   var doubles = [this];
   var acc = this;
   for (var i = 0; i < power; i += step) {
-    for (var j = 0; j < step; j++)
-      acc = acc.dbl();
+    for (var j = 0; j < step; j++) acc = acc.dbl();
     doubles.push(acc);
   }
   return {
     step,
-    points: doubles
+    points: doubles,
   };
 };
 BasePoint.prototype._getNAFPoints = function _getNAFPoints(wnd) {
-  if (this.precomputed && this.precomputed.naf)
-    return this.precomputed.naf;
+  if (this.precomputed && this.precomputed.naf) return this.precomputed.naf;
   var res = [this];
   var max2 = (1 << wnd) - 1;
   var dbl5 = max2 === 1 ? null : this.dbl();
-  for (var i = 1; i < max2; i++)
-    res[i] = res[i - 1].add(dbl5);
+  for (var i = 1; i < max2; i++) res[i] = res[i - 1].add(dbl5);
   return {
     wnd,
-    points: res
+    points: res,
   };
 };
 BasePoint.prototype._getBeta = function _getBeta() {
@@ -10318,8 +10883,7 @@ BasePoint.prototype._getBeta = function _getBeta() {
 };
 BasePoint.prototype.dblp = function dblp(k) {
   var r2 = this;
-  for (var i = 0; i < k; i++)
-    r2 = r2.dbl();
+  for (var i = 0; i < k; i++) r2 = r2.dbl();
   return r2;
 };
 var inherits_browserExports = {};
@@ -10329,7 +10893,7 @@ var inherits_browser = {
   },
   set exports(v2) {
     inherits_browserExports = v2;
-  }
+  },
 };
 if (typeof Object.create === "function") {
   inherits_browser.exports = function inherits2(ctor, superCtor) {
@@ -10340,8 +10904,8 @@ if (typeof Object.create === "function") {
           value: ctor,
           enumerable: false,
           writable: true,
-          configurable: true
-        }
+          configurable: true,
+        },
       });
     }
   };
@@ -10349,8 +10913,7 @@ if (typeof Object.create === "function") {
   inherits_browser.exports = function inherits2(ctor, superCtor) {
     if (superCtor) {
       ctor.super_ = superCtor;
-      var TempCtor = function() {
-      };
+      var TempCtor = function () {};
       TempCtor.prototype = superCtor.prototype;
       ctor.prototype = new TempCtor();
       ctor.prototype.constructor = ctor;
@@ -10376,8 +10939,7 @@ function ShortCurve(conf) {
 inherits$3(ShortCurve, Base$2);
 var short = ShortCurve;
 ShortCurve.prototype._getEndomorphism = function _getEndomorphism(conf) {
-  if (!this.zeroA || !this.g || !this.n || this.p.modn(3) !== 1)
-    return;
+  if (!this.zeroA || !this.g || !this.n || this.p.modn(3) !== 1) return;
   var beta;
   var lambda;
   if (conf.beta) {
@@ -10400,10 +10962,10 @@ ShortCurve.prototype._getEndomorphism = function _getEndomorphism(conf) {
   }
   var basis;
   if (conf.basis) {
-    basis = conf.basis.map(function(vec) {
+    basis = conf.basis.map(function (vec) {
       return {
         a: new BN$7(vec.a, 16),
-        b: new BN$7(vec.b, 16)
+        b: new BN$7(vec.b, 16),
       };
     });
   } else {
@@ -10412,7 +10974,7 @@ ShortCurve.prototype._getEndomorphism = function _getEndomorphism(conf) {
   return {
     beta,
     lambda,
-    basis
+    basis,
   };
 };
 ShortCurve.prototype._getEndoRoots = function _getEndoRoots(num) {
@@ -10481,7 +11043,7 @@ ShortCurve.prototype._getEndoBasis = function _getEndoBasis(lambda) {
   }
   return [
     { a: a1, b: b1 },
-    { a: a2, b: b2 }
+    { a: a2, b: b2 },
   ];
 };
 ShortCurve.prototype._endoSplit = function _endoSplit(k) {
@@ -10500,27 +11062,28 @@ ShortCurve.prototype._endoSplit = function _endoSplit(k) {
 };
 ShortCurve.prototype.pointFromX = function pointFromX(x, odd) {
   x = new BN$7(x, 16);
-  if (!x.red)
-    x = x.toRed(this.red);
+  if (!x.red) x = x.toRed(this.red);
   var y2 = x.redSqr().redMul(x).redIAdd(x.redMul(this.a)).redIAdd(this.b);
   var y = y2.redSqrt();
   if (y.redSqr().redSub(y2).cmp(this.zero) !== 0)
     throw new Error("invalid point");
   var isOdd2 = y.fromRed().isOdd();
-  if (odd && !isOdd2 || !odd && isOdd2)
-    y = y.redNeg();
+  if ((odd && !isOdd2) || (!odd && isOdd2)) y = y.redNeg();
   return this.point(x, y);
 };
 ShortCurve.prototype.validate = function validate3(point5) {
-  if (point5.inf)
-    return true;
+  if (point5.inf) return true;
   var x = point5.x;
   var y = point5.y;
   var ax = this.a.redMul(x);
   var rhs = x.redSqr().redMul(x).redIAdd(ax).redIAdd(this.b);
   return y.redSqr().redISub(rhs).cmpn(0) === 0;
 };
-ShortCurve.prototype._endoWnafMulAdd = function _endoWnafMulAdd(points, coeffs, jacobianResult) {
+ShortCurve.prototype._endoWnafMulAdd = function _endoWnafMulAdd(
+  points,
+  coeffs,
+  jacobianResult
+) {
   var npoints = this._endoWnafT1;
   var ncoeffs = this._endoWnafT2;
   for (var i = 0; i < points.length; i++) {
@@ -10560,10 +11123,8 @@ function Point$2(curve2, x, y, isRed) {
       this.x.forceRed(this.curve.red);
       this.y.forceRed(this.curve.red);
     }
-    if (!this.x.red)
-      this.x = this.x.toRed(this.curve.red);
-    if (!this.y.red)
-      this.y = this.y.toRed(this.curve.red);
+    if (!this.x.red) this.x = this.x.toRed(this.curve.red);
+    if (!this.y.red) this.y = this.y.toRed(this.curve.red);
     this.inf = false;
   }
 }
@@ -10575,15 +11136,13 @@ ShortCurve.prototype.pointFromJSON = function pointFromJSON(obj, red) {
   return Point$2.fromJSON(this, obj, red);
 };
 Point$2.prototype._getBeta = function _getBeta2() {
-  if (!this.curve.endo)
-    return;
+  if (!this.curve.endo) return;
   var pre = this.precomputed;
-  if (pre && pre.beta)
-    return pre.beta;
+  if (pre && pre.beta) return pre.beta;
   var beta = this.curve.point(this.x.redMul(this.curve.endo.beta), this.y);
   if (pre) {
     var curve2 = this.curve;
-    var endoMul = function(p) {
+    var endoMul = function (p) {
       return curve2.point(p.x.redMul(curve2.endo.beta), p.y);
     };
     pre.beta = beta;
@@ -10591,36 +11150,37 @@ Point$2.prototype._getBeta = function _getBeta2() {
       beta: null,
       naf: pre.naf && {
         wnd: pre.naf.wnd,
-        points: pre.naf.points.map(endoMul)
+        points: pre.naf.points.map(endoMul),
       },
       doubles: pre.doubles && {
         step: pre.doubles.step,
-        points: pre.doubles.points.map(endoMul)
-      }
+        points: pre.doubles.points.map(endoMul),
+      },
     };
   }
   return beta;
 };
 Point$2.prototype.toJSON = function toJSON() {
-  if (!this.precomputed)
-    return [this.x, this.y];
-  return [this.x, this.y, this.precomputed && {
-    doubles: this.precomputed.doubles && {
-      step: this.precomputed.doubles.step,
-      points: this.precomputed.doubles.points.slice(1)
+  if (!this.precomputed) return [this.x, this.y];
+  return [
+    this.x,
+    this.y,
+    this.precomputed && {
+      doubles: this.precomputed.doubles && {
+        step: this.precomputed.doubles.step,
+        points: this.precomputed.doubles.points.slice(1),
+      },
+      naf: this.precomputed.naf && {
+        wnd: this.precomputed.naf.wnd,
+        points: this.precomputed.naf.points.slice(1),
+      },
     },
-    naf: this.precomputed.naf && {
-      wnd: this.precomputed.naf.wnd,
-      points: this.precomputed.naf.points.slice(1)
-    }
-  }];
+  ];
 };
 Point$2.fromJSON = function fromJSON(curve2, obj, red) {
-  if (typeof obj === "string")
-    obj = JSON.parse(obj);
+  if (typeof obj === "string") obj = JSON.parse(obj);
   var res = curve2.point(obj[0], obj[1], red);
-  if (!obj[2])
-    return res;
+  if (!obj[2]) return res;
   function obj2point(obj2) {
     return curve2.point(obj2[0], obj2[1], red);
   }
@@ -10629,47 +11189,44 @@ Point$2.fromJSON = function fromJSON(curve2, obj, red) {
     beta: null,
     doubles: pre.doubles && {
       step: pre.doubles.step,
-      points: [res].concat(pre.doubles.points.map(obj2point))
+      points: [res].concat(pre.doubles.points.map(obj2point)),
     },
     naf: pre.naf && {
       wnd: pre.naf.wnd,
-      points: [res].concat(pre.naf.points.map(obj2point))
-    }
+      points: [res].concat(pre.naf.points.map(obj2point)),
+    },
   };
   return res;
 };
 Point$2.prototype.inspect = function inspect() {
-  if (this.isInfinity())
-    return "<EC Point Infinity>";
-  return "<EC Point x: " + this.x.fromRed().toString(16, 2) + " y: " + this.y.fromRed().toString(16, 2) + ">";
+  if (this.isInfinity()) return "<EC Point Infinity>";
+  return (
+    "<EC Point x: " +
+    this.x.fromRed().toString(16, 2) +
+    " y: " +
+    this.y.fromRed().toString(16, 2) +
+    ">"
+  );
 };
 Point$2.prototype.isInfinity = function isInfinity() {
   return this.inf;
 };
 Point$2.prototype.add = function add2(p) {
-  if (this.inf)
-    return p;
-  if (p.inf)
-    return this;
-  if (this.eq(p))
-    return this.dbl();
-  if (this.neg().eq(p))
-    return this.curve.point(null, null);
-  if (this.x.cmp(p.x) === 0)
-    return this.curve.point(null, null);
+  if (this.inf) return p;
+  if (p.inf) return this;
+  if (this.eq(p)) return this.dbl();
+  if (this.neg().eq(p)) return this.curve.point(null, null);
+  if (this.x.cmp(p.x) === 0) return this.curve.point(null, null);
   var c = this.y.redSub(p.y);
-  if (c.cmpn(0) !== 0)
-    c = c.redMul(this.x.redSub(p.x).redInvm());
+  if (c.cmpn(0) !== 0) c = c.redMul(this.x.redSub(p.x).redInvm());
   var nx = c.redSqr().redISub(this.x).redISub(p.x);
   var ny = c.redMul(this.x.redSub(nx)).redISub(this.y);
   return this.curve.point(nx, ny);
 };
 Point$2.prototype.dbl = function dbl() {
-  if (this.inf)
-    return this;
+  if (this.inf) return this;
   var ys1 = this.y.redAdd(this.y);
-  if (ys1.cmpn(0) === 0)
-    return this.curve.point(null, null);
+  if (ys1.cmpn(0) === 0) return this.curve.point(null, null);
   var a = this.curve.a;
   var x2 = this.x.redSqr();
   var dyinv = ys1.redInvm();
@@ -10686,59 +11243,53 @@ Point$2.prototype.getY = function getY() {
 };
 Point$2.prototype.mul = function mul2(k) {
   k = new BN$7(k, 16);
-  if (this.isInfinity())
-    return this;
-  else if (this._hasDoubles(k))
-    return this.curve._fixedNafMul(this, k);
-  else if (this.curve.endo)
-    return this.curve._endoWnafMulAdd([this], [k]);
-  else
-    return this.curve._wnafMul(this, k);
+  if (this.isInfinity()) return this;
+  else if (this._hasDoubles(k)) return this.curve._fixedNafMul(this, k);
+  else if (this.curve.endo) return this.curve._endoWnafMulAdd([this], [k]);
+  else return this.curve._wnafMul(this, k);
 };
 Point$2.prototype.mulAdd = function mulAdd(k1, p2, k2) {
   var points = [this, p2];
   var coeffs = [k1, k2];
-  if (this.curve.endo)
-    return this.curve._endoWnafMulAdd(points, coeffs);
-  else
-    return this.curve._wnafMulAdd(1, points, coeffs, 2);
+  if (this.curve.endo) return this.curve._endoWnafMulAdd(points, coeffs);
+  else return this.curve._wnafMulAdd(1, points, coeffs, 2);
 };
 Point$2.prototype.jmulAdd = function jmulAdd(k1, p2, k2) {
   var points = [this, p2];
   var coeffs = [k1, k2];
-  if (this.curve.endo)
-    return this.curve._endoWnafMulAdd(points, coeffs, true);
-  else
-    return this.curve._wnafMulAdd(1, points, coeffs, 2, true);
+  if (this.curve.endo) return this.curve._endoWnafMulAdd(points, coeffs, true);
+  else return this.curve._wnafMulAdd(1, points, coeffs, 2, true);
 };
 Point$2.prototype.eq = function eq2(p) {
-  return this === p || this.inf === p.inf && (this.inf || this.x.cmp(p.x) === 0 && this.y.cmp(p.y) === 0);
+  return (
+    this === p ||
+    (this.inf === p.inf &&
+      (this.inf || (this.x.cmp(p.x) === 0 && this.y.cmp(p.y) === 0)))
+  );
 };
 Point$2.prototype.neg = function neg(_precompute) {
-  if (this.inf)
-    return this;
+  if (this.inf) return this;
   var res = this.curve.point(this.x, this.y.redNeg());
   if (_precompute && this.precomputed) {
     var pre = this.precomputed;
-    var negate = function(p) {
+    var negate = function (p) {
       return p.neg();
     };
     res.precomputed = {
       naf: pre.naf && {
         wnd: pre.naf.wnd,
-        points: pre.naf.points.map(negate)
+        points: pre.naf.points.map(negate),
       },
       doubles: pre.doubles && {
         step: pre.doubles.step,
-        points: pre.doubles.points.map(negate)
-      }
+        points: pre.doubles.points.map(negate),
+      },
     };
   }
   return res;
 };
 Point$2.prototype.toJ = function toJ() {
-  if (this.inf)
-    return this.curve.jpoint(null, null, null);
+  if (this.inf) return this.curve.jpoint(null, null, null);
   var res = this.curve.jpoint(this.x, this.y, this.curve.one);
   return res;
 };
@@ -10753,12 +11304,9 @@ function JPoint(curve2, x, y, z) {
     this.y = new BN$7(y, 16);
     this.z = new BN$7(z, 16);
   }
-  if (!this.x.red)
-    this.x = this.x.toRed(this.curve.red);
-  if (!this.y.red)
-    this.y = this.y.toRed(this.curve.red);
-  if (!this.z.red)
-    this.z = this.z.toRed(this.curve.red);
+  if (!this.x.red) this.x = this.x.toRed(this.curve.red);
+  if (!this.y.red) this.y = this.y.toRed(this.curve.red);
+  if (!this.z.red) this.z = this.z.toRed(this.curve.red);
   this.zOne = this.z === this.curve.one;
 }
 inherits$3(JPoint, Base$2.BasePoint);
@@ -10766,8 +11314,7 @@ ShortCurve.prototype.jpoint = function jpoint(x, y, z) {
   return new JPoint(this, x, y, z);
 };
 JPoint.prototype.toP = function toP() {
-  if (this.isInfinity())
-    return this.curve.point(null, null);
+  if (this.isInfinity()) return this.curve.point(null, null);
   var zinv = this.z.redInvm();
   var zinv2 = zinv.redSqr();
   var ax = this.x.redMul(zinv2);
@@ -10778,10 +11325,8 @@ JPoint.prototype.neg = function neg2() {
   return this.curve.jpoint(this.x, this.y.redNeg(), this.z);
 };
 JPoint.prototype.add = function add3(p) {
-  if (this.isInfinity())
-    return p;
-  if (p.isInfinity())
-    return this;
+  if (this.isInfinity()) return p;
+  if (p.isInfinity()) return this;
   var pz2 = p.z.redSqr();
   var z2 = this.z.redSqr();
   var u1 = this.x.redMul(pz2);
@@ -10791,10 +11336,8 @@ JPoint.prototype.add = function add3(p) {
   var h = u1.redSub(u2);
   var r2 = s1.redSub(s2);
   if (h.cmpn(0) === 0) {
-    if (r2.cmpn(0) !== 0)
-      return this.curve.jpoint(null, null, null);
-    else
-      return this.dbl();
+    if (r2.cmpn(0) !== 0) return this.curve.jpoint(null, null, null);
+    else return this.dbl();
   }
   var h2 = h.redSqr();
   var h3 = h2.redMul(h);
@@ -10805,10 +11348,8 @@ JPoint.prototype.add = function add3(p) {
   return this.curve.jpoint(nx, ny, nz);
 };
 JPoint.prototype.mixedAdd = function mixedAdd(p) {
-  if (this.isInfinity())
-    return p.toJ();
-  if (p.isInfinity())
-    return this;
+  if (this.isInfinity()) return p.toJ();
+  if (p.isInfinity()) return this;
   var z2 = this.z.redSqr();
   var u1 = this.x;
   var u2 = p.x.redMul(z2);
@@ -10817,10 +11358,8 @@ JPoint.prototype.mixedAdd = function mixedAdd(p) {
   var h = u1.redSub(u2);
   var r2 = s1.redSub(s2);
   if (h.cmpn(0) === 0) {
-    if (r2.cmpn(0) !== 0)
-      return this.curve.jpoint(null, null, null);
-    else
-      return this.dbl();
+    if (r2.cmpn(0) !== 0) return this.curve.jpoint(null, null, null);
+    else return this.dbl();
   }
   var h2 = h.redSqr();
   var h3 = h2.redMul(h);
@@ -10831,17 +11370,13 @@ JPoint.prototype.mixedAdd = function mixedAdd(p) {
   return this.curve.jpoint(nx, ny, nz);
 };
 JPoint.prototype.dblp = function dblp2(pow3) {
-  if (pow3 === 0)
-    return this;
-  if (this.isInfinity())
-    return this;
-  if (!pow3)
-    return this.dbl();
+  if (pow3 === 0) return this;
+  if (this.isInfinity()) return this;
+  if (!pow3) return this.dbl();
   var i;
   if (this.curve.zeroA || this.curve.threeA) {
     var r2 = this;
-    for (i = 0; i < pow3; i++)
-      r2 = r2.dbl();
+    for (i = 0; i < pow3; i++) r2 = r2.dbl();
     return r2;
   }
   var a = this.curve.a;
@@ -10862,8 +11397,7 @@ JPoint.prototype.dblp = function dblp2(pow3) {
     var dny = c.redMul(t2);
     dny = dny.redIAdd(dny).redISub(jyd4);
     var nz = jyd.redMul(jz);
-    if (i + 1 < pow3)
-      jz4 = jz4.redMul(jyd4);
+    if (i + 1 < pow3) jz4 = jz4.redMul(jyd4);
     jx = nx;
     jz = nz;
     jyd = dny;
@@ -10871,14 +11405,10 @@ JPoint.prototype.dblp = function dblp2(pow3) {
   return this.curve.jpoint(jx, jyd.redMul(tinv), jz);
 };
 JPoint.prototype.dbl = function dbl2() {
-  if (this.isInfinity())
-    return this;
-  if (this.curve.zeroA)
-    return this._zeroDbl();
-  else if (this.curve.threeA)
-    return this._threeDbl();
-  else
-    return this._dbl();
+  if (this.isInfinity()) return this;
+  if (this.curve.zeroA) return this._zeroDbl();
+  else if (this.curve.threeA) return this._threeDbl();
+  else return this._dbl();
 };
 JPoint.prototype._zeroDbl = function _zeroDbl() {
   var nx;
@@ -10976,8 +11506,7 @@ JPoint.prototype._dbl = function _dbl() {
   return this.curve.jpoint(nx, ny, nz);
 };
 JPoint.prototype.trpl = function trpl() {
-  if (!this.curve.zeroA)
-    return this.dbl().add(this);
+  if (!this.curve.zeroA) return this.dbl().add(this);
   var xx = this.x.redSqr();
   var yy = this.y.redSqr();
   var zz = this.z.redSqr();
@@ -11012,14 +11541,11 @@ JPoint.prototype.mul = function mul3(k, kbase) {
   return this.curve._wnafMul(this, k);
 };
 JPoint.prototype.eq = function eq3(p) {
-  if (p.type === "affine")
-    return this.eq(p.toJ());
-  if (this === p)
-    return true;
+  if (p.type === "affine") return this.eq(p.toJ());
+  if (this === p) return true;
   var z2 = this.z.redSqr();
   var pz2 = p.z.redSqr();
-  if (this.x.redMul(pz2).redISub(p.x.redMul(z2)).cmpn(0) !== 0)
-    return false;
+  if (this.x.redMul(pz2).redISub(p.x.redMul(z2)).cmpn(0) !== 0) return false;
   var z3 = z2.redMul(this.z);
   var pz3 = pz2.redMul(p.z);
   return this.y.redMul(pz3).redISub(p.y.redMul(z3)).cmpn(0) === 0;
@@ -11027,23 +11553,27 @@ JPoint.prototype.eq = function eq3(p) {
 JPoint.prototype.eqXToP = function eqXToP(x) {
   var zs = this.z.redSqr();
   var rx = x.toRed(this.curve.red).redMul(zs);
-  if (this.x.cmp(rx) === 0)
-    return true;
+  if (this.x.cmp(rx) === 0) return true;
   var xc = x.clone();
   var t = this.curve.redN.redMul(zs);
-  for (; ; ) {
+  for (;;) {
     xc.iadd(this.curve.n);
-    if (xc.cmp(this.curve.p) >= 0)
-      return false;
+    if (xc.cmp(this.curve.p) >= 0) return false;
     rx.redIAdd(t);
-    if (this.x.cmp(rx) === 0)
-      return true;
+    if (this.x.cmp(rx) === 0) return true;
   }
 };
 JPoint.prototype.inspect = function inspect2() {
-  if (this.isInfinity())
-    return "<EC JPoint Infinity>";
-  return "<EC JPoint x: " + this.x.toString(16, 2) + " y: " + this.y.toString(16, 2) + " z: " + this.z.toString(16, 2) + ">";
+  if (this.isInfinity()) return "<EC JPoint Infinity>";
+  return (
+    "<EC JPoint x: " +
+    this.x.toString(16, 2) +
+    " y: " +
+    this.y.toString(16, 2) +
+    " z: " +
+    this.z.toString(16, 2) +
+    ">"
+  );
 };
 JPoint.prototype.isInfinity = function isInfinity2() {
   return this.z.cmpn(0) === 0;
@@ -11077,10 +11607,8 @@ function Point$1(curve2, x, z) {
   } else {
     this.x = new BN$6(x, 16);
     this.z = new BN$6(z, 16);
-    if (!this.x.red)
-      this.x = this.x.toRed(this.curve.red);
-    if (!this.z.red)
-      this.z = this.z.toRed(this.curve.red);
+    if (!this.x.red) this.x = this.x.toRed(this.curve.red);
+    if (!this.z.red) this.z = this.z.toRed(this.curve.red);
   }
 }
 inherits$2(Point$1, Base$1.BasePoint);
@@ -11093,8 +11621,7 @@ MontCurve.prototype.point = function point3(x, z) {
 MontCurve.prototype.pointFromJSON = function pointFromJSON2(obj) {
   return Point$1.fromJSON(this, obj);
 };
-Point$1.prototype.precompute = function precompute3() {
-};
+Point$1.prototype.precompute = function precompute3() {};
 Point$1.prototype._encode = function _encode2() {
   return this.getX().toArray("be", this.curve.p.byteLength());
 };
@@ -11102,9 +11629,14 @@ Point$1.fromJSON = function fromJSON2(curve2, obj) {
   return new Point$1(curve2, obj[0], obj[1] || curve2.one);
 };
 Point$1.prototype.inspect = function inspect3() {
-  if (this.isInfinity())
-    return "<EC Point Infinity>";
-  return "<EC Point x: " + this.x.fromRed().toString(16, 2) + " z: " + this.z.fromRed().toString(16, 2) + ">";
+  if (this.isInfinity()) return "<EC Point Infinity>";
+  return (
+    "<EC Point x: " +
+    this.x.fromRed().toString(16, 2) +
+    " z: " +
+    this.z.fromRed().toString(16, 2) +
+    ">"
+  );
 };
 Point$1.prototype.isInfinity = function isInfinity3() {
   return this.z.cmpn(0) === 0;
@@ -11138,8 +11670,7 @@ Point$1.prototype.mul = function mul4(k) {
   var a = this;
   var b = this.curve.point(null, null);
   var c = this;
-  for (var bits = []; t.cmpn(0) !== 0; t.iushrn(1))
-    bits.push(t.andln(1));
+  for (var bits = []; t.cmpn(0) !== 0; t.iushrn(1)) bits.push(t.andln(1));
   for (var i = bits.length - 1; i >= 0; i--) {
     if (bits[i] === 0) {
       a = a.diffAdd(b, c);
@@ -11191,24 +11722,19 @@ function EdwardsCurve(conf) {
 inherits$1(EdwardsCurve, Base);
 var edwards = EdwardsCurve;
 EdwardsCurve.prototype._mulA = function _mulA(num) {
-  if (this.mOneA)
-    return num.redNeg();
-  else
-    return this.a.redMul(num);
+  if (this.mOneA) return num.redNeg();
+  else return this.a.redMul(num);
 };
 EdwardsCurve.prototype._mulC = function _mulC(num) {
-  if (this.oneC)
-    return num;
-  else
-    return this.c.redMul(num);
+  if (this.oneC) return num;
+  else return this.c.redMul(num);
 };
 EdwardsCurve.prototype.jpoint = function jpoint2(x, y, z, t) {
   return this.point(x, y, z, t);
 };
 EdwardsCurve.prototype.pointFromX = function pointFromX2(x, odd) {
   x = new BN$5(x, 16);
-  if (!x.red)
-    x = x.toRed(this.red);
+  if (!x.red) x = x.toRed(this.red);
   var x2 = x.redSqr();
   var rhs = this.c2.redSub(this.a.redMul(x2));
   var lhs = this.one.redSub(this.c2.redMul(this.d).redMul(x2));
@@ -11217,34 +11743,28 @@ EdwardsCurve.prototype.pointFromX = function pointFromX2(x, odd) {
   if (y.redSqr().redSub(y2).cmp(this.zero) !== 0)
     throw new Error("invalid point");
   var isOdd2 = y.fromRed().isOdd();
-  if (odd && !isOdd2 || !odd && isOdd2)
-    y = y.redNeg();
+  if ((odd && !isOdd2) || (!odd && isOdd2)) y = y.redNeg();
   return this.point(x, y);
 };
 EdwardsCurve.prototype.pointFromY = function pointFromY(y, odd) {
   y = new BN$5(y, 16);
-  if (!y.red)
-    y = y.toRed(this.red);
+  if (!y.red) y = y.toRed(this.red);
   var y2 = y.redSqr();
   var lhs = y2.redSub(this.c2);
   var rhs = y2.redMul(this.d).redMul(this.c2).redSub(this.a);
   var x2 = lhs.redMul(rhs.redInvm());
   if (x2.cmp(this.zero) === 0) {
-    if (odd)
-      throw new Error("invalid point");
-    else
-      return this.point(this.zero, y);
+    if (odd) throw new Error("invalid point");
+    else return this.point(this.zero, y);
   }
   var x = x2.redSqrt();
   if (x.redSqr().redSub(x2).cmp(this.zero) !== 0)
     throw new Error("invalid point");
-  if (x.fromRed().isOdd() !== odd)
-    x = x.redNeg();
+  if (x.fromRed().isOdd() !== odd) x = x.redNeg();
   return this.point(x, y);
 };
 EdwardsCurve.prototype.validate = function validate5(point5) {
-  if (point5.isInfinity())
-    return true;
+  if (point5.isInfinity()) return true;
   point5.normalize();
   var x2 = point5.x.redSqr();
   var y2 = point5.y.redSqr();
@@ -11265,19 +11785,14 @@ function Point2(curve2, x, y, z, t) {
     this.y = new BN$5(y, 16);
     this.z = z ? new BN$5(z, 16) : this.curve.one;
     this.t = t && new BN$5(t, 16);
-    if (!this.x.red)
-      this.x = this.x.toRed(this.curve.red);
-    if (!this.y.red)
-      this.y = this.y.toRed(this.curve.red);
-    if (!this.z.red)
-      this.z = this.z.toRed(this.curve.red);
-    if (this.t && !this.t.red)
-      this.t = this.t.toRed(this.curve.red);
+    if (!this.x.red) this.x = this.x.toRed(this.curve.red);
+    if (!this.y.red) this.y = this.y.toRed(this.curve.red);
+    if (!this.z.red) this.z = this.z.toRed(this.curve.red);
+    if (this.t && !this.t.red) this.t = this.t.toRed(this.curve.red);
     this.zOne = this.z === this.curve.one;
     if (this.curve.extended && !this.t) {
       this.t = this.x.redMul(this.y);
-      if (!this.zOne)
-        this.t = this.t.redMul(this.z.redInvm());
+      if (!this.zOne) this.t = this.t.redMul(this.z.redInvm());
     }
   }
 }
@@ -11292,12 +11807,22 @@ Point2.fromJSON = function fromJSON3(curve2, obj) {
   return new Point2(curve2, obj[0], obj[1], obj[2]);
 };
 Point2.prototype.inspect = function inspect4() {
-  if (this.isInfinity())
-    return "<EC Point Infinity>";
-  return "<EC Point x: " + this.x.fromRed().toString(16, 2) + " y: " + this.y.fromRed().toString(16, 2) + " z: " + this.z.fromRed().toString(16, 2) + ">";
+  if (this.isInfinity()) return "<EC Point Infinity>";
+  return (
+    "<EC Point x: " +
+    this.x.fromRed().toString(16, 2) +
+    " y: " +
+    this.y.fromRed().toString(16, 2) +
+    " z: " +
+    this.z.fromRed().toString(16, 2) +
+    ">"
+  );
 };
 Point2.prototype.isInfinity = function isInfinity4() {
-  return this.x.cmpn(0) === 0 && (this.y.cmp(this.z) === 0 || this.zOne && this.y.cmp(this.curve.c) === 0);
+  return (
+    this.x.cmpn(0) === 0 &&
+    (this.y.cmp(this.z) === 0 || (this.zOne && this.y.cmp(this.curve.c) === 0))
+  );
 };
 Point2.prototype._extDbl = function _extDbl() {
   var a = this.x.redSqr();
@@ -11350,12 +11875,9 @@ Point2.prototype._projDbl = function _projDbl() {
   return this.curve.point(nx, ny, nz);
 };
 Point2.prototype.dbl = function dbl4() {
-  if (this.isInfinity())
-    return this;
-  if (this.curve.extended)
-    return this._extDbl();
-  else
-    return this._projDbl();
+  if (this.isInfinity()) return this;
+  if (this.curve.extended) return this._extDbl();
+  else return this._projDbl();
 };
 Point2.prototype._extAdd = function _extAdd(p) {
   var a = this.y.redSub(this.x).redMul(p.y.redSub(p.x));
@@ -11394,20 +11916,14 @@ Point2.prototype._projAdd = function _projAdd(p) {
   return this.curve.point(nx, ny, nz);
 };
 Point2.prototype.add = function add5(p) {
-  if (this.isInfinity())
-    return p;
-  if (p.isInfinity())
-    return this;
-  if (this.curve.extended)
-    return this._extAdd(p);
-  else
-    return this._projAdd(p);
+  if (this.isInfinity()) return p;
+  if (p.isInfinity()) return this;
+  if (this.curve.extended) return this._extAdd(p);
+  else return this._projAdd(p);
 };
 Point2.prototype.mul = function mul5(k) {
-  if (this._hasDoubles(k))
-    return this.curve._fixedNafMul(this, k);
-  else
-    return this.curve._wnafMul(this, k);
+  if (this._hasDoubles(k)) return this.curve._fixedNafMul(this, k);
+  else return this.curve._wnafMul(this, k);
 };
 Point2.prototype.mulAdd = function mulAdd3(k1, p, k2) {
   return this.curve._wnafMulAdd(1, [this, p], [k1, k2], 2, false);
@@ -11416,13 +11932,11 @@ Point2.prototype.jmulAdd = function jmulAdd2(k1, p, k2) {
   return this.curve._wnafMulAdd(1, [this, p], [k1, k2], 2, true);
 };
 Point2.prototype.normalize = function normalize2() {
-  if (this.zOne)
-    return this;
+  if (this.zOne) return this;
   var zi = this.z.redInvm();
   this.x = this.x.redMul(zi);
   this.y = this.y.redMul(zi);
-  if (this.t)
-    this.t = this.t.redMul(zi);
+  if (this.t) this.t = this.t.redMul(zi);
   this.z = this.curve.one;
   this.zOne = true;
   return this;
@@ -11444,26 +11958,26 @@ Point2.prototype.getY = function getY2() {
   return this.y.fromRed();
 };
 Point2.prototype.eq = function eq5(other) {
-  return this === other || this.getX().cmp(other.getX()) === 0 && this.getY().cmp(other.getY()) === 0;
+  return (
+    this === other ||
+    (this.getX().cmp(other.getX()) === 0 && this.getY().cmp(other.getY()) === 0)
+  );
 };
 Point2.prototype.eqXToP = function eqXToP2(x) {
   var rx = x.toRed(this.curve.red).redMul(this.z);
-  if (this.x.cmp(rx) === 0)
-    return true;
+  if (this.x.cmp(rx) === 0) return true;
   var xc = x.clone();
   var t = this.curve.redN.redMul(this.z);
-  for (; ; ) {
+  for (;;) {
     xc.iadd(this.curve.n);
-    if (xc.cmp(this.curve.p) >= 0)
-      return false;
+    if (xc.cmp(this.curve.p) >= 0) return false;
     rx.redIAdd(t);
-    if (this.x.cmp(rx) === 0)
-      return true;
+    if (this.x.cmp(rx) === 0) return true;
   }
 };
 Point2.prototype.toP = Point2.prototype.normalize;
 Point2.prototype.mixedAdd = Point2.prototype.add;
-(function(exports) {
+(function (exports) {
   var curve2 = exports;
   curve2.base = base;
   curve2.short = short;
@@ -11486,10 +12000,8 @@ function isSurrogatePair(msg, i) {
   return (msg.charCodeAt(i + 1) & 64512) === 56320;
 }
 function toArray(msg, enc) {
-  if (Array.isArray(msg))
-    return msg.slice();
-  if (!msg)
-    return [];
+  if (Array.isArray(msg)) return msg.slice();
+  if (!msg) return [];
   var res = [];
   if (typeof msg === "string") {
     if (!enc) {
@@ -11499,43 +12011,44 @@ function toArray(msg, enc) {
         if (c < 128) {
           res[p++] = c;
         } else if (c < 2048) {
-          res[p++] = c >> 6 | 192;
-          res[p++] = c & 63 | 128;
+          res[p++] = (c >> 6) | 192;
+          res[p++] = (c & 63) | 128;
         } else if (isSurrogatePair(msg, i)) {
           c = 65536 + ((c & 1023) << 10) + (msg.charCodeAt(++i) & 1023);
-          res[p++] = c >> 18 | 240;
-          res[p++] = c >> 12 & 63 | 128;
-          res[p++] = c >> 6 & 63 | 128;
-          res[p++] = c & 63 | 128;
+          res[p++] = (c >> 18) | 240;
+          res[p++] = ((c >> 12) & 63) | 128;
+          res[p++] = ((c >> 6) & 63) | 128;
+          res[p++] = (c & 63) | 128;
         } else {
-          res[p++] = c >> 12 | 224;
-          res[p++] = c >> 6 & 63 | 128;
-          res[p++] = c & 63 | 128;
+          res[p++] = (c >> 12) | 224;
+          res[p++] = ((c >> 6) & 63) | 128;
+          res[p++] = (c & 63) | 128;
         }
       }
     } else if (enc === "hex") {
-      msg = msg.replace(/[^a-z0-9]+/ig, "");
-      if (msg.length % 2 !== 0)
-        msg = "0" + msg;
+      msg = msg.replace(/[^a-z0-9]+/gi, "");
+      if (msg.length % 2 !== 0) msg = "0" + msg;
       for (i = 0; i < msg.length; i += 2)
         res.push(parseInt(msg[i] + msg[i + 1], 16));
     }
   } else {
-    for (i = 0; i < msg.length; i++)
-      res[i] = msg[i] | 0;
+    for (i = 0; i < msg.length; i++) res[i] = msg[i] | 0;
   }
   return res;
 }
 utils$g.toArray = toArray;
 function toHex$1(msg) {
   var res = "";
-  for (var i = 0; i < msg.length; i++)
-    res += zero2(msg[i].toString(16));
+  for (var i = 0; i < msg.length; i++) res += zero2(msg[i].toString(16));
   return res;
 }
 utils$g.toHex = toHex$1;
 function htonl(w) {
-  var res = w >>> 24 | w >>> 8 & 65280 | w << 8 & 16711680 | (w & 255) << 24;
+  var res =
+    (w >>> 24) |
+    ((w >>> 8) & 65280) |
+    ((w << 8) & 16711680) |
+    ((w & 255) << 24);
   return res >>> 0;
 }
 utils$g.htonl = htonl;
@@ -11543,37 +12056,26 @@ function toHex32(msg, endian) {
   var res = "";
   for (var i = 0; i < msg.length; i++) {
     var w = msg[i];
-    if (endian === "little")
-      w = htonl(w);
+    if (endian === "little") w = htonl(w);
     res += zero8(w.toString(16));
   }
   return res;
 }
 utils$g.toHex32 = toHex32;
 function zero2(word) {
-  if (word.length === 1)
-    return "0" + word;
-  else
-    return word;
+  if (word.length === 1) return "0" + word;
+  else return word;
 }
 utils$g.zero2 = zero2;
 function zero8(word) {
-  if (word.length === 7)
-    return "0" + word;
-  else if (word.length === 6)
-    return "00" + word;
-  else if (word.length === 5)
-    return "000" + word;
-  else if (word.length === 4)
-    return "0000" + word;
-  else if (word.length === 3)
-    return "00000" + word;
-  else if (word.length === 2)
-    return "000000" + word;
-  else if (word.length === 1)
-    return "0000000" + word;
-  else
-    return word;
+  if (word.length === 7) return "0" + word;
+  else if (word.length === 6) return "00" + word;
+  else if (word.length === 5) return "000" + word;
+  else if (word.length === 4) return "0000" + word;
+  else if (word.length === 3) return "00000" + word;
+  else if (word.length === 2) return "000000" + word;
+  else if (word.length === 1) return "0000000" + word;
+  else return word;
 }
 utils$g.zero8 = zero8;
 function join32(msg, start, end, endian) {
@@ -11583,9 +12085,9 @@ function join32(msg, start, end, endian) {
   for (var i = 0, k = start; i < res.length; i++, k += 4) {
     var w;
     if (endian === "big")
-      w = msg[k] << 24 | msg[k + 1] << 16 | msg[k + 2] << 8 | msg[k + 3];
+      w = (msg[k] << 24) | (msg[k + 1] << 16) | (msg[k + 2] << 8) | msg[k + 3];
     else
-      w = msg[k + 3] << 24 | msg[k + 2] << 16 | msg[k + 1] << 8 | msg[k];
+      w = (msg[k + 3] << 24) | (msg[k + 2] << 16) | (msg[k + 1] << 8) | msg[k];
     res[i] = w >>> 0;
   }
   return res;
@@ -11597,13 +12099,13 @@ function split32(msg, endian) {
     var m2 = msg[i];
     if (endian === "big") {
       res[k] = m2 >>> 24;
-      res[k + 1] = m2 >>> 16 & 255;
-      res[k + 2] = m2 >>> 8 & 255;
+      res[k + 1] = (m2 >>> 16) & 255;
+      res[k + 2] = (m2 >>> 8) & 255;
       res[k + 3] = m2 & 255;
     } else {
       res[k + 3] = m2 >>> 24;
-      res[k + 2] = m2 >>> 16 & 255;
-      res[k + 1] = m2 >>> 8 & 255;
+      res[k + 2] = (m2 >>> 16) & 255;
+      res[k + 1] = (m2 >>> 8) & 255;
       res[k] = m2 & 255;
     }
   }
@@ -11611,40 +12113,40 @@ function split32(msg, endian) {
 }
 utils$g.split32 = split32;
 function rotr32$1(w, b) {
-  return w >>> b | w << 32 - b;
+  return (w >>> b) | (w << (32 - b));
 }
 utils$g.rotr32 = rotr32$1;
 function rotl32$2(w, b) {
-  return w << b | w >>> 32 - b;
+  return (w << b) | (w >>> (32 - b));
 }
 utils$g.rotl32 = rotl32$2;
 function sum32$3(a, b) {
-  return a + b >>> 0;
+  return (a + b) >>> 0;
 }
 utils$g.sum32 = sum32$3;
 function sum32_3$1(a, b, c) {
-  return a + b + c >>> 0;
+  return (a + b + c) >>> 0;
 }
 utils$g.sum32_3 = sum32_3$1;
 function sum32_4$2(a, b, c, d) {
-  return a + b + c + d >>> 0;
+  return (a + b + c + d) >>> 0;
 }
 utils$g.sum32_4 = sum32_4$2;
 function sum32_5$2(a, b, c, d, e) {
-  return a + b + c + d + e >>> 0;
+  return (a + b + c + d + e) >>> 0;
 }
 utils$g.sum32_5 = sum32_5$2;
 function sum64$1(buf, pos, ah, al) {
   var bh = buf[pos];
   var bl = buf[pos + 1];
-  var lo = al + bl >>> 0;
+  var lo = (al + bl) >>> 0;
   var hi = (lo < al ? 1 : 0) + ah + bh;
   buf[pos] = hi >>> 0;
   buf[pos + 1] = lo;
 }
 utils$g.sum64 = sum64$1;
 function sum64_hi$1(ah, al, bh, bl) {
-  var lo = al + bl >>> 0;
+  var lo = (al + bl) >>> 0;
   var hi = (lo < al ? 1 : 0) + ah + bh;
   return hi >>> 0;
 }
@@ -11657,11 +12159,11 @@ utils$g.sum64_lo = sum64_lo$1;
 function sum64_4_hi$1(ah, al, bh, bl, ch, cl, dh, dl) {
   var carry = 0;
   var lo = al;
-  lo = lo + bl >>> 0;
+  lo = (lo + bl) >>> 0;
   carry += lo < al ? 1 : 0;
-  lo = lo + cl >>> 0;
+  lo = (lo + cl) >>> 0;
   carry += lo < cl ? 1 : 0;
-  lo = lo + dl >>> 0;
+  lo = (lo + dl) >>> 0;
   carry += lo < dl ? 1 : 0;
   var hi = ah + bh + ch + dh + carry;
   return hi >>> 0;
@@ -11675,13 +12177,13 @@ utils$g.sum64_4_lo = sum64_4_lo$1;
 function sum64_5_hi$1(ah, al, bh, bl, ch, cl, dh, dl, eh, el) {
   var carry = 0;
   var lo = al;
-  lo = lo + bl >>> 0;
+  lo = (lo + bl) >>> 0;
   carry += lo < al ? 1 : 0;
-  lo = lo + cl >>> 0;
+  lo = (lo + cl) >>> 0;
   carry += lo < cl ? 1 : 0;
-  lo = lo + dl >>> 0;
+  lo = (lo + dl) >>> 0;
   carry += lo < dl ? 1 : 0;
-  lo = lo + el >>> 0;
+  lo = (lo + el) >>> 0;
   carry += lo < el ? 1 : 0;
   var hi = ah + bh + ch + dh + eh + carry;
   return hi >>> 0;
@@ -11693,12 +12195,12 @@ function sum64_5_lo$1(ah, al, bh, bl, ch, cl, dh, dl, eh, el) {
 }
 utils$g.sum64_5_lo = sum64_5_lo$1;
 function rotr64_hi$1(ah, al, num) {
-  var r2 = al << 32 - num | ah >>> num;
+  var r2 = (al << (32 - num)) | (ah >>> num);
   return r2 >>> 0;
 }
 utils$g.rotr64_hi = rotr64_hi$1;
 function rotr64_lo$1(ah, al, num) {
-  var r2 = ah << 32 - num | al >>> num;
+  var r2 = (ah << (32 - num)) | (al >>> num);
   return r2 >>> 0;
 }
 utils$g.rotr64_lo = rotr64_lo$1;
@@ -11707,7 +12209,7 @@ function shr64_hi$1(ah, al, num) {
 }
 utils$g.shr64_hi = shr64_hi$1;
 function shr64_lo$1(ah, al, num) {
-  var r2 = ah << 32 - num | al >>> num;
+  var r2 = (ah << (32 - num)) | (al >>> num);
   return r2 >>> 0;
 }
 utils$g.shr64_lo = shr64_lo$1;
@@ -11728,17 +12230,14 @@ function BlockHash$4() {
 common$5.BlockHash = BlockHash$4;
 BlockHash$4.prototype.update = function update(msg, enc) {
   msg = utils$f.toArray(msg, enc);
-  if (!this.pending)
-    this.pending = msg;
-  else
-    this.pending = this.pending.concat(msg);
+  if (!this.pending) this.pending = msg;
+  else this.pending = this.pending.concat(msg);
   this.pendingTotal += msg.length;
   if (this.pending.length >= this._delta8) {
     msg = this.pending;
     var r2 = msg.length % this._delta8;
     this.pending = msg.slice(msg.length - r2, msg.length);
-    if (this.pending.length === 0)
-      this.pending = null;
+    if (this.pending.length === 0) this.pending = null;
     msg = utils$f.join32(msg, 0, msg.length - r2, this.endian);
     for (var i = 0; i < msg.length; i += this._delta32)
       this._update(msg, i, i + this._delta32);
@@ -11753,34 +12252,31 @@ BlockHash$4.prototype.digest = function digest(enc) {
 BlockHash$4.prototype._pad = function pad() {
   var len = this.pendingTotal;
   var bytes2 = this._delta8;
-  var k = bytes2 - (len + this.padLength) % bytes2;
+  var k = bytes2 - ((len + this.padLength) % bytes2);
   var res = new Array(k + this.padLength);
   res[0] = 128;
-  for (var i = 1; i < k; i++)
-    res[i] = 0;
+  for (var i = 1; i < k; i++) res[i] = 0;
   len <<= 3;
   if (this.endian === "big") {
-    for (var t = 8; t < this.padLength; t++)
-      res[i++] = 0;
+    for (var t = 8; t < this.padLength; t++) res[i++] = 0;
     res[i++] = 0;
     res[i++] = 0;
     res[i++] = 0;
     res[i++] = 0;
-    res[i++] = len >>> 24 & 255;
-    res[i++] = len >>> 16 & 255;
-    res[i++] = len >>> 8 & 255;
+    res[i++] = (len >>> 24) & 255;
+    res[i++] = (len >>> 16) & 255;
+    res[i++] = (len >>> 8) & 255;
     res[i++] = len & 255;
   } else {
     res[i++] = len & 255;
-    res[i++] = len >>> 8 & 255;
-    res[i++] = len >>> 16 & 255;
-    res[i++] = len >>> 24 & 255;
+    res[i++] = (len >>> 8) & 255;
+    res[i++] = (len >>> 16) & 255;
+    res[i++] = (len >>> 24) & 255;
     res[i++] = 0;
     res[i++] = 0;
     res[i++] = 0;
     res[i++] = 0;
-    for (t = 8; t < this.padLength; t++)
-      res[i++] = 0;
+    for (t = 8; t < this.padLength; t++) res[i++] = 0;
   }
   return res;
 };
@@ -11789,20 +12285,17 @@ var common$4 = {};
 var utils$e = utils$g;
 var rotr32 = utils$e.rotr32;
 function ft_1$1(s2, x, y, z) {
-  if (s2 === 0)
-    return ch32$1(x, y, z);
-  if (s2 === 1 || s2 === 3)
-    return p32(x, y, z);
-  if (s2 === 2)
-    return maj32$1(x, y, z);
+  if (s2 === 0) return ch32$1(x, y, z);
+  if (s2 === 1 || s2 === 3) return p32(x, y, z);
+  if (s2 === 2) return maj32$1(x, y, z);
 }
 common$4.ft_1 = ft_1$1;
 function ch32$1(x, y, z) {
-  return x & y ^ ~x & z;
+  return (x & y) ^ (~x & z);
 }
 common$4.ch32 = ch32$1;
 function maj32$1(x, y, z) {
-  return x & y ^ x & z ^ y & z;
+  return (x & y) ^ (x & z) ^ (y & z);
 }
 common$4.maj32 = maj32$1;
 function p32(x, y, z) {
@@ -11818,11 +12311,11 @@ function s1_256$1(x) {
 }
 common$4.s1_256 = s1_256$1;
 function g0_256$1(x) {
-  return rotr32(x, 7) ^ rotr32(x, 18) ^ x >>> 3;
+  return rotr32(x, 7) ^ rotr32(x, 18) ^ (x >>> 3);
 }
 common$4.g0_256 = g0_256$1;
 function g1_256$1(x) {
-  return rotr32(x, 17) ^ rotr32(x, 19) ^ x >>> 10;
+  return rotr32(x, 17) ^ rotr32(x, 19) ^ (x >>> 10);
 }
 common$4.g1_256 = g1_256$1;
 var utils$d = utils$g;
@@ -11833,23 +12326,11 @@ var sum32$2 = utils$d.sum32;
 var sum32_5$1 = utils$d.sum32_5;
 var ft_1 = shaCommon$1.ft_1;
 var BlockHash$3 = common$3.BlockHash;
-var sha1_K = [
-  1518500249,
-  1859775393,
-  2400959708,
-  3395469782
-];
+var sha1_K = [1518500249, 1859775393, 2400959708, 3395469782];
 function SHA1() {
-  if (!(this instanceof SHA1))
-    return new SHA1();
+  if (!(this instanceof SHA1)) return new SHA1();
   BlockHash$3.call(this);
-  this.h = [
-    1732584193,
-    4023233417,
-    2562383102,
-    271733878,
-    3285377520
-  ];
+  this.h = [1732584193, 4023233417, 2562383102, 271733878, 3285377520];
   this.W = new Array(80);
 }
 utils$d.inherits(SHA1, BlockHash$3);
@@ -11860,8 +12341,7 @@ SHA1.hmacStrength = 80;
 SHA1.padLength = 64;
 SHA1.prototype._update = function _update(msg, start) {
   var W2 = this.W;
-  for (var i = 0; i < 16; i++)
-    W2[i] = msg[start + i];
+  for (var i = 0; i < 16; i++) W2[i] = msg[start + i];
   for (; i < W2.length; i++)
     W2[i] = rotl32$1(W2[i - 3] ^ W2[i - 8] ^ W2[i - 14] ^ W2[i - 16], 1);
   var a = this.h[0];
@@ -11885,10 +12365,8 @@ SHA1.prototype._update = function _update(msg, start) {
   this.h[4] = sum32$2(this.h[4], e);
 };
 SHA1.prototype._digest = function digest2(enc) {
-  if (enc === "hex")
-    return utils$d.toHex32(this.h, "big");
-  else
-    return utils$d.split32(this.h, "big");
+  if (enc === "hex") return utils$d.toHex32(this.h, "big");
+  else return utils$d.split32(this.h, "big");
 };
 var utils$c = utils$g;
 var common$2 = common$5;
@@ -11905,84 +12383,24 @@ var g0_256 = shaCommon.g0_256;
 var g1_256 = shaCommon.g1_256;
 var BlockHash$2 = common$2.BlockHash;
 var sha256_K = [
-  1116352408,
-  1899447441,
-  3049323471,
-  3921009573,
-  961987163,
-  1508970993,
-  2453635748,
-  2870763221,
-  3624381080,
-  310598401,
-  607225278,
-  1426881987,
-  1925078388,
-  2162078206,
-  2614888103,
-  3248222580,
-  3835390401,
-  4022224774,
-  264347078,
-  604807628,
-  770255983,
-  1249150122,
-  1555081692,
-  1996064986,
-  2554220882,
-  2821834349,
-  2952996808,
-  3210313671,
-  3336571891,
-  3584528711,
-  113926993,
-  338241895,
-  666307205,
-  773529912,
-  1294757372,
-  1396182291,
-  1695183700,
-  1986661051,
-  2177026350,
-  2456956037,
-  2730485921,
-  2820302411,
-  3259730800,
-  3345764771,
-  3516065817,
-  3600352804,
-  4094571909,
-  275423344,
-  430227734,
-  506948616,
-  659060556,
-  883997877,
-  958139571,
-  1322822218,
-  1537002063,
-  1747873779,
-  1955562222,
-  2024104815,
-  2227730452,
-  2361852424,
-  2428436474,
-  2756734187,
-  3204031479,
-  3329325298
+  1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993,
+  2453635748, 2870763221, 3624381080, 310598401, 607225278, 1426881987,
+  1925078388, 2162078206, 2614888103, 3248222580, 3835390401, 4022224774,
+  264347078, 604807628, 770255983, 1249150122, 1555081692, 1996064986,
+  2554220882, 2821834349, 2952996808, 3210313671, 3336571891, 3584528711,
+  113926993, 338241895, 666307205, 773529912, 1294757372, 1396182291,
+  1695183700, 1986661051, 2177026350, 2456956037, 2730485921, 2820302411,
+  3259730800, 3345764771, 3516065817, 3600352804, 4094571909, 275423344,
+  430227734, 506948616, 659060556, 883997877, 958139571, 1322822218, 1537002063,
+  1747873779, 1955562222, 2024104815, 2227730452, 2361852424, 2428436474,
+  2756734187, 3204031479, 3329325298,
 ];
 function SHA256$1() {
-  if (!(this instanceof SHA256$1))
-    return new SHA256$1();
+  if (!(this instanceof SHA256$1)) return new SHA256$1();
   BlockHash$2.call(this);
   this.h = [
-    1779033703,
-    3144134277,
-    1013904242,
-    2773480762,
-    1359893119,
-    2600822924,
-    528734635,
-    1541459225
+    1779033703, 3144134277, 1013904242, 2773480762, 1359893119, 2600822924,
+    528734635, 1541459225,
   ];
   this.k = sha256_K;
   this.W = new Array(64);
@@ -11995,10 +12413,14 @@ SHA256$1.hmacStrength = 192;
 SHA256$1.padLength = 64;
 SHA256$1.prototype._update = function _update2(msg, start) {
   var W2 = this.W;
-  for (var i = 0; i < 16; i++)
-    W2[i] = msg[start + i];
+  for (var i = 0; i < 16; i++) W2[i] = msg[start + i];
   for (; i < W2.length; i++)
-    W2[i] = sum32_4$1(g1_256(W2[i - 2]), W2[i - 7], g0_256(W2[i - 15]), W2[i - 16]);
+    W2[i] = sum32_4$1(
+      g1_256(W2[i - 2]),
+      W2[i - 7],
+      g0_256(W2[i - 15]),
+      W2[i - 16]
+    );
   var a = this.h[0];
   var b = this.h[1];
   var c = this.h[2];
@@ -12030,26 +12452,17 @@ SHA256$1.prototype._update = function _update2(msg, start) {
   this.h[7] = sum32$1(this.h[7], h);
 };
 SHA256$1.prototype._digest = function digest3(enc) {
-  if (enc === "hex")
-    return utils$c.toHex32(this.h, "big");
-  else
-    return utils$c.split32(this.h, "big");
+  if (enc === "hex") return utils$c.toHex32(this.h, "big");
+  else return utils$c.split32(this.h, "big");
 };
 var utils$b = utils$g;
 var SHA256 = _256;
 function SHA224() {
-  if (!(this instanceof SHA224))
-    return new SHA224();
+  if (!(this instanceof SHA224)) return new SHA224();
   SHA256.call(this);
   this.h = [
-    3238371032,
-    914150663,
-    812702999,
-    4144912697,
-    4290775857,
-    1750603025,
-    1694076839,
-    3204075428
+    3238371032, 914150663, 812702999, 4144912697, 4290775857, 1750603025,
+    1694076839, 3204075428,
   ];
 }
 utils$b.inherits(SHA224, SHA256);
@@ -12059,10 +12472,8 @@ SHA224.outSize = 224;
 SHA224.hmacStrength = 192;
 SHA224.padLength = 64;
 SHA224.prototype._digest = function digest4(enc) {
-  if (enc === "hex")
-    return utils$b.toHex32(this.h.slice(0, 7), "big");
-  else
-    return utils$b.split32(this.h.slice(0, 7), "big");
+  if (enc === "hex") return utils$b.toHex32(this.h.slice(0, 7), "big");
+  else return utils$b.split32(this.h.slice(0, 7), "big");
 };
 var utils$a = utils$g;
 var common$1 = common$5;
@@ -12080,188 +12491,41 @@ var sum64_5_hi = utils$a.sum64_5_hi;
 var sum64_5_lo = utils$a.sum64_5_lo;
 var BlockHash$1 = common$1.BlockHash;
 var sha512_K = [
-  1116352408,
-  3609767458,
-  1899447441,
-  602891725,
-  3049323471,
-  3964484399,
-  3921009573,
-  2173295548,
-  961987163,
-  4081628472,
-  1508970993,
-  3053834265,
-  2453635748,
-  2937671579,
-  2870763221,
-  3664609560,
-  3624381080,
-  2734883394,
-  310598401,
-  1164996542,
-  607225278,
-  1323610764,
-  1426881987,
-  3590304994,
-  1925078388,
-  4068182383,
-  2162078206,
-  991336113,
-  2614888103,
-  633803317,
-  3248222580,
-  3479774868,
-  3835390401,
-  2666613458,
-  4022224774,
-  944711139,
-  264347078,
-  2341262773,
-  604807628,
-  2007800933,
-  770255983,
-  1495990901,
-  1249150122,
-  1856431235,
-  1555081692,
-  3175218132,
-  1996064986,
-  2198950837,
-  2554220882,
-  3999719339,
-  2821834349,
-  766784016,
-  2952996808,
-  2566594879,
-  3210313671,
-  3203337956,
-  3336571891,
-  1034457026,
-  3584528711,
-  2466948901,
-  113926993,
-  3758326383,
-  338241895,
-  168717936,
-  666307205,
-  1188179964,
-  773529912,
-  1546045734,
-  1294757372,
-  1522805485,
-  1396182291,
-  2643833823,
-  1695183700,
-  2343527390,
-  1986661051,
-  1014477480,
-  2177026350,
-  1206759142,
-  2456956037,
-  344077627,
-  2730485921,
-  1290863460,
-  2820302411,
-  3158454273,
-  3259730800,
-  3505952657,
-  3345764771,
-  106217008,
-  3516065817,
-  3606008344,
-  3600352804,
-  1432725776,
-  4094571909,
-  1467031594,
-  275423344,
-  851169720,
-  430227734,
-  3100823752,
-  506948616,
-  1363258195,
-  659060556,
-  3750685593,
-  883997877,
-  3785050280,
-  958139571,
-  3318307427,
-  1322822218,
-  3812723403,
-  1537002063,
-  2003034995,
-  1747873779,
-  3602036899,
-  1955562222,
-  1575990012,
-  2024104815,
-  1125592928,
-  2227730452,
-  2716904306,
-  2361852424,
-  442776044,
-  2428436474,
-  593698344,
-  2756734187,
-  3733110249,
-  3204031479,
-  2999351573,
-  3329325298,
-  3815920427,
-  3391569614,
-  3928383900,
-  3515267271,
-  566280711,
-  3940187606,
-  3454069534,
-  4118630271,
-  4000239992,
-  116418474,
-  1914138554,
-  174292421,
-  2731055270,
-  289380356,
-  3203993006,
-  460393269,
-  320620315,
-  685471733,
-  587496836,
-  852142971,
-  1086792851,
-  1017036298,
-  365543100,
-  1126000580,
-  2618297676,
-  1288033470,
-  3409855158,
-  1501505948,
-  4234509866,
-  1607167915,
-  987167468,
-  1816402316,
-  1246189591
+  1116352408, 3609767458, 1899447441, 602891725, 3049323471, 3964484399,
+  3921009573, 2173295548, 961987163, 4081628472, 1508970993, 3053834265,
+  2453635748, 2937671579, 2870763221, 3664609560, 3624381080, 2734883394,
+  310598401, 1164996542, 607225278, 1323610764, 1426881987, 3590304994,
+  1925078388, 4068182383, 2162078206, 991336113, 2614888103, 633803317,
+  3248222580, 3479774868, 3835390401, 2666613458, 4022224774, 944711139,
+  264347078, 2341262773, 604807628, 2007800933, 770255983, 1495990901,
+  1249150122, 1856431235, 1555081692, 3175218132, 1996064986, 2198950837,
+  2554220882, 3999719339, 2821834349, 766784016, 2952996808, 2566594879,
+  3210313671, 3203337956, 3336571891, 1034457026, 3584528711, 2466948901,
+  113926993, 3758326383, 338241895, 168717936, 666307205, 1188179964, 773529912,
+  1546045734, 1294757372, 1522805485, 1396182291, 2643833823, 1695183700,
+  2343527390, 1986661051, 1014477480, 2177026350, 1206759142, 2456956037,
+  344077627, 2730485921, 1290863460, 2820302411, 3158454273, 3259730800,
+  3505952657, 3345764771, 106217008, 3516065817, 3606008344, 3600352804,
+  1432725776, 4094571909, 1467031594, 275423344, 851169720, 430227734,
+  3100823752, 506948616, 1363258195, 659060556, 3750685593, 883997877,
+  3785050280, 958139571, 3318307427, 1322822218, 3812723403, 1537002063,
+  2003034995, 1747873779, 3602036899, 1955562222, 1575990012, 2024104815,
+  1125592928, 2227730452, 2716904306, 2361852424, 442776044, 2428436474,
+  593698344, 2756734187, 3733110249, 3204031479, 2999351573, 3329325298,
+  3815920427, 3391569614, 3928383900, 3515267271, 566280711, 3940187606,
+  3454069534, 4118630271, 4000239992, 116418474, 1914138554, 174292421,
+  2731055270, 289380356, 3203993006, 460393269, 320620315, 685471733, 587496836,
+  852142971, 1086792851, 1017036298, 365543100, 1126000580, 2618297676,
+  1288033470, 3409855158, 1501505948, 4234509866, 1607167915, 987167468,
+  1816402316, 1246189591,
 ];
 function SHA512$1() {
-  if (!(this instanceof SHA512$1))
-    return new SHA512$1();
+  if (!(this instanceof SHA512$1)) return new SHA512$1();
   BlockHash$1.call(this);
   this.h = [
-    1779033703,
-    4089235720,
-    3144134277,
-    2227873595,
-    1013904242,
-    4271175723,
-    2773480762,
-    1595750129,
-    1359893119,
-    2917565137,
-    2600822924,
-    725511199,
-    528734635,
-    4215389547,
-    1541459225,
-    327033209
+    1779033703, 4089235720, 3144134277, 2227873595, 1013904242, 4271175723,
+    2773480762, 1595750129, 1359893119, 2917565137, 2600822924, 725511199,
+    528734635, 4215389547, 1541459225, 327033209,
   ];
   this.k = sha512_K;
   this.W = new Array(160);
@@ -12274,8 +12538,7 @@ SHA512$1.hmacStrength = 192;
 SHA512$1.padLength = 128;
 SHA512$1.prototype._prepareBlock = function _prepareBlock(msg, start) {
   var W2 = this.W;
-  for (var i = 0; i < 32; i++)
-    W2[i] = msg[start + i];
+  for (var i = 0; i < 32; i++) W2[i] = msg[start + i];
   for (; i < W2.length; i += 2) {
     var c0_hi = g1_512_hi(W2[i - 4], W2[i - 3]);
     var c0_lo = g1_512_lo(W2[i - 4], W2[i - 3]);
@@ -12285,16 +12548,7 @@ SHA512$1.prototype._prepareBlock = function _prepareBlock(msg, start) {
     var c2_lo = g0_512_lo(W2[i - 30], W2[i - 29]);
     var c3_hi = W2[i - 32];
     var c3_lo = W2[i - 31];
-    W2[i] = sum64_4_hi(
-      c0_hi,
-      c0_lo,
-      c1_hi,
-      c1_lo,
-      c2_hi,
-      c2_lo,
-      c3_hi,
-      c3_lo
-    );
+    W2[i] = sum64_4_hi(c0_hi, c0_lo, c1_hi, c1_lo, c2_hi, c2_lo, c3_hi, c3_lo);
     W2[i + 1] = sum64_4_lo(
       c0_hi,
       c0_lo,
@@ -12395,33 +12649,27 @@ SHA512$1.prototype._update = function _update3(msg, start) {
   sum64(this.h, 14, hh, hl);
 };
 SHA512$1.prototype._digest = function digest5(enc) {
-  if (enc === "hex")
-    return utils$a.toHex32(this.h, "big");
-  else
-    return utils$a.split32(this.h, "big");
+  if (enc === "hex") return utils$a.toHex32(this.h, "big");
+  else return utils$a.split32(this.h, "big");
 };
 function ch64_hi(xh, xl, yh, yl, zh) {
-  var r2 = xh & yh ^ ~xh & zh;
-  if (r2 < 0)
-    r2 += 4294967296;
+  var r2 = (xh & yh) ^ (~xh & zh);
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 function ch64_lo(xh, xl, yh, yl, zh, zl) {
-  var r2 = xl & yl ^ ~xl & zl;
-  if (r2 < 0)
-    r2 += 4294967296;
+  var r2 = (xl & yl) ^ (~xl & zl);
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 function maj64_hi(xh, xl, yh, yl, zh) {
-  var r2 = xh & yh ^ xh & zh ^ yh & zh;
-  if (r2 < 0)
-    r2 += 4294967296;
+  var r2 = (xh & yh) ^ (xh & zh) ^ (yh & zh);
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 function maj64_lo(xh, xl, yh, yl, zh, zl) {
-  var r2 = xl & yl ^ xl & zl ^ yl & zl;
-  if (r2 < 0)
-    r2 += 4294967296;
+  var r2 = (xl & yl) ^ (xl & zl) ^ (yl & zl);
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 function s0_512_hi(xh, xl) {
@@ -12429,8 +12677,7 @@ function s0_512_hi(xh, xl) {
   var c1_hi = rotr64_hi(xl, xh, 2);
   var c2_hi = rotr64_hi(xl, xh, 7);
   var r2 = c0_hi ^ c1_hi ^ c2_hi;
-  if (r2 < 0)
-    r2 += 4294967296;
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 function s0_512_lo(xh, xl) {
@@ -12438,8 +12685,7 @@ function s0_512_lo(xh, xl) {
   var c1_lo = rotr64_lo(xl, xh, 2);
   var c2_lo = rotr64_lo(xl, xh, 7);
   var r2 = c0_lo ^ c1_lo ^ c2_lo;
-  if (r2 < 0)
-    r2 += 4294967296;
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 function s1_512_hi(xh, xl) {
@@ -12447,8 +12693,7 @@ function s1_512_hi(xh, xl) {
   var c1_hi = rotr64_hi(xh, xl, 18);
   var c2_hi = rotr64_hi(xl, xh, 9);
   var r2 = c0_hi ^ c1_hi ^ c2_hi;
-  if (r2 < 0)
-    r2 += 4294967296;
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 function s1_512_lo(xh, xl) {
@@ -12456,8 +12701,7 @@ function s1_512_lo(xh, xl) {
   var c1_lo = rotr64_lo(xh, xl, 18);
   var c2_lo = rotr64_lo(xl, xh, 9);
   var r2 = c0_lo ^ c1_lo ^ c2_lo;
-  if (r2 < 0)
-    r2 += 4294967296;
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 function g0_512_hi(xh, xl) {
@@ -12465,8 +12709,7 @@ function g0_512_hi(xh, xl) {
   var c1_hi = rotr64_hi(xh, xl, 8);
   var c2_hi = shr64_hi(xh, xl, 7);
   var r2 = c0_hi ^ c1_hi ^ c2_hi;
-  if (r2 < 0)
-    r2 += 4294967296;
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 function g0_512_lo(xh, xl) {
@@ -12474,8 +12717,7 @@ function g0_512_lo(xh, xl) {
   var c1_lo = rotr64_lo(xh, xl, 8);
   var c2_lo = shr64_lo(xh, xl, 7);
   var r2 = c0_lo ^ c1_lo ^ c2_lo;
-  if (r2 < 0)
-    r2 += 4294967296;
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 function g1_512_hi(xh, xl) {
@@ -12483,8 +12725,7 @@ function g1_512_hi(xh, xl) {
   var c1_hi = rotr64_hi(xl, xh, 29);
   var c2_hi = shr64_hi(xh, xl, 6);
   var r2 = c0_hi ^ c1_hi ^ c2_hi;
-  if (r2 < 0)
-    r2 += 4294967296;
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 function g1_512_lo(xh, xl) {
@@ -12492,33 +12733,18 @@ function g1_512_lo(xh, xl) {
   var c1_lo = rotr64_lo(xl, xh, 29);
   var c2_lo = shr64_lo(xh, xl, 6);
   var r2 = c0_lo ^ c1_lo ^ c2_lo;
-  if (r2 < 0)
-    r2 += 4294967296;
+  if (r2 < 0) r2 += 4294967296;
   return r2;
 }
 var utils$9 = utils$g;
 var SHA5122 = _512;
 function SHA3842() {
-  if (!(this instanceof SHA3842))
-    return new SHA3842();
+  if (!(this instanceof SHA3842)) return new SHA3842();
   SHA5122.call(this);
   this.h = [
-    3418070365,
-    3238371032,
-    1654270250,
-    914150663,
-    2438529370,
-    812702999,
-    355462360,
-    4144912697,
-    1731405415,
-    4290775857,
-    2394180231,
-    1750603025,
-    3675008525,
-    1694076839,
-    1203062813,
-    3204075428
+    3418070365, 3238371032, 1654270250, 914150663, 2438529370, 812702999,
+    355462360, 4144912697, 1731405415, 4290775857, 2394180231, 1750603025,
+    3675008525, 1694076839, 1203062813, 3204075428,
   ];
 }
 utils$9.inherits(SHA3842, SHA5122);
@@ -12528,10 +12754,8 @@ SHA3842.outSize = 384;
 SHA3842.hmacStrength = 192;
 SHA3842.padLength = 128;
 SHA3842.prototype._digest = function digest6(enc) {
-  if (enc === "hex")
-    return utils$9.toHex32(this.h.slice(0, 12), "big");
-  else
-    return utils$9.split32(this.h.slice(0, 12), "big");
+  if (enc === "hex") return utils$9.toHex32(this.h.slice(0, 12), "big");
+  else return utils$9.split32(this.h.slice(0, 12), "big");
 };
 sha.sha1 = _1;
 sha.sha224 = _224;
@@ -12547,8 +12771,7 @@ var sum32_3 = utils$8.sum32_3;
 var sum32_4 = utils$8.sum32_4;
 var BlockHash = common.BlockHash;
 function RIPEMD160() {
-  if (!(this instanceof RIPEMD160))
-    return new RIPEMD160();
+  if (!(this instanceof RIPEMD160)) return new RIPEMD160();
   BlockHash.call(this);
   this.h = [1732584193, 4023233417, 2562383102, 271733878, 3285377520];
   this.endian = "little";
@@ -12572,10 +12795,7 @@ RIPEMD160.prototype._update = function update2(msg, start) {
   var Eh = E;
   for (var j = 0; j < 80; j++) {
     var T = sum32(
-      rotl32(
-        sum32_4(A, f(j, B, C, D), msg[r[j] + start], K(j)),
-        s[j]
-      ),
+      rotl32(sum32_4(A, f(j, B, C, D), msg[r[j] + start], K(j)), s[j]),
       E
     );
     A = E;
@@ -12604,380 +12824,58 @@ RIPEMD160.prototype._update = function update2(msg, start) {
   this.h[0] = T;
 };
 RIPEMD160.prototype._digest = function digest7(enc) {
-  if (enc === "hex")
-    return utils$8.toHex32(this.h, "little");
-  else
-    return utils$8.split32(this.h, "little");
+  if (enc === "hex") return utils$8.toHex32(this.h, "little");
+  else return utils$8.split32(this.h, "little");
 };
 function f(j, x, y, z) {
-  if (j <= 15)
-    return x ^ y ^ z;
-  else if (j <= 31)
-    return x & y | ~x & z;
-  else if (j <= 47)
-    return (x | ~y) ^ z;
-  else if (j <= 63)
-    return x & z | y & ~z;
-  else
-    return x ^ (y | ~z);
+  if (j <= 15) return x ^ y ^ z;
+  else if (j <= 31) return (x & y) | (~x & z);
+  else if (j <= 47) return (x | ~y) ^ z;
+  else if (j <= 63) return (x & z) | (y & ~z);
+  else return x ^ (y | ~z);
 }
 function K(j) {
-  if (j <= 15)
-    return 0;
-  else if (j <= 31)
-    return 1518500249;
-  else if (j <= 47)
-    return 1859775393;
-  else if (j <= 63)
-    return 2400959708;
-  else
-    return 2840853838;
+  if (j <= 15) return 0;
+  else if (j <= 31) return 1518500249;
+  else if (j <= 47) return 1859775393;
+  else if (j <= 63) return 2400959708;
+  else return 2840853838;
 }
 function Kh(j) {
-  if (j <= 15)
-    return 1352829926;
-  else if (j <= 31)
-    return 1548603684;
-  else if (j <= 47)
-    return 1836072691;
-  else if (j <= 63)
-    return 2053994217;
-  else
-    return 0;
+  if (j <= 15) return 1352829926;
+  else if (j <= 31) return 1548603684;
+  else if (j <= 47) return 1836072691;
+  else if (j <= 63) return 2053994217;
+  else return 0;
 }
 var r = [
-  0,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  7,
-  4,
-  13,
-  1,
-  10,
-  6,
-  15,
-  3,
-  12,
-  0,
-  9,
-  5,
-  2,
-  14,
-  11,
-  8,
-  3,
-  10,
-  14,
-  4,
-  9,
-  15,
-  8,
-  1,
-  2,
-  7,
-  0,
-  6,
-  13,
-  11,
-  5,
-  12,
-  1,
-  9,
-  11,
-  10,
-  0,
-  8,
-  12,
-  4,
-  13,
-  3,
-  7,
-  15,
-  14,
-  5,
-  6,
-  2,
-  4,
-  0,
-  5,
-  9,
-  7,
-  12,
-  2,
-  10,
-  14,
-  1,
-  3,
-  8,
-  11,
-  6,
-  15,
-  13
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 7, 4, 13, 1, 10, 6, 15,
+  3, 12, 0, 9, 5, 2, 14, 11, 8, 3, 10, 14, 4, 9, 15, 8, 1, 2, 7, 0, 6, 13, 11,
+  5, 12, 1, 9, 11, 10, 0, 8, 12, 4, 13, 3, 7, 15, 14, 5, 6, 2, 4, 0, 5, 9, 7,
+  12, 2, 10, 14, 1, 3, 8, 11, 6, 15, 13,
 ];
 var rh = [
-  5,
-  14,
-  7,
-  0,
-  9,
-  2,
-  11,
-  4,
-  13,
-  6,
-  15,
-  8,
-  1,
-  10,
-  3,
-  12,
-  6,
-  11,
-  3,
-  7,
-  0,
-  13,
-  5,
-  10,
-  14,
-  15,
-  8,
-  12,
-  4,
-  9,
-  1,
-  2,
-  15,
-  5,
-  1,
-  3,
-  7,
-  14,
-  6,
-  9,
-  11,
-  8,
-  12,
-  2,
-  10,
-  0,
-  4,
-  13,
-  8,
-  6,
-  4,
-  1,
-  3,
-  11,
-  15,
-  0,
-  5,
-  12,
-  2,
-  13,
-  9,
-  7,
-  10,
-  14,
-  12,
-  15,
-  10,
-  4,
-  1,
-  5,
-  8,
-  7,
-  6,
-  2,
-  13,
-  14,
-  0,
-  3,
-  9,
-  11
+  5, 14, 7, 0, 9, 2, 11, 4, 13, 6, 15, 8, 1, 10, 3, 12, 6, 11, 3, 7, 0, 13, 5,
+  10, 14, 15, 8, 12, 4, 9, 1, 2, 15, 5, 1, 3, 7, 14, 6, 9, 11, 8, 12, 2, 10, 0,
+  4, 13, 8, 6, 4, 1, 3, 11, 15, 0, 5, 12, 2, 13, 9, 7, 10, 14, 12, 15, 10, 4, 1,
+  5, 8, 7, 6, 2, 13, 14, 0, 3, 9, 11,
 ];
 var s = [
-  11,
-  14,
-  15,
-  12,
-  5,
-  8,
-  7,
-  9,
-  11,
-  13,
-  14,
-  15,
-  6,
-  7,
-  9,
-  8,
-  7,
-  6,
-  8,
-  13,
-  11,
-  9,
-  7,
-  15,
-  7,
-  12,
-  15,
-  9,
-  11,
-  7,
-  13,
-  12,
-  11,
-  13,
-  6,
-  7,
-  14,
-  9,
-  13,
-  15,
-  14,
-  8,
-  13,
-  6,
-  5,
-  12,
-  7,
-  5,
-  11,
-  12,
-  14,
-  15,
-  14,
-  15,
-  9,
-  8,
-  9,
-  14,
-  5,
-  6,
-  8,
-  6,
-  5,
-  12,
-  9,
-  15,
-  5,
-  11,
-  6,
-  8,
-  13,
-  12,
-  5,
-  12,
-  13,
-  14,
-  11,
-  8,
-  5,
-  6
+  11, 14, 15, 12, 5, 8, 7, 9, 11, 13, 14, 15, 6, 7, 9, 8, 7, 6, 8, 13, 11, 9, 7,
+  15, 7, 12, 15, 9, 11, 7, 13, 12, 11, 13, 6, 7, 14, 9, 13, 15, 14, 8, 13, 6, 5,
+  12, 7, 5, 11, 12, 14, 15, 14, 15, 9, 8, 9, 14, 5, 6, 8, 6, 5, 12, 9, 15, 5,
+  11, 6, 8, 13, 12, 5, 12, 13, 14, 11, 8, 5, 6,
 ];
 var sh = [
-  8,
-  9,
-  9,
-  11,
-  13,
-  15,
-  15,
-  5,
-  7,
-  7,
-  8,
-  11,
-  14,
-  14,
-  12,
-  6,
-  9,
-  13,
-  15,
-  7,
-  12,
-  8,
-  9,
-  11,
-  7,
-  7,
-  12,
-  7,
-  6,
-  15,
-  13,
-  11,
-  9,
-  7,
-  15,
-  11,
-  8,
-  6,
-  6,
-  14,
-  12,
-  13,
-  5,
-  14,
-  13,
-  13,
-  7,
-  5,
-  15,
-  5,
-  8,
-  11,
-  14,
-  14,
-  6,
-  14,
-  6,
-  9,
-  12,
-  9,
-  12,
-  5,
-  15,
-  8,
-  8,
-  5,
-  12,
-  9,
-  12,
-  5,
-  14,
-  6,
-  8,
-  13,
-  6,
-  5,
-  15,
-  13,
-  11,
-  11
+  8, 9, 9, 11, 13, 15, 15, 5, 7, 7, 8, 11, 14, 14, 12, 6, 9, 13, 15, 7, 12, 8,
+  9, 11, 7, 7, 12, 7, 6, 15, 13, 11, 9, 7, 15, 11, 8, 6, 6, 14, 12, 13, 5, 14,
+  13, 13, 7, 5, 15, 5, 8, 11, 14, 14, 6, 14, 6, 9, 12, 9, 12, 5, 15, 8, 8, 5,
+  12, 9, 12, 5, 14, 6, 8, 13, 6, 5, 15, 13, 11, 11,
 ];
 var utils$7 = utils$g;
 var assert$7 = minimalisticAssert;
 function Hmac(hash3, key2, enc) {
-  if (!(this instanceof Hmac))
-    return new Hmac(hash3, key2, enc);
+  if (!(this instanceof Hmac)) return new Hmac(hash3, key2, enc);
   this.Hash = hash3;
   this.blockSize = hash3.blockSize / 8;
   this.outSize = hash3.outSize / 8;
@@ -12990,13 +12888,10 @@ Hmac.prototype._init = function init(key2) {
   if (key2.length > this.blockSize)
     key2 = new this.Hash().update(key2).digest();
   assert$7(key2.length <= this.blockSize);
-  for (var i = key2.length; i < this.blockSize; i++)
-    key2.push(0);
-  for (i = 0; i < key2.length; i++)
-    key2[i] ^= 54;
+  for (var i = key2.length; i < this.blockSize; i++) key2.push(0);
+  for (i = 0; i < key2.length; i++) key2[i] ^= 54;
   this.inner = new this.Hash().update(key2);
-  for (i = 0; i < key2.length; i++)
-    key2[i] ^= 106;
+  for (i = 0; i < key2.length; i++) key2[i] ^= 106;
   this.outer = new this.Hash().update(key2);
 };
 Hmac.prototype.update = function update3(msg, enc) {
@@ -13007,7 +12902,7 @@ Hmac.prototype.digest = function digest8(enc) {
   this.outer.update(this.inner.digest());
   return this.outer.digest(enc);
 };
-(function(exports) {
+(function (exports) {
   var hash3 = exports;
   hash3.utils = utils$g;
   hash3.common = common$5;
@@ -13024,8 +12919,7 @@ Hmac.prototype.digest = function digest8(enc) {
 var secp256k1;
 var hasRequiredSecp256k1;
 function requireSecp256k1() {
-  if (hasRequiredSecp256k1)
-    return secp256k1;
+  if (hasRequiredSecp256k1) return secp256k1;
   hasRequiredSecp256k1 = 1;
   secp256k1 = {
     doubles: {
@@ -13033,795 +12927,793 @@ function requireSecp256k1() {
       points: [
         [
           "e60fce93b59e9ec53011aabc21c23e97b2a31369b87a5ae9c44ee89e2a6dec0a",
-          "f7e3507399e595929db99f34f57937101296891e44d23f0be1f32cce69616821"
+          "f7e3507399e595929db99f34f57937101296891e44d23f0be1f32cce69616821",
         ],
         [
           "8282263212c609d9ea2a6e3e172de238d8c39cabd5ac1ca10646e23fd5f51508",
-          "11f8a8098557dfe45e8256e830b60ace62d613ac2f7b17bed31b6eaff6e26caf"
+          "11f8a8098557dfe45e8256e830b60ace62d613ac2f7b17bed31b6eaff6e26caf",
         ],
         [
           "175e159f728b865a72f99cc6c6fc846de0b93833fd2222ed73fce5b551e5b739",
-          "d3506e0d9e3c79eba4ef97a51ff71f5eacb5955add24345c6efa6ffee9fed695"
+          "d3506e0d9e3c79eba4ef97a51ff71f5eacb5955add24345c6efa6ffee9fed695",
         ],
         [
           "363d90d447b00c9c99ceac05b6262ee053441c7e55552ffe526bad8f83ff4640",
-          "4e273adfc732221953b445397f3363145b9a89008199ecb62003c7f3bee9de9"
+          "4e273adfc732221953b445397f3363145b9a89008199ecb62003c7f3bee9de9",
         ],
         [
           "8b4b5f165df3c2be8c6244b5b745638843e4a781a15bcd1b69f79a55dffdf80c",
-          "4aad0a6f68d308b4b3fbd7813ab0da04f9e336546162ee56b3eff0c65fd4fd36"
+          "4aad0a6f68d308b4b3fbd7813ab0da04f9e336546162ee56b3eff0c65fd4fd36",
         ],
         [
           "723cbaa6e5db996d6bf771c00bd548c7b700dbffa6c0e77bcb6115925232fcda",
-          "96e867b5595cc498a921137488824d6e2660a0653779494801dc069d9eb39f5f"
+          "96e867b5595cc498a921137488824d6e2660a0653779494801dc069d9eb39f5f",
         ],
         [
           "eebfa4d493bebf98ba5feec812c2d3b50947961237a919839a533eca0e7dd7fa",
-          "5d9a8ca3970ef0f269ee7edaf178089d9ae4cdc3a711f712ddfd4fdae1de8999"
+          "5d9a8ca3970ef0f269ee7edaf178089d9ae4cdc3a711f712ddfd4fdae1de8999",
         ],
         [
           "100f44da696e71672791d0a09b7bde459f1215a29b3c03bfefd7835b39a48db0",
-          "cdd9e13192a00b772ec8f3300c090666b7ff4a18ff5195ac0fbd5cd62bc65a09"
+          "cdd9e13192a00b772ec8f3300c090666b7ff4a18ff5195ac0fbd5cd62bc65a09",
         ],
         [
           "e1031be262c7ed1b1dc9227a4a04c017a77f8d4464f3b3852c8acde6e534fd2d",
-          "9d7061928940405e6bb6a4176597535af292dd419e1ced79a44f18f29456a00d"
+          "9d7061928940405e6bb6a4176597535af292dd419e1ced79a44f18f29456a00d",
         ],
         [
           "feea6cae46d55b530ac2839f143bd7ec5cf8b266a41d6af52d5e688d9094696d",
-          "e57c6b6c97dce1bab06e4e12bf3ecd5c981c8957cc41442d3155debf18090088"
+          "e57c6b6c97dce1bab06e4e12bf3ecd5c981c8957cc41442d3155debf18090088",
         ],
         [
           "da67a91d91049cdcb367be4be6ffca3cfeed657d808583de33fa978bc1ec6cb1",
-          "9bacaa35481642bc41f463f7ec9780e5dec7adc508f740a17e9ea8e27a68be1d"
+          "9bacaa35481642bc41f463f7ec9780e5dec7adc508f740a17e9ea8e27a68be1d",
         ],
         [
           "53904faa0b334cdda6e000935ef22151ec08d0f7bb11069f57545ccc1a37b7c0",
-          "5bc087d0bc80106d88c9eccac20d3c1c13999981e14434699dcb096b022771c8"
+          "5bc087d0bc80106d88c9eccac20d3c1c13999981e14434699dcb096b022771c8",
         ],
         [
           "8e7bcd0bd35983a7719cca7764ca906779b53a043a9b8bcaeff959f43ad86047",
-          "10b7770b2a3da4b3940310420ca9514579e88e2e47fd68b3ea10047e8460372a"
+          "10b7770b2a3da4b3940310420ca9514579e88e2e47fd68b3ea10047e8460372a",
         ],
         [
           "385eed34c1cdff21e6d0818689b81bde71a7f4f18397e6690a841e1599c43862",
-          "283bebc3e8ea23f56701de19e9ebf4576b304eec2086dc8cc0458fe5542e5453"
+          "283bebc3e8ea23f56701de19e9ebf4576b304eec2086dc8cc0458fe5542e5453",
         ],
         [
           "6f9d9b803ecf191637c73a4413dfa180fddf84a5947fbc9c606ed86c3fac3a7",
-          "7c80c68e603059ba69b8e2a30e45c4d47ea4dd2f5c281002d86890603a842160"
+          "7c80c68e603059ba69b8e2a30e45c4d47ea4dd2f5c281002d86890603a842160",
         ],
         [
           "3322d401243c4e2582a2147c104d6ecbf774d163db0f5e5313b7e0e742d0e6bd",
-          "56e70797e9664ef5bfb019bc4ddaf9b72805f63ea2873af624f3a2e96c28b2a0"
+          "56e70797e9664ef5bfb019bc4ddaf9b72805f63ea2873af624f3a2e96c28b2a0",
         ],
         [
           "85672c7d2de0b7da2bd1770d89665868741b3f9af7643397721d74d28134ab83",
-          "7c481b9b5b43b2eb6374049bfa62c2e5e77f17fcc5298f44c8e3094f790313a6"
+          "7c481b9b5b43b2eb6374049bfa62c2e5e77f17fcc5298f44c8e3094f790313a6",
         ],
         [
           "948bf809b1988a46b06c9f1919413b10f9226c60f668832ffd959af60c82a0a",
-          "53a562856dcb6646dc6b74c5d1c3418c6d4dff08c97cd2bed4cb7f88d8c8e589"
+          "53a562856dcb6646dc6b74c5d1c3418c6d4dff08c97cd2bed4cb7f88d8c8e589",
         ],
         [
           "6260ce7f461801c34f067ce0f02873a8f1b0e44dfc69752accecd819f38fd8e8",
-          "bc2da82b6fa5b571a7f09049776a1ef7ecd292238051c198c1a84e95b2b4ae17"
+          "bc2da82b6fa5b571a7f09049776a1ef7ecd292238051c198c1a84e95b2b4ae17",
         ],
         [
           "e5037de0afc1d8d43d8348414bbf4103043ec8f575bfdc432953cc8d2037fa2d",
-          "4571534baa94d3b5f9f98d09fb990bddbd5f5b03ec481f10e0e5dc841d755bda"
+          "4571534baa94d3b5f9f98d09fb990bddbd5f5b03ec481f10e0e5dc841d755bda",
         ],
         [
           "e06372b0f4a207adf5ea905e8f1771b4e7e8dbd1c6a6c5b725866a0ae4fce725",
-          "7a908974bce18cfe12a27bb2ad5a488cd7484a7787104870b27034f94eee31dd"
+          "7a908974bce18cfe12a27bb2ad5a488cd7484a7787104870b27034f94eee31dd",
         ],
         [
           "213c7a715cd5d45358d0bbf9dc0ce02204b10bdde2a3f58540ad6908d0559754",
-          "4b6dad0b5ae462507013ad06245ba190bb4850f5f36a7eeddff2c27534b458f2"
+          "4b6dad0b5ae462507013ad06245ba190bb4850f5f36a7eeddff2c27534b458f2",
         ],
         [
           "4e7c272a7af4b34e8dbb9352a5419a87e2838c70adc62cddf0cc3a3b08fbd53c",
-          "17749c766c9d0b18e16fd09f6def681b530b9614bff7dd33e0b3941817dcaae6"
+          "17749c766c9d0b18e16fd09f6def681b530b9614bff7dd33e0b3941817dcaae6",
         ],
         [
           "fea74e3dbe778b1b10f238ad61686aa5c76e3db2be43057632427e2840fb27b6",
-          "6e0568db9b0b13297cf674deccb6af93126b596b973f7b77701d3db7f23cb96f"
+          "6e0568db9b0b13297cf674deccb6af93126b596b973f7b77701d3db7f23cb96f",
         ],
         [
           "76e64113f677cf0e10a2570d599968d31544e179b760432952c02a4417bdde39",
-          "c90ddf8dee4e95cf577066d70681f0d35e2a33d2b56d2032b4b1752d1901ac01"
+          "c90ddf8dee4e95cf577066d70681f0d35e2a33d2b56d2032b4b1752d1901ac01",
         ],
         [
           "c738c56b03b2abe1e8281baa743f8f9a8f7cc643df26cbee3ab150242bcbb891",
-          "893fb578951ad2537f718f2eacbfbbbb82314eef7880cfe917e735d9699a84c3"
+          "893fb578951ad2537f718f2eacbfbbbb82314eef7880cfe917e735d9699a84c3",
         ],
         [
           "d895626548b65b81e264c7637c972877d1d72e5f3a925014372e9f6588f6c14b",
-          "febfaa38f2bc7eae728ec60818c340eb03428d632bb067e179363ed75d7d991f"
+          "febfaa38f2bc7eae728ec60818c340eb03428d632bb067e179363ed75d7d991f",
         ],
         [
           "b8da94032a957518eb0f6433571e8761ceffc73693e84edd49150a564f676e03",
-          "2804dfa44805a1e4d7c99cc9762808b092cc584d95ff3b511488e4e74efdf6e7"
+          "2804dfa44805a1e4d7c99cc9762808b092cc584d95ff3b511488e4e74efdf6e7",
         ],
         [
           "e80fea14441fb33a7d8adab9475d7fab2019effb5156a792f1a11778e3c0df5d",
-          "eed1de7f638e00771e89768ca3ca94472d155e80af322ea9fcb4291b6ac9ec78"
+          "eed1de7f638e00771e89768ca3ca94472d155e80af322ea9fcb4291b6ac9ec78",
         ],
         [
           "a301697bdfcd704313ba48e51d567543f2a182031efd6915ddc07bbcc4e16070",
-          "7370f91cfb67e4f5081809fa25d40f9b1735dbf7c0a11a130c0d1a041e177ea1"
+          "7370f91cfb67e4f5081809fa25d40f9b1735dbf7c0a11a130c0d1a041e177ea1",
         ],
         [
           "90ad85b389d6b936463f9d0512678de208cc330b11307fffab7ac63e3fb04ed4",
-          "e507a3620a38261affdcbd9427222b839aefabe1582894d991d4d48cb6ef150"
+          "e507a3620a38261affdcbd9427222b839aefabe1582894d991d4d48cb6ef150",
         ],
         [
           "8f68b9d2f63b5f339239c1ad981f162ee88c5678723ea3351b7b444c9ec4c0da",
-          "662a9f2dba063986de1d90c2b6be215dbbea2cfe95510bfdf23cbf79501fff82"
+          "662a9f2dba063986de1d90c2b6be215dbbea2cfe95510bfdf23cbf79501fff82",
         ],
         [
           "e4f3fb0176af85d65ff99ff9198c36091f48e86503681e3e6686fd5053231e11",
-          "1e63633ad0ef4f1c1661a6d0ea02b7286cc7e74ec951d1c9822c38576feb73bc"
+          "1e63633ad0ef4f1c1661a6d0ea02b7286cc7e74ec951d1c9822c38576feb73bc",
         ],
         [
           "8c00fa9b18ebf331eb961537a45a4266c7034f2f0d4e1d0716fb6eae20eae29e",
-          "efa47267fea521a1a9dc343a3736c974c2fadafa81e36c54e7d2a4c66702414b"
+          "efa47267fea521a1a9dc343a3736c974c2fadafa81e36c54e7d2a4c66702414b",
         ],
         [
           "e7a26ce69dd4829f3e10cec0a9e98ed3143d084f308b92c0997fddfc60cb3e41",
-          "2a758e300fa7984b471b006a1aafbb18d0a6b2c0420e83e20e8a9421cf2cfd51"
+          "2a758e300fa7984b471b006a1aafbb18d0a6b2c0420e83e20e8a9421cf2cfd51",
         ],
         [
           "b6459e0ee3662ec8d23540c223bcbdc571cbcb967d79424f3cf29eb3de6b80ef",
-          "67c876d06f3e06de1dadf16e5661db3c4b3ae6d48e35b2ff30bf0b61a71ba45"
+          "67c876d06f3e06de1dadf16e5661db3c4b3ae6d48e35b2ff30bf0b61a71ba45",
         ],
         [
           "d68a80c8280bb840793234aa118f06231d6f1fc67e73c5a5deda0f5b496943e8",
-          "db8ba9fff4b586d00c4b1f9177b0e28b5b0e7b8f7845295a294c84266b133120"
+          "db8ba9fff4b586d00c4b1f9177b0e28b5b0e7b8f7845295a294c84266b133120",
         ],
         [
           "324aed7df65c804252dc0270907a30b09612aeb973449cea4095980fc28d3d5d",
-          "648a365774b61f2ff130c0c35aec1f4f19213b0c7e332843967224af96ab7c84"
+          "648a365774b61f2ff130c0c35aec1f4f19213b0c7e332843967224af96ab7c84",
         ],
         [
           "4df9c14919cde61f6d51dfdbe5fee5dceec4143ba8d1ca888e8bd373fd054c96",
-          "35ec51092d8728050974c23a1d85d4b5d506cdc288490192ebac06cad10d5d"
+          "35ec51092d8728050974c23a1d85d4b5d506cdc288490192ebac06cad10d5d",
         ],
         [
           "9c3919a84a474870faed8a9c1cc66021523489054d7f0308cbfc99c8ac1f98cd",
-          "ddb84f0f4a4ddd57584f044bf260e641905326f76c64c8e6be7e5e03d4fc599d"
+          "ddb84f0f4a4ddd57584f044bf260e641905326f76c64c8e6be7e5e03d4fc599d",
         ],
         [
           "6057170b1dd12fdf8de05f281d8e06bb91e1493a8b91d4cc5a21382120a959e5",
-          "9a1af0b26a6a4807add9a2daf71df262465152bc3ee24c65e899be932385a2a8"
+          "9a1af0b26a6a4807add9a2daf71df262465152bc3ee24c65e899be932385a2a8",
         ],
         [
           "a576df8e23a08411421439a4518da31880cef0fba7d4df12b1a6973eecb94266",
-          "40a6bf20e76640b2c92b97afe58cd82c432e10a7f514d9f3ee8be11ae1b28ec8"
+          "40a6bf20e76640b2c92b97afe58cd82c432e10a7f514d9f3ee8be11ae1b28ec8",
         ],
         [
           "7778a78c28dec3e30a05fe9629de8c38bb30d1f5cf9a3a208f763889be58ad71",
-          "34626d9ab5a5b22ff7098e12f2ff580087b38411ff24ac563b513fc1fd9f43ac"
+          "34626d9ab5a5b22ff7098e12f2ff580087b38411ff24ac563b513fc1fd9f43ac",
         ],
         [
           "928955ee637a84463729fd30e7afd2ed5f96274e5ad7e5cb09eda9c06d903ac",
-          "c25621003d3f42a827b78a13093a95eeac3d26efa8a8d83fc5180e935bcd091f"
+          "c25621003d3f42a827b78a13093a95eeac3d26efa8a8d83fc5180e935bcd091f",
         ],
         [
           "85d0fef3ec6db109399064f3a0e3b2855645b4a907ad354527aae75163d82751",
-          "1f03648413a38c0be29d496e582cf5663e8751e96877331582c237a24eb1f962"
+          "1f03648413a38c0be29d496e582cf5663e8751e96877331582c237a24eb1f962",
         ],
         [
           "ff2b0dce97eece97c1c9b6041798b85dfdfb6d8882da20308f5404824526087e",
-          "493d13fef524ba188af4c4dc54d07936c7b7ed6fb90e2ceb2c951e01f0c29907"
+          "493d13fef524ba188af4c4dc54d07936c7b7ed6fb90e2ceb2c951e01f0c29907",
         ],
         [
           "827fbbe4b1e880ea9ed2b2e6301b212b57f1ee148cd6dd28780e5e2cf856e241",
-          "c60f9c923c727b0b71bef2c67d1d12687ff7a63186903166d605b68baec293ec"
+          "c60f9c923c727b0b71bef2c67d1d12687ff7a63186903166d605b68baec293ec",
         ],
         [
           "eaa649f21f51bdbae7be4ae34ce6e5217a58fdce7f47f9aa7f3b58fa2120e2b3",
-          "be3279ed5bbbb03ac69a80f89879aa5a01a6b965f13f7e59d47a5305ba5ad93d"
+          "be3279ed5bbbb03ac69a80f89879aa5a01a6b965f13f7e59d47a5305ba5ad93d",
         ],
         [
           "e4a42d43c5cf169d9391df6decf42ee541b6d8f0c9a137401e23632dda34d24f",
-          "4d9f92e716d1c73526fc99ccfb8ad34ce886eedfa8d8e4f13a7f7131deba9414"
+          "4d9f92e716d1c73526fc99ccfb8ad34ce886eedfa8d8e4f13a7f7131deba9414",
         ],
         [
           "1ec80fef360cbdd954160fadab352b6b92b53576a88fea4947173b9d4300bf19",
-          "aeefe93756b5340d2f3a4958a7abbf5e0146e77f6295a07b671cdc1cc107cefd"
+          "aeefe93756b5340d2f3a4958a7abbf5e0146e77f6295a07b671cdc1cc107cefd",
         ],
         [
           "146a778c04670c2f91b00af4680dfa8bce3490717d58ba889ddb5928366642be",
-          "b318e0ec3354028add669827f9d4b2870aaa971d2f7e5ed1d0b297483d83efd0"
+          "b318e0ec3354028add669827f9d4b2870aaa971d2f7e5ed1d0b297483d83efd0",
         ],
         [
           "fa50c0f61d22e5f07e3acebb1aa07b128d0012209a28b9776d76a8793180eef9",
-          "6b84c6922397eba9b72cd2872281a68a5e683293a57a213b38cd8d7d3f4f2811"
+          "6b84c6922397eba9b72cd2872281a68a5e683293a57a213b38cd8d7d3f4f2811",
         ],
         [
           "da1d61d0ca721a11b1a5bf6b7d88e8421a288ab5d5bba5220e53d32b5f067ec2",
-          "8157f55a7c99306c79c0766161c91e2966a73899d279b48a655fba0f1ad836f1"
+          "8157f55a7c99306c79c0766161c91e2966a73899d279b48a655fba0f1ad836f1",
         ],
         [
           "a8e282ff0c9706907215ff98e8fd416615311de0446f1e062a73b0610d064e13",
-          "7f97355b8db81c09abfb7f3c5b2515888b679a3e50dd6bd6cef7c73111f4cc0c"
+          "7f97355b8db81c09abfb7f3c5b2515888b679a3e50dd6bd6cef7c73111f4cc0c",
         ],
         [
           "174a53b9c9a285872d39e56e6913cab15d59b1fa512508c022f382de8319497c",
-          "ccc9dc37abfc9c1657b4155f2c47f9e6646b3a1d8cb9854383da13ac079afa73"
+          "ccc9dc37abfc9c1657b4155f2c47f9e6646b3a1d8cb9854383da13ac079afa73",
         ],
         [
           "959396981943785c3d3e57edf5018cdbe039e730e4918b3d884fdff09475b7ba",
-          "2e7e552888c331dd8ba0386a4b9cd6849c653f64c8709385e9b8abf87524f2fd"
+          "2e7e552888c331dd8ba0386a4b9cd6849c653f64c8709385e9b8abf87524f2fd",
         ],
         [
           "d2a63a50ae401e56d645a1153b109a8fcca0a43d561fba2dbb51340c9d82b151",
-          "e82d86fb6443fcb7565aee58b2948220a70f750af484ca52d4142174dcf89405"
+          "e82d86fb6443fcb7565aee58b2948220a70f750af484ca52d4142174dcf89405",
         ],
         [
           "64587e2335471eb890ee7896d7cfdc866bacbdbd3839317b3436f9b45617e073",
-          "d99fcdd5bf6902e2ae96dd6447c299a185b90a39133aeab358299e5e9faf6589"
+          "d99fcdd5bf6902e2ae96dd6447c299a185b90a39133aeab358299e5e9faf6589",
         ],
         [
           "8481bde0e4e4d885b3a546d3e549de042f0aa6cea250e7fd358d6c86dd45e458",
-          "38ee7b8cba5404dd84a25bf39cecb2ca900a79c42b262e556d64b1b59779057e"
+          "38ee7b8cba5404dd84a25bf39cecb2ca900a79c42b262e556d64b1b59779057e",
         ],
         [
           "13464a57a78102aa62b6979ae817f4637ffcfed3c4b1ce30bcd6303f6caf666b",
-          "69be159004614580ef7e433453ccb0ca48f300a81d0942e13f495a907f6ecc27"
+          "69be159004614580ef7e433453ccb0ca48f300a81d0942e13f495a907f6ecc27",
         ],
         [
           "bc4a9df5b713fe2e9aef430bcc1dc97a0cd9ccede2f28588cada3a0d2d83f366",
-          "d3a81ca6e785c06383937adf4b798caa6e8a9fbfa547b16d758d666581f33c1"
+          "d3a81ca6e785c06383937adf4b798caa6e8a9fbfa547b16d758d666581f33c1",
         ],
         [
           "8c28a97bf8298bc0d23d8c749452a32e694b65e30a9472a3954ab30fe5324caa",
-          "40a30463a3305193378fedf31f7cc0eb7ae784f0451cb9459e71dc73cbef9482"
+          "40a30463a3305193378fedf31f7cc0eb7ae784f0451cb9459e71dc73cbef9482",
         ],
         [
           "8ea9666139527a8c1dd94ce4f071fd23c8b350c5a4bb33748c4ba111faccae0",
-          "620efabbc8ee2782e24e7c0cfb95c5d735b783be9cf0f8e955af34a30e62b945"
+          "620efabbc8ee2782e24e7c0cfb95c5d735b783be9cf0f8e955af34a30e62b945",
         ],
         [
           "dd3625faef5ba06074669716bbd3788d89bdde815959968092f76cc4eb9a9787",
-          "7a188fa3520e30d461da2501045731ca941461982883395937f68d00c644a573"
+          "7a188fa3520e30d461da2501045731ca941461982883395937f68d00c644a573",
         ],
         [
           "f710d79d9eb962297e4f6232b40e8f7feb2bc63814614d692c12de752408221e",
-          "ea98e67232d3b3295d3b535532115ccac8612c721851617526ae47a9c77bfc82"
-        ]
-      ]
+          "ea98e67232d3b3295d3b535532115ccac8612c721851617526ae47a9c77bfc82",
+        ],
+      ],
     },
     naf: {
       wnd: 7,
       points: [
         [
           "f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
-          "388f7b0f632de8140fe337e62a37f3566500a99934c2231b6cb9fd7584b8e672"
+          "388f7b0f632de8140fe337e62a37f3566500a99934c2231b6cb9fd7584b8e672",
         ],
         [
           "2f8bde4d1a07209355b4a7250a5c5128e88b84bddc619ab7cba8d569b240efe4",
-          "d8ac222636e5e3d6d4dba9dda6c9c426f788271bab0d6840dca87d3aa6ac62d6"
+          "d8ac222636e5e3d6d4dba9dda6c9c426f788271bab0d6840dca87d3aa6ac62d6",
         ],
         [
           "5cbdf0646e5db4eaa398f365f2ea7a0e3d419b7e0330e39ce92bddedcac4f9bc",
-          "6aebca40ba255960a3178d6d861a54dba813d0b813fde7b5a5082628087264da"
+          "6aebca40ba255960a3178d6d861a54dba813d0b813fde7b5a5082628087264da",
         ],
         [
           "acd484e2f0c7f65309ad178a9f559abde09796974c57e714c35f110dfc27ccbe",
-          "cc338921b0a7d9fd64380971763b61e9add888a4375f8e0f05cc262ac64f9c37"
+          "cc338921b0a7d9fd64380971763b61e9add888a4375f8e0f05cc262ac64f9c37",
         ],
         [
           "774ae7f858a9411e5ef4246b70c65aac5649980be5c17891bbec17895da008cb",
-          "d984a032eb6b5e190243dd56d7b7b365372db1e2dff9d6a8301d74c9c953c61b"
+          "d984a032eb6b5e190243dd56d7b7b365372db1e2dff9d6a8301d74c9c953c61b",
         ],
         [
           "f28773c2d975288bc7d1d205c3748651b075fbc6610e58cddeeddf8f19405aa8",
-          "ab0902e8d880a89758212eb65cdaf473a1a06da521fa91f29b5cb52db03ed81"
+          "ab0902e8d880a89758212eb65cdaf473a1a06da521fa91f29b5cb52db03ed81",
         ],
         [
           "d7924d4f7d43ea965a465ae3095ff41131e5946f3c85f79e44adbcf8e27e080e",
-          "581e2872a86c72a683842ec228cc6defea40af2bd896d3a5c504dc9ff6a26b58"
+          "581e2872a86c72a683842ec228cc6defea40af2bd896d3a5c504dc9ff6a26b58",
         ],
         [
           "defdea4cdb677750a420fee807eacf21eb9898ae79b9768766e4faa04a2d4a34",
-          "4211ab0694635168e997b0ead2a93daeced1f4a04a95c0f6cfb199f69e56eb77"
+          "4211ab0694635168e997b0ead2a93daeced1f4a04a95c0f6cfb199f69e56eb77",
         ],
         [
           "2b4ea0a797a443d293ef5cff444f4979f06acfebd7e86d277475656138385b6c",
-          "85e89bc037945d93b343083b5a1c86131a01f60c50269763b570c854e5c09b7a"
+          "85e89bc037945d93b343083b5a1c86131a01f60c50269763b570c854e5c09b7a",
         ],
         [
           "352bbf4a4cdd12564f93fa332ce333301d9ad40271f8107181340aef25be59d5",
-          "321eb4075348f534d59c18259dda3e1f4a1b3b2e71b1039c67bd3d8bcf81998c"
+          "321eb4075348f534d59c18259dda3e1f4a1b3b2e71b1039c67bd3d8bcf81998c",
         ],
         [
           "2fa2104d6b38d11b0230010559879124e42ab8dfeff5ff29dc9cdadd4ecacc3f",
-          "2de1068295dd865b64569335bd5dd80181d70ecfc882648423ba76b532b7d67"
+          "2de1068295dd865b64569335bd5dd80181d70ecfc882648423ba76b532b7d67",
         ],
         [
           "9248279b09b4d68dab21a9b066edda83263c3d84e09572e269ca0cd7f5453714",
-          "73016f7bf234aade5d1aa71bdea2b1ff3fc0de2a887912ffe54a32ce97cb3402"
+          "73016f7bf234aade5d1aa71bdea2b1ff3fc0de2a887912ffe54a32ce97cb3402",
         ],
         [
           "daed4f2be3a8bf278e70132fb0beb7522f570e144bf615c07e996d443dee8729",
-          "a69dce4a7d6c98e8d4a1aca87ef8d7003f83c230f3afa726ab40e52290be1c55"
+          "a69dce4a7d6c98e8d4a1aca87ef8d7003f83c230f3afa726ab40e52290be1c55",
         ],
         [
           "c44d12c7065d812e8acf28d7cbb19f9011ecd9e9fdf281b0e6a3b5e87d22e7db",
-          "2119a460ce326cdc76c45926c982fdac0e106e861edf61c5a039063f0e0e6482"
+          "2119a460ce326cdc76c45926c982fdac0e106e861edf61c5a039063f0e0e6482",
         ],
         [
           "6a245bf6dc698504c89a20cfded60853152b695336c28063b61c65cbd269e6b4",
-          "e022cf42c2bd4a708b3f5126f16a24ad8b33ba48d0423b6efd5e6348100d8a82"
+          "e022cf42c2bd4a708b3f5126f16a24ad8b33ba48d0423b6efd5e6348100d8a82",
         ],
         [
           "1697ffa6fd9de627c077e3d2fe541084ce13300b0bec1146f95ae57f0d0bd6a5",
-          "b9c398f186806f5d27561506e4557433a2cf15009e498ae7adee9d63d01b2396"
+          "b9c398f186806f5d27561506e4557433a2cf15009e498ae7adee9d63d01b2396",
         ],
         [
           "605bdb019981718b986d0f07e834cb0d9deb8360ffb7f61df982345ef27a7479",
-          "2972d2de4f8d20681a78d93ec96fe23c26bfae84fb14db43b01e1e9056b8c49"
+          "2972d2de4f8d20681a78d93ec96fe23c26bfae84fb14db43b01e1e9056b8c49",
         ],
         [
           "62d14dab4150bf497402fdc45a215e10dcb01c354959b10cfe31c7e9d87ff33d",
-          "80fc06bd8cc5b01098088a1950eed0db01aa132967ab472235f5642483b25eaf"
+          "80fc06bd8cc5b01098088a1950eed0db01aa132967ab472235f5642483b25eaf",
         ],
         [
           "80c60ad0040f27dade5b4b06c408e56b2c50e9f56b9b8b425e555c2f86308b6f",
-          "1c38303f1cc5c30f26e66bad7fe72f70a65eed4cbe7024eb1aa01f56430bd57a"
+          "1c38303f1cc5c30f26e66bad7fe72f70a65eed4cbe7024eb1aa01f56430bd57a",
         ],
         [
           "7a9375ad6167ad54aa74c6348cc54d344cc5dc9487d847049d5eabb0fa03c8fb",
-          "d0e3fa9eca8726909559e0d79269046bdc59ea10c70ce2b02d499ec224dc7f7"
+          "d0e3fa9eca8726909559e0d79269046bdc59ea10c70ce2b02d499ec224dc7f7",
         ],
         [
           "d528ecd9b696b54c907a9ed045447a79bb408ec39b68df504bb51f459bc3ffc9",
-          "eecf41253136e5f99966f21881fd656ebc4345405c520dbc063465b521409933"
+          "eecf41253136e5f99966f21881fd656ebc4345405c520dbc063465b521409933",
         ],
         [
           "49370a4b5f43412ea25f514e8ecdad05266115e4a7ecb1387231808f8b45963",
-          "758f3f41afd6ed428b3081b0512fd62a54c3f3afbb5b6764b653052a12949c9a"
+          "758f3f41afd6ed428b3081b0512fd62a54c3f3afbb5b6764b653052a12949c9a",
         ],
         [
           "77f230936ee88cbbd73df930d64702ef881d811e0e1498e2f1c13eb1fc345d74",
-          "958ef42a7886b6400a08266e9ba1b37896c95330d97077cbbe8eb3c7671c60d6"
+          "958ef42a7886b6400a08266e9ba1b37896c95330d97077cbbe8eb3c7671c60d6",
         ],
         [
           "f2dac991cc4ce4b9ea44887e5c7c0bce58c80074ab9d4dbaeb28531b7739f530",
-          "e0dedc9b3b2f8dad4da1f32dec2531df9eb5fbeb0598e4fd1a117dba703a3c37"
+          "e0dedc9b3b2f8dad4da1f32dec2531df9eb5fbeb0598e4fd1a117dba703a3c37",
         ],
         [
           "463b3d9f662621fb1b4be8fbbe2520125a216cdfc9dae3debcba4850c690d45b",
-          "5ed430d78c296c3543114306dd8622d7c622e27c970a1de31cb377b01af7307e"
+          "5ed430d78c296c3543114306dd8622d7c622e27c970a1de31cb377b01af7307e",
         ],
         [
           "f16f804244e46e2a09232d4aff3b59976b98fac14328a2d1a32496b49998f247",
-          "cedabd9b82203f7e13d206fcdf4e33d92a6c53c26e5cce26d6579962c4e31df6"
+          "cedabd9b82203f7e13d206fcdf4e33d92a6c53c26e5cce26d6579962c4e31df6",
         ],
         [
           "caf754272dc84563b0352b7a14311af55d245315ace27c65369e15f7151d41d1",
-          "cb474660ef35f5f2a41b643fa5e460575f4fa9b7962232a5c32f908318a04476"
+          "cb474660ef35f5f2a41b643fa5e460575f4fa9b7962232a5c32f908318a04476",
         ],
         [
           "2600ca4b282cb986f85d0f1709979d8b44a09c07cb86d7c124497bc86f082120",
-          "4119b88753c15bd6a693b03fcddbb45d5ac6be74ab5f0ef44b0be9475a7e4b40"
+          "4119b88753c15bd6a693b03fcddbb45d5ac6be74ab5f0ef44b0be9475a7e4b40",
         ],
         [
           "7635ca72d7e8432c338ec53cd12220bc01c48685e24f7dc8c602a7746998e435",
-          "91b649609489d613d1d5e590f78e6d74ecfc061d57048bad9e76f302c5b9c61"
+          "91b649609489d613d1d5e590f78e6d74ecfc061d57048bad9e76f302c5b9c61",
         ],
         [
           "754e3239f325570cdbbf4a87deee8a66b7f2b33479d468fbc1a50743bf56cc18",
-          "673fb86e5bda30fb3cd0ed304ea49a023ee33d0197a695d0c5d98093c536683"
+          "673fb86e5bda30fb3cd0ed304ea49a023ee33d0197a695d0c5d98093c536683",
         ],
         [
           "e3e6bd1071a1e96aff57859c82d570f0330800661d1c952f9fe2694691d9b9e8",
-          "59c9e0bba394e76f40c0aa58379a3cb6a5a2283993e90c4167002af4920e37f5"
+          "59c9e0bba394e76f40c0aa58379a3cb6a5a2283993e90c4167002af4920e37f5",
         ],
         [
           "186b483d056a033826ae73d88f732985c4ccb1f32ba35f4b4cc47fdcf04aa6eb",
-          "3b952d32c67cf77e2e17446e204180ab21fb8090895138b4a4a797f86e80888b"
+          "3b952d32c67cf77e2e17446e204180ab21fb8090895138b4a4a797f86e80888b",
         ],
         [
           "df9d70a6b9876ce544c98561f4be4f725442e6d2b737d9c91a8321724ce0963f",
-          "55eb2dafd84d6ccd5f862b785dc39d4ab157222720ef9da217b8c45cf2ba2417"
+          "55eb2dafd84d6ccd5f862b785dc39d4ab157222720ef9da217b8c45cf2ba2417",
         ],
         [
           "5edd5cc23c51e87a497ca815d5dce0f8ab52554f849ed8995de64c5f34ce7143",
-          "efae9c8dbc14130661e8cec030c89ad0c13c66c0d17a2905cdc706ab7399a868"
+          "efae9c8dbc14130661e8cec030c89ad0c13c66c0d17a2905cdc706ab7399a868",
         ],
         [
           "290798c2b6476830da12fe02287e9e777aa3fba1c355b17a722d362f84614fba",
-          "e38da76dcd440621988d00bcf79af25d5b29c094db2a23146d003afd41943e7a"
+          "e38da76dcd440621988d00bcf79af25d5b29c094db2a23146d003afd41943e7a",
         ],
         [
           "af3c423a95d9f5b3054754efa150ac39cd29552fe360257362dfdecef4053b45",
-          "f98a3fd831eb2b749a93b0e6f35cfb40c8cd5aa667a15581bc2feded498fd9c6"
+          "f98a3fd831eb2b749a93b0e6f35cfb40c8cd5aa667a15581bc2feded498fd9c6",
         ],
         [
           "766dbb24d134e745cccaa28c99bf274906bb66b26dcf98df8d2fed50d884249a",
-          "744b1152eacbe5e38dcc887980da38b897584a65fa06cedd2c924f97cbac5996"
+          "744b1152eacbe5e38dcc887980da38b897584a65fa06cedd2c924f97cbac5996",
         ],
         [
           "59dbf46f8c94759ba21277c33784f41645f7b44f6c596a58ce92e666191abe3e",
-          "c534ad44175fbc300f4ea6ce648309a042ce739a7919798cd85e216c4a307f6e"
+          "c534ad44175fbc300f4ea6ce648309a042ce739a7919798cd85e216c4a307f6e",
         ],
         [
           "f13ada95103c4537305e691e74e9a4a8dd647e711a95e73cb62dc6018cfd87b8",
-          "e13817b44ee14de663bf4bc808341f326949e21a6a75c2570778419bdaf5733d"
+          "e13817b44ee14de663bf4bc808341f326949e21a6a75c2570778419bdaf5733d",
         ],
         [
           "7754b4fa0e8aced06d4167a2c59cca4cda1869c06ebadfb6488550015a88522c",
-          "30e93e864e669d82224b967c3020b8fa8d1e4e350b6cbcc537a48b57841163a2"
+          "30e93e864e669d82224b967c3020b8fa8d1e4e350b6cbcc537a48b57841163a2",
         ],
         [
           "948dcadf5990e048aa3874d46abef9d701858f95de8041d2a6828c99e2262519",
-          "e491a42537f6e597d5d28a3224b1bc25df9154efbd2ef1d2cbba2cae5347d57e"
+          "e491a42537f6e597d5d28a3224b1bc25df9154efbd2ef1d2cbba2cae5347d57e",
         ],
         [
           "7962414450c76c1689c7b48f8202ec37fb224cf5ac0bfa1570328a8a3d7c77ab",
-          "100b610ec4ffb4760d5c1fc133ef6f6b12507a051f04ac5760afa5b29db83437"
+          "100b610ec4ffb4760d5c1fc133ef6f6b12507a051f04ac5760afa5b29db83437",
         ],
         [
           "3514087834964b54b15b160644d915485a16977225b8847bb0dd085137ec47ca",
-          "ef0afbb2056205448e1652c48e8127fc6039e77c15c2378b7e7d15a0de293311"
+          "ef0afbb2056205448e1652c48e8127fc6039e77c15c2378b7e7d15a0de293311",
         ],
         [
           "d3cc30ad6b483e4bc79ce2c9dd8bc54993e947eb8df787b442943d3f7b527eaf",
-          "8b378a22d827278d89c5e9be8f9508ae3c2ad46290358630afb34db04eede0a4"
+          "8b378a22d827278d89c5e9be8f9508ae3c2ad46290358630afb34db04eede0a4",
         ],
         [
           "1624d84780732860ce1c78fcbfefe08b2b29823db913f6493975ba0ff4847610",
-          "68651cf9b6da903e0914448c6cd9d4ca896878f5282be4c8cc06e2a404078575"
+          "68651cf9b6da903e0914448c6cd9d4ca896878f5282be4c8cc06e2a404078575",
         ],
         [
           "733ce80da955a8a26902c95633e62a985192474b5af207da6df7b4fd5fc61cd4",
-          "f5435a2bd2badf7d485a4d8b8db9fcce3e1ef8e0201e4578c54673bc1dc5ea1d"
+          "f5435a2bd2badf7d485a4d8b8db9fcce3e1ef8e0201e4578c54673bc1dc5ea1d",
         ],
         [
           "15d9441254945064cf1a1c33bbd3b49f8966c5092171e699ef258dfab81c045c",
-          "d56eb30b69463e7234f5137b73b84177434800bacebfc685fc37bbe9efe4070d"
+          "d56eb30b69463e7234f5137b73b84177434800bacebfc685fc37bbe9efe4070d",
         ],
         [
           "a1d0fcf2ec9de675b612136e5ce70d271c21417c9d2b8aaaac138599d0717940",
-          "edd77f50bcb5a3cab2e90737309667f2641462a54070f3d519212d39c197a629"
+          "edd77f50bcb5a3cab2e90737309667f2641462a54070f3d519212d39c197a629",
         ],
         [
           "e22fbe15c0af8ccc5780c0735f84dbe9a790badee8245c06c7ca37331cb36980",
-          "a855babad5cd60c88b430a69f53a1a7a38289154964799be43d06d77d31da06"
+          "a855babad5cd60c88b430a69f53a1a7a38289154964799be43d06d77d31da06",
         ],
         [
           "311091dd9860e8e20ee13473c1155f5f69635e394704eaa74009452246cfa9b3",
-          "66db656f87d1f04fffd1f04788c06830871ec5a64feee685bd80f0b1286d8374"
+          "66db656f87d1f04fffd1f04788c06830871ec5a64feee685bd80f0b1286d8374",
         ],
         [
           "34c1fd04d301be89b31c0442d3e6ac24883928b45a9340781867d4232ec2dbdf",
-          "9414685e97b1b5954bd46f730174136d57f1ceeb487443dc5321857ba73abee"
+          "9414685e97b1b5954bd46f730174136d57f1ceeb487443dc5321857ba73abee",
         ],
         [
           "f219ea5d6b54701c1c14de5b557eb42a8d13f3abbcd08affcc2a5e6b049b8d63",
-          "4cb95957e83d40b0f73af4544cccf6b1f4b08d3c07b27fb8d8c2962a400766d1"
+          "4cb95957e83d40b0f73af4544cccf6b1f4b08d3c07b27fb8d8c2962a400766d1",
         ],
         [
           "d7b8740f74a8fbaab1f683db8f45de26543a5490bca627087236912469a0b448",
-          "fa77968128d9c92ee1010f337ad4717eff15db5ed3c049b3411e0315eaa4593b"
+          "fa77968128d9c92ee1010f337ad4717eff15db5ed3c049b3411e0315eaa4593b",
         ],
         [
           "32d31c222f8f6f0ef86f7c98d3a3335ead5bcd32abdd94289fe4d3091aa824bf",
-          "5f3032f5892156e39ccd3d7915b9e1da2e6dac9e6f26e961118d14b8462e1661"
+          "5f3032f5892156e39ccd3d7915b9e1da2e6dac9e6f26e961118d14b8462e1661",
         ],
         [
           "7461f371914ab32671045a155d9831ea8793d77cd59592c4340f86cbc18347b5",
-          "8ec0ba238b96bec0cbdddcae0aa442542eee1ff50c986ea6b39847b3cc092ff6"
+          "8ec0ba238b96bec0cbdddcae0aa442542eee1ff50c986ea6b39847b3cc092ff6",
         ],
         [
           "ee079adb1df1860074356a25aa38206a6d716b2c3e67453d287698bad7b2b2d6",
-          "8dc2412aafe3be5c4c5f37e0ecc5f9f6a446989af04c4e25ebaac479ec1c8c1e"
+          "8dc2412aafe3be5c4c5f37e0ecc5f9f6a446989af04c4e25ebaac479ec1c8c1e",
         ],
         [
           "16ec93e447ec83f0467b18302ee620f7e65de331874c9dc72bfd8616ba9da6b5",
-          "5e4631150e62fb40d0e8c2a7ca5804a39d58186a50e497139626778e25b0674d"
+          "5e4631150e62fb40d0e8c2a7ca5804a39d58186a50e497139626778e25b0674d",
         ],
         [
           "eaa5f980c245f6f038978290afa70b6bd8855897f98b6aa485b96065d537bd99",
-          "f65f5d3e292c2e0819a528391c994624d784869d7e6ea67fb18041024edc07dc"
+          "f65f5d3e292c2e0819a528391c994624d784869d7e6ea67fb18041024edc07dc",
         ],
         [
           "78c9407544ac132692ee1910a02439958ae04877151342ea96c4b6b35a49f51",
-          "f3e0319169eb9b85d5404795539a5e68fa1fbd583c064d2462b675f194a3ddb4"
+          "f3e0319169eb9b85d5404795539a5e68fa1fbd583c064d2462b675f194a3ddb4",
         ],
         [
           "494f4be219a1a77016dcd838431aea0001cdc8ae7a6fc688726578d9702857a5",
-          "42242a969283a5f339ba7f075e36ba2af925ce30d767ed6e55f4b031880d562c"
+          "42242a969283a5f339ba7f075e36ba2af925ce30d767ed6e55f4b031880d562c",
         ],
         [
           "a598a8030da6d86c6bc7f2f5144ea549d28211ea58faa70ebf4c1e665c1fe9b5",
-          "204b5d6f84822c307e4b4a7140737aec23fc63b65b35f86a10026dbd2d864e6b"
+          "204b5d6f84822c307e4b4a7140737aec23fc63b65b35f86a10026dbd2d864e6b",
         ],
         [
           "c41916365abb2b5d09192f5f2dbeafec208f020f12570a184dbadc3e58595997",
-          "4f14351d0087efa49d245b328984989d5caf9450f34bfc0ed16e96b58fa9913"
+          "4f14351d0087efa49d245b328984989d5caf9450f34bfc0ed16e96b58fa9913",
         ],
         [
           "841d6063a586fa475a724604da03bc5b92a2e0d2e0a36acfe4c73a5514742881",
-          "73867f59c0659e81904f9a1c7543698e62562d6744c169ce7a36de01a8d6154"
+          "73867f59c0659e81904f9a1c7543698e62562d6744c169ce7a36de01a8d6154",
         ],
         [
           "5e95bb399a6971d376026947f89bde2f282b33810928be4ded112ac4d70e20d5",
-          "39f23f366809085beebfc71181313775a99c9aed7d8ba38b161384c746012865"
+          "39f23f366809085beebfc71181313775a99c9aed7d8ba38b161384c746012865",
         ],
         [
           "36e4641a53948fd476c39f8a99fd974e5ec07564b5315d8bf99471bca0ef2f66",
-          "d2424b1b1abe4eb8164227b085c9aa9456ea13493fd563e06fd51cf5694c78fc"
+          "d2424b1b1abe4eb8164227b085c9aa9456ea13493fd563e06fd51cf5694c78fc",
         ],
         [
           "336581ea7bfbbb290c191a2f507a41cf5643842170e914faeab27c2c579f726",
-          "ead12168595fe1be99252129b6e56b3391f7ab1410cd1e0ef3dcdcabd2fda224"
+          "ead12168595fe1be99252129b6e56b3391f7ab1410cd1e0ef3dcdcabd2fda224",
         ],
         [
           "8ab89816dadfd6b6a1f2634fcf00ec8403781025ed6890c4849742706bd43ede",
-          "6fdcef09f2f6d0a044e654aef624136f503d459c3e89845858a47a9129cdd24e"
+          "6fdcef09f2f6d0a044e654aef624136f503d459c3e89845858a47a9129cdd24e",
         ],
         [
           "1e33f1a746c9c5778133344d9299fcaa20b0938e8acff2544bb40284b8c5fb94",
-          "60660257dd11b3aa9c8ed618d24edff2306d320f1d03010e33a7d2057f3b3b6"
+          "60660257dd11b3aa9c8ed618d24edff2306d320f1d03010e33a7d2057f3b3b6",
         ],
         [
           "85b7c1dcb3cec1b7ee7f30ded79dd20a0ed1f4cc18cbcfcfa410361fd8f08f31",
-          "3d98a9cdd026dd43f39048f25a8847f4fcafad1895d7a633c6fed3c35e999511"
+          "3d98a9cdd026dd43f39048f25a8847f4fcafad1895d7a633c6fed3c35e999511",
         ],
         [
           "29df9fbd8d9e46509275f4b125d6d45d7fbe9a3b878a7af872a2800661ac5f51",
-          "b4c4fe99c775a606e2d8862179139ffda61dc861c019e55cd2876eb2a27d84b"
+          "b4c4fe99c775a606e2d8862179139ffda61dc861c019e55cd2876eb2a27d84b",
         ],
         [
           "a0b1cae06b0a847a3fea6e671aaf8adfdfe58ca2f768105c8082b2e449fce252",
-          "ae434102edde0958ec4b19d917a6a28e6b72da1834aff0e650f049503a296cf2"
+          "ae434102edde0958ec4b19d917a6a28e6b72da1834aff0e650f049503a296cf2",
         ],
         [
           "4e8ceafb9b3e9a136dc7ff67e840295b499dfb3b2133e4ba113f2e4c0e121e5",
-          "cf2174118c8b6d7a4b48f6d534ce5c79422c086a63460502b827ce62a326683c"
+          "cf2174118c8b6d7a4b48f6d534ce5c79422c086a63460502b827ce62a326683c",
         ],
         [
           "d24a44e047e19b6f5afb81c7ca2f69080a5076689a010919f42725c2b789a33b",
-          "6fb8d5591b466f8fc63db50f1c0f1c69013f996887b8244d2cdec417afea8fa3"
+          "6fb8d5591b466f8fc63db50f1c0f1c69013f996887b8244d2cdec417afea8fa3",
         ],
         [
           "ea01606a7a6c9cdd249fdfcfacb99584001edd28abbab77b5104e98e8e3b35d4",
-          "322af4908c7312b0cfbfe369f7a7b3cdb7d4494bc2823700cfd652188a3ea98d"
+          "322af4908c7312b0cfbfe369f7a7b3cdb7d4494bc2823700cfd652188a3ea98d",
         ],
         [
           "af8addbf2b661c8a6c6328655eb96651252007d8c5ea31be4ad196de8ce2131f",
-          "6749e67c029b85f52a034eafd096836b2520818680e26ac8f3dfbcdb71749700"
+          "6749e67c029b85f52a034eafd096836b2520818680e26ac8f3dfbcdb71749700",
         ],
         [
           "e3ae1974566ca06cc516d47e0fb165a674a3dabcfca15e722f0e3450f45889",
-          "2aeabe7e4531510116217f07bf4d07300de97e4874f81f533420a72eeb0bd6a4"
+          "2aeabe7e4531510116217f07bf4d07300de97e4874f81f533420a72eeb0bd6a4",
         ],
         [
           "591ee355313d99721cf6993ffed1e3e301993ff3ed258802075ea8ced397e246",
-          "b0ea558a113c30bea60fc4775460c7901ff0b053d25ca2bdeee98f1a4be5d196"
+          "b0ea558a113c30bea60fc4775460c7901ff0b053d25ca2bdeee98f1a4be5d196",
         ],
         [
           "11396d55fda54c49f19aa97318d8da61fa8584e47b084945077cf03255b52984",
-          "998c74a8cd45ac01289d5833a7beb4744ff536b01b257be4c5767bea93ea57a4"
+          "998c74a8cd45ac01289d5833a7beb4744ff536b01b257be4c5767bea93ea57a4",
         ],
         [
           "3c5d2a1ba39c5a1790000738c9e0c40b8dcdfd5468754b6405540157e017aa7a",
-          "b2284279995a34e2f9d4de7396fc18b80f9b8b9fdd270f6661f79ca4c81bd257"
+          "b2284279995a34e2f9d4de7396fc18b80f9b8b9fdd270f6661f79ca4c81bd257",
         ],
         [
           "cc8704b8a60a0defa3a99a7299f2e9c3fbc395afb04ac078425ef8a1793cc030",
-          "bdd46039feed17881d1e0862db347f8cf395b74fc4bcdc4e940b74e3ac1f1b13"
+          "bdd46039feed17881d1e0862db347f8cf395b74fc4bcdc4e940b74e3ac1f1b13",
         ],
         [
           "c533e4f7ea8555aacd9777ac5cad29b97dd4defccc53ee7ea204119b2889b197",
-          "6f0a256bc5efdf429a2fb6242f1a43a2d9b925bb4a4b3a26bb8e0f45eb596096"
+          "6f0a256bc5efdf429a2fb6242f1a43a2d9b925bb4a4b3a26bb8e0f45eb596096",
         ],
         [
           "c14f8f2ccb27d6f109f6d08d03cc96a69ba8c34eec07bbcf566d48e33da6593",
-          "c359d6923bb398f7fd4473e16fe1c28475b740dd098075e6c0e8649113dc3a38"
+          "c359d6923bb398f7fd4473e16fe1c28475b740dd098075e6c0e8649113dc3a38",
         ],
         [
           "a6cbc3046bc6a450bac24789fa17115a4c9739ed75f8f21ce441f72e0b90e6ef",
-          "21ae7f4680e889bb130619e2c0f95a360ceb573c70603139862afd617fa9b9f"
+          "21ae7f4680e889bb130619e2c0f95a360ceb573c70603139862afd617fa9b9f",
         ],
         [
           "347d6d9a02c48927ebfb86c1359b1caf130a3c0267d11ce6344b39f99d43cc38",
-          "60ea7f61a353524d1c987f6ecec92f086d565ab687870cb12689ff1e31c74448"
+          "60ea7f61a353524d1c987f6ecec92f086d565ab687870cb12689ff1e31c74448",
         ],
         [
           "da6545d2181db8d983f7dcb375ef5866d47c67b1bf31c8cf855ef7437b72656a",
-          "49b96715ab6878a79e78f07ce5680c5d6673051b4935bd897fea824b77dc208a"
+          "49b96715ab6878a79e78f07ce5680c5d6673051b4935bd897fea824b77dc208a",
         ],
         [
           "c40747cc9d012cb1a13b8148309c6de7ec25d6945d657146b9d5994b8feb1111",
-          "5ca560753be2a12fc6de6caf2cb489565db936156b9514e1bb5e83037e0fa2d4"
+          "5ca560753be2a12fc6de6caf2cb489565db936156b9514e1bb5e83037e0fa2d4",
         ],
         [
           "4e42c8ec82c99798ccf3a610be870e78338c7f713348bd34c8203ef4037f3502",
-          "7571d74ee5e0fb92a7a8b33a07783341a5492144cc54bcc40a94473693606437"
+          "7571d74ee5e0fb92a7a8b33a07783341a5492144cc54bcc40a94473693606437",
         ],
         [
           "3775ab7089bc6af823aba2e1af70b236d251cadb0c86743287522a1b3b0dedea",
-          "be52d107bcfa09d8bcb9736a828cfa7fac8db17bf7a76a2c42ad961409018cf7"
+          "be52d107bcfa09d8bcb9736a828cfa7fac8db17bf7a76a2c42ad961409018cf7",
         ],
         [
           "cee31cbf7e34ec379d94fb814d3d775ad954595d1314ba8846959e3e82f74e26",
-          "8fd64a14c06b589c26b947ae2bcf6bfa0149ef0be14ed4d80f448a01c43b1c6d"
+          "8fd64a14c06b589c26b947ae2bcf6bfa0149ef0be14ed4d80f448a01c43b1c6d",
         ],
         [
           "b4f9eaea09b6917619f6ea6a4eb5464efddb58fd45b1ebefcdc1a01d08b47986",
-          "39e5c9925b5a54b07433a4f18c61726f8bb131c012ca542eb24a8ac07200682a"
+          "39e5c9925b5a54b07433a4f18c61726f8bb131c012ca542eb24a8ac07200682a",
         ],
         [
           "d4263dfc3d2df923a0179a48966d30ce84e2515afc3dccc1b77907792ebcc60e",
-          "62dfaf07a0f78feb30e30d6295853ce189e127760ad6cf7fae164e122a208d54"
+          "62dfaf07a0f78feb30e30d6295853ce189e127760ad6cf7fae164e122a208d54",
         ],
         [
           "48457524820fa65a4f8d35eb6930857c0032acc0a4a2de422233eeda897612c4",
-          "25a748ab367979d98733c38a1fa1c2e7dc6cc07db2d60a9ae7a76aaa49bd0f77"
+          "25a748ab367979d98733c38a1fa1c2e7dc6cc07db2d60a9ae7a76aaa49bd0f77",
         ],
         [
           "dfeeef1881101f2cb11644f3a2afdfc2045e19919152923f367a1767c11cceda",
-          "ecfb7056cf1de042f9420bab396793c0c390bde74b4bbdff16a83ae09a9a7517"
+          "ecfb7056cf1de042f9420bab396793c0c390bde74b4bbdff16a83ae09a9a7517",
         ],
         [
           "6d7ef6b17543f8373c573f44e1f389835d89bcbc6062ced36c82df83b8fae859",
-          "cd450ec335438986dfefa10c57fea9bcc521a0959b2d80bbf74b190dca712d10"
+          "cd450ec335438986dfefa10c57fea9bcc521a0959b2d80bbf74b190dca712d10",
         ],
         [
           "e75605d59102a5a2684500d3b991f2e3f3c88b93225547035af25af66e04541f",
-          "f5c54754a8f71ee540b9b48728473e314f729ac5308b06938360990e2bfad125"
+          "f5c54754a8f71ee540b9b48728473e314f729ac5308b06938360990e2bfad125",
         ],
         [
           "eb98660f4c4dfaa06a2be453d5020bc99a0c2e60abe388457dd43fefb1ed620c",
-          "6cb9a8876d9cb8520609af3add26cd20a0a7cd8a9411131ce85f44100099223e"
+          "6cb9a8876d9cb8520609af3add26cd20a0a7cd8a9411131ce85f44100099223e",
         ],
         [
           "13e87b027d8514d35939f2e6892b19922154596941888336dc3563e3b8dba942",
-          "fef5a3c68059a6dec5d624114bf1e91aac2b9da568d6abeb2570d55646b8adf1"
+          "fef5a3c68059a6dec5d624114bf1e91aac2b9da568d6abeb2570d55646b8adf1",
         ],
         [
           "ee163026e9fd6fe017c38f06a5be6fc125424b371ce2708e7bf4491691e5764a",
-          "1acb250f255dd61c43d94ccc670d0f58f49ae3fa15b96623e5430da0ad6c62b2"
+          "1acb250f255dd61c43d94ccc670d0f58f49ae3fa15b96623e5430da0ad6c62b2",
         ],
         [
           "b268f5ef9ad51e4d78de3a750c2dc89b1e626d43505867999932e5db33af3d80",
-          "5f310d4b3c99b9ebb19f77d41c1dee018cf0d34fd4191614003e945a1216e423"
+          "5f310d4b3c99b9ebb19f77d41c1dee018cf0d34fd4191614003e945a1216e423",
         ],
         [
           "ff07f3118a9df035e9fad85eb6c7bfe42b02f01ca99ceea3bf7ffdba93c4750d",
-          "438136d603e858a3a5c440c38eccbaddc1d2942114e2eddd4740d098ced1f0d8"
+          "438136d603e858a3a5c440c38eccbaddc1d2942114e2eddd4740d098ced1f0d8",
         ],
         [
           "8d8b9855c7c052a34146fd20ffb658bea4b9f69e0d825ebec16e8c3ce2b526a1",
-          "cdb559eedc2d79f926baf44fb84ea4d44bcf50fee51d7ceb30e2e7f463036758"
+          "cdb559eedc2d79f926baf44fb84ea4d44bcf50fee51d7ceb30e2e7f463036758",
         ],
         [
           "52db0b5384dfbf05bfa9d472d7ae26dfe4b851ceca91b1eba54263180da32b63",
-          "c3b997d050ee5d423ebaf66a6db9f57b3180c902875679de924b69d84a7b375"
+          "c3b997d050ee5d423ebaf66a6db9f57b3180c902875679de924b69d84a7b375",
         ],
         [
           "e62f9490d3d51da6395efd24e80919cc7d0f29c3f3fa48c6fff543becbd43352",
-          "6d89ad7ba4876b0b22c2ca280c682862f342c8591f1daf5170e07bfd9ccafa7d"
+          "6d89ad7ba4876b0b22c2ca280c682862f342c8591f1daf5170e07bfd9ccafa7d",
         ],
         [
           "7f30ea2476b399b4957509c88f77d0191afa2ff5cb7b14fd6d8e7d65aaab1193",
-          "ca5ef7d4b231c94c3b15389a5f6311e9daff7bb67b103e9880ef4bff637acaec"
+          "ca5ef7d4b231c94c3b15389a5f6311e9daff7bb67b103e9880ef4bff637acaec",
         ],
         [
           "5098ff1e1d9f14fb46a210fada6c903fef0fb7b4a1dd1d9ac60a0361800b7a00",
-          "9731141d81fc8f8084d37c6e7542006b3ee1b40d60dfe5362a5b132fd17ddc0"
+          "9731141d81fc8f8084d37c6e7542006b3ee1b40d60dfe5362a5b132fd17ddc0",
         ],
         [
           "32b78c7de9ee512a72895be6b9cbefa6e2f3c4ccce445c96b9f2c81e2778ad58",
-          "ee1849f513df71e32efc3896ee28260c73bb80547ae2275ba497237794c8753c"
+          "ee1849f513df71e32efc3896ee28260c73bb80547ae2275ba497237794c8753c",
         ],
         [
           "e2cb74fddc8e9fbcd076eef2a7c72b0ce37d50f08269dfc074b581550547a4f7",
-          "d3aa2ed71c9dd2247a62df062736eb0baddea9e36122d2be8641abcb005cc4a4"
+          "d3aa2ed71c9dd2247a62df062736eb0baddea9e36122d2be8641abcb005cc4a4",
         ],
         [
           "8438447566d4d7bedadc299496ab357426009a35f235cb141be0d99cd10ae3a8",
-          "c4e1020916980a4da5d01ac5e6ad330734ef0d7906631c4f2390426b2edd791f"
+          "c4e1020916980a4da5d01ac5e6ad330734ef0d7906631c4f2390426b2edd791f",
         ],
         [
           "4162d488b89402039b584c6fc6c308870587d9c46f660b878ab65c82c711d67e",
-          "67163e903236289f776f22c25fb8a3afc1732f2b84b4e95dbda47ae5a0852649"
+          "67163e903236289f776f22c25fb8a3afc1732f2b84b4e95dbda47ae5a0852649",
         ],
         [
           "3fad3fa84caf0f34f0f89bfd2dcf54fc175d767aec3e50684f3ba4a4bf5f683d",
-          "cd1bc7cb6cc407bb2f0ca647c718a730cf71872e7d0d2a53fa20efcdfe61826"
+          "cd1bc7cb6cc407bb2f0ca647c718a730cf71872e7d0d2a53fa20efcdfe61826",
         ],
         [
           "674f2600a3007a00568c1a7ce05d0816c1fb84bf1370798f1c69532faeb1a86b",
-          "299d21f9413f33b3edf43b257004580b70db57da0b182259e09eecc69e0d38a5"
+          "299d21f9413f33b3edf43b257004580b70db57da0b182259e09eecc69e0d38a5",
         ],
         [
           "d32f4da54ade74abb81b815ad1fb3b263d82d6c692714bcff87d29bd5ee9f08f",
-          "f9429e738b8e53b968e99016c059707782e14f4535359d582fc416910b3eea87"
+          "f9429e738b8e53b968e99016c059707782e14f4535359d582fc416910b3eea87",
         ],
         [
           "30e4e670435385556e593657135845d36fbb6931f72b08cb1ed954f1e3ce3ff6",
-          "462f9bce619898638499350113bbc9b10a878d35da70740dc695a559eb88db7b"
+          "462f9bce619898638499350113bbc9b10a878d35da70740dc695a559eb88db7b",
         ],
         [
           "be2062003c51cc3004682904330e4dee7f3dcd10b01e580bf1971b04d4cad297",
-          "62188bc49d61e5428573d48a74e1c655b1c61090905682a0d5558ed72dccb9bc"
+          "62188bc49d61e5428573d48a74e1c655b1c61090905682a0d5558ed72dccb9bc",
         ],
         [
           "93144423ace3451ed29e0fb9ac2af211cb6e84a601df5993c419859fff5df04a",
-          "7c10dfb164c3425f5c71a3f9d7992038f1065224f72bb9d1d902a6d13037b47c"
+          "7c10dfb164c3425f5c71a3f9d7992038f1065224f72bb9d1d902a6d13037b47c",
         ],
         [
           "b015f8044f5fcbdcf21ca26d6c34fb8197829205c7b7d2a7cb66418c157b112c",
-          "ab8c1e086d04e813744a655b2df8d5f83b3cdc6faa3088c1d3aea1454e3a1d5f"
+          "ab8c1e086d04e813744a655b2df8d5f83b3cdc6faa3088c1d3aea1454e3a1d5f",
         ],
         [
           "d5e9e1da649d97d89e4868117a465a3a4f8a18de57a140d36b3f2af341a21b52",
-          "4cb04437f391ed73111a13cc1d4dd0db1693465c2240480d8955e8592f27447a"
+          "4cb04437f391ed73111a13cc1d4dd0db1693465c2240480d8955e8592f27447a",
         ],
         [
           "d3ae41047dd7ca065dbf8ed77b992439983005cd72e16d6f996a5316d36966bb",
-          "bd1aeb21ad22ebb22a10f0303417c6d964f8cdd7df0aca614b10dc14d125ac46"
+          "bd1aeb21ad22ebb22a10f0303417c6d964f8cdd7df0aca614b10dc14d125ac46",
         ],
         [
           "463e2763d885f958fc66cdd22800f0a487197d0a82e377b49f80af87c897b065",
-          "bfefacdb0e5d0fd7df3a311a94de062b26b80c61fbc97508b79992671ef7ca7f"
+          "bfefacdb0e5d0fd7df3a311a94de062b26b80c61fbc97508b79992671ef7ca7f",
         ],
         [
           "7985fdfd127c0567c6f53ec1bb63ec3158e597c40bfe747c83cddfc910641917",
-          "603c12daf3d9862ef2b25fe1de289aed24ed291e0ec6708703a5bd567f32ed03"
+          "603c12daf3d9862ef2b25fe1de289aed24ed291e0ec6708703a5bd567f32ed03",
         ],
         [
           "74a1ad6b5f76e39db2dd249410eac7f99e74c59cb83d2d0ed5ff1543da7703e9",
-          "cc6157ef18c9c63cd6193d83631bbea0093e0968942e8c33d5737fd790e0db08"
+          "cc6157ef18c9c63cd6193d83631bbea0093e0968942e8c33d5737fd790e0db08",
         ],
         [
           "30682a50703375f602d416664ba19b7fc9bab42c72747463a71d0896b22f6da3",
-          "553e04f6b018b4fa6c8f39e7f311d3176290d0e0f19ca73f17714d9977a22ff8"
+          "553e04f6b018b4fa6c8f39e7f311d3176290d0e0f19ca73f17714d9977a22ff8",
         ],
         [
           "9e2158f0d7c0d5f26c3791efefa79597654e7a2b2464f52b1ee6c1347769ef57",
-          "712fcdd1b9053f09003a3481fa7762e9ffd7c8ef35a38509e2fbf2629008373"
+          "712fcdd1b9053f09003a3481fa7762e9ffd7c8ef35a38509e2fbf2629008373",
         ],
         [
           "176e26989a43c9cfeba4029c202538c28172e566e3c4fce7322857f3be327d66",
-          "ed8cc9d04b29eb877d270b4878dc43c19aefd31f4eee09ee7b47834c1fa4b1c3"
+          "ed8cc9d04b29eb877d270b4878dc43c19aefd31f4eee09ee7b47834c1fa4b1c3",
         ],
         [
           "75d46efea3771e6e68abb89a13ad747ecf1892393dfc4f1b7004788c50374da8",
-          "9852390a99507679fd0b86fd2b39a868d7efc22151346e1a3ca4726586a6bed8"
+          "9852390a99507679fd0b86fd2b39a868d7efc22151346e1a3ca4726586a6bed8",
         ],
         [
           "809a20c67d64900ffb698c4c825f6d5f2310fb0451c869345b7319f645605721",
-          "9e994980d9917e22b76b061927fa04143d096ccc54963e6a5ebfa5f3f8e286c1"
+          "9e994980d9917e22b76b061927fa04143d096ccc54963e6a5ebfa5f3f8e286c1",
         ],
         [
           "1b38903a43f7f114ed4500b4eac7083fdefece1cf29c63528d563446f972c180",
-          "4036edc931a60ae889353f77fd53de4a2708b26b6f5da72ad3394119daf408f9"
-        ]
-      ]
-    }
+          "4036edc931a60ae889353f77fd53de4a2708b26b6f5da72ad3394119daf408f9",
+        ],
+      ],
+    },
   };
   return secp256k1;
 }
-(function(exports) {
+(function (exports) {
   var curves2 = exports;
   var hash3 = hash$3;
   var curve$1 = curve;
   var utils2 = utils$m;
   var assert2 = utils2.assert;
   function PresetCurve(options) {
-    if (options.type === "short")
-      this.curve = new curve$1.short(options);
+    if (options.type === "short") this.curve = new curve$1.short(options);
     else if (options.type === "edwards")
       this.curve = new curve$1.edwards(options);
-    else
-      this.curve = new curve$1.mont(options);
+    else this.curve = new curve$1.mont(options);
     this.g = this.curve.g;
     this.n = this.curve.n;
     this.hash = options.hash;
@@ -13833,15 +13725,15 @@ function requireSecp256k1() {
     Object.defineProperty(curves2, name2, {
       configurable: true,
       enumerable: true,
-      get: function() {
+      get: function () {
         var curve2 = new PresetCurve(options);
         Object.defineProperty(curves2, name2, {
           configurable: true,
           enumerable: true,
-          value: curve2
+          value: curve2,
         });
         return curve2;
-      }
+      },
     });
   }
   defineCurve("p192", {
@@ -13855,8 +13747,8 @@ function requireSecp256k1() {
     gRed: false,
     g: [
       "188da80e b03090f6 7cbf20eb 43a18800 f4ff0afd 82ff1012",
-      "07192b95 ffc8da78 631011ed 6b24cdd5 73f977a1 1e794811"
-    ]
+      "07192b95 ffc8da78 631011ed 6b24cdd5 73f977a1 1e794811",
+    ],
   });
   defineCurve("p224", {
     type: "short",
@@ -13869,8 +13761,8 @@ function requireSecp256k1() {
     gRed: false,
     g: [
       "b70e0cbd 6bb4bf7f 321390b9 4a03c1d3 56c21122 343280d6 115c1d21",
-      "bd376388 b5f723fb 4c22dfe6 cd4375a0 5a074764 44d58199 85007e34"
-    ]
+      "bd376388 b5f723fb 4c22dfe6 cd4375a0 5a074764 44d58199 85007e34",
+    ],
   });
   defineCurve("p256", {
     type: "short",
@@ -13883,8 +13775,8 @@ function requireSecp256k1() {
     gRed: false,
     g: [
       "6b17d1f2 e12c4247 f8bce6e5 63a440f2 77037d81 2deb33a0 f4a13945 d898c296",
-      "4fe342e2 fe1a7f9b 8ee7eb4a 7c0f9e16 2bce3357 6b315ece cbb64068 37bf51f5"
-    ]
+      "4fe342e2 fe1a7f9b 8ee7eb4a 7c0f9e16 2bce3357 6b315ece cbb64068 37bf51f5",
+    ],
   });
   defineCurve("p384", {
     type: "short",
@@ -13897,8 +13789,8 @@ function requireSecp256k1() {
     gRed: false,
     g: [
       "aa87ca22 be8b0537 8eb1c71e f320ad74 6e1d3b62 8ba79b98 59f741e0 82542a38 5502f25d bf55296c 3a545e38 72760ab7",
-      "3617de4a 96262c6f 5d9e98bf 9292dc29 f8f41dbd 289a147c e9da3113 b5f0b8c0 0a60b1ce 1d7e819d 7a431d7c 90ea0e5f"
-    ]
+      "3617de4a 96262c6f 5d9e98bf 9292dc29 f8f41dbd 289a147c e9da3113 b5f0b8c0 0a60b1ce 1d7e819d 7a431d7c 90ea0e5f",
+    ],
   });
   defineCurve("p521", {
     type: "short",
@@ -13911,8 +13803,8 @@ function requireSecp256k1() {
     gRed: false,
     g: [
       "000000c6 858e06b7 0404e9cd 9e3ecb66 2395b442 9c648139 053fb521 f828af60 6b4d3dba a14b5e77 efe75928 fe1dc127 a2ffa8de 3348b3c1 856a429b f97e7e31 c2e5bd66",
-      "00000118 39296a78 9a3bc004 5c8a5fb4 2c7d1bd9 98f54449 579b4468 17afbd17 273e662c 97ee7299 5ef42640 c550b901 3fad0761 353c7086 a272c240 88be9476 9fd16650"
-    ]
+      "00000118 39296a78 9a3bc004 5c8a5fb4 2c7d1bd9 98f54449 579b4468 17afbd17 273e662c 97ee7299 5ef42640 c550b901 3fad0761 353c7086 a272c240 88be9476 9fd16650",
+    ],
   });
   defineCurve("curve25519", {
     type: "mont",
@@ -13923,9 +13815,7 @@ function requireSecp256k1() {
     n: "1000000000000000 0000000000000000 14def9dea2f79cd6 5812631a5cf5d3ed",
     hash: hash3.sha256,
     gRed: false,
-    g: [
-      "9"
-    ]
+    g: ["9"],
   });
   defineCurve("ed25519", {
     type: "edwards",
@@ -13941,8 +13831,8 @@ function requireSecp256k1() {
     g: [
       "216936d3cd6e53fec0a4e231fdd6dc5c692cc7609525a7b2c9562d608f25d51a",
       // 4/5
-      "6666666666666666666666666666666666666666666666666666666666666658"
-    ]
+      "6666666666666666666666666666666666666666666666666666666666666658",
+    ],
   });
   var pre;
   try {
@@ -13965,27 +13855,26 @@ function requireSecp256k1() {
     basis: [
       {
         a: "3086d221a7d46bcde86c90e49284eb15",
-        b: "-e4437ed6010e88286f547fa90abfe4c3"
+        b: "-e4437ed6010e88286f547fa90abfe4c3",
       },
       {
         a: "114ca50f7a8e2f3f657c1108d9d44cfd8",
-        b: "3086d221a7d46bcde86c90e49284eb15"
-      }
+        b: "3086d221a7d46bcde86c90e49284eb15",
+      },
     ],
     gRed: false,
     g: [
       "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
       "483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8",
-      pre
-    ]
+      pre,
+    ],
   });
 })(curves$2);
 var hash$2 = hash$3;
 var utils$6 = utils$l;
 var assert$6 = minimalisticAssert;
 function HmacDRBG$1(options) {
-  if (!(this instanceof HmacDRBG$1))
-    return new HmacDRBG$1(options);
+  if (!(this instanceof HmacDRBG$1)) return new HmacDRBG$1(options);
   this.hash = options.hash;
   this.predResist = !!options.predResist;
   this.outLen = this.hash.outSize;
@@ -14021,16 +13910,19 @@ HmacDRBG$1.prototype._hmac = function hmac2() {
 };
 HmacDRBG$1.prototype._update = function update4(seed) {
   var kmac = this._hmac().update(this.V).update([0]);
-  if (seed)
-    kmac = kmac.update(seed);
+  if (seed) kmac = kmac.update(seed);
   this.K = kmac.digest();
   this.V = this._hmac().update(this.V).digest();
-  if (!seed)
-    return;
+  if (!seed) return;
   this.K = this._hmac().update(this.V).update([1]).update(seed).digest();
   this.V = this._hmac().update(this.V).digest();
 };
-HmacDRBG$1.prototype.reseed = function reseed(entropy, entropyEnc, add6, addEnc) {
+HmacDRBG$1.prototype.reseed = function reseed(
+  entropy,
+  entropyEnc,
+  add6,
+  addEnc
+) {
   if (typeof entropyEnc !== "string") {
     addEnc = add6;
     add6 = entropyEnc;
@@ -14046,8 +13938,7 @@ HmacDRBG$1.prototype.reseed = function reseed(entropy, entropyEnc, add6, addEnc)
   this._reseed = 1;
 };
 HmacDRBG$1.prototype.generate = function generate2(len, enc, add6, addEnc) {
-  if (this._reseed > this.reseedInterval)
-    throw new Error("Reseed is required");
+  if (this._reseed > this.reseedInterval) throw new Error("Reseed is required");
   if (typeof enc !== "string") {
     addEnc = add6;
     add6 = enc;
@@ -14074,32 +13965,27 @@ function KeyPair$3(ec2, options) {
   this.ec = ec2;
   this.priv = null;
   this.pub = null;
-  if (options.priv)
-    this._importPrivate(options.priv, options.privEnc);
-  if (options.pub)
-    this._importPublic(options.pub, options.pubEnc);
+  if (options.priv) this._importPrivate(options.priv, options.privEnc);
+  if (options.pub) this._importPublic(options.pub, options.pubEnc);
 }
 var key$1 = KeyPair$3;
 KeyPair$3.fromPublic = function fromPublic(ec2, pub2, enc) {
-  if (pub2 instanceof KeyPair$3)
-    return pub2;
+  if (pub2 instanceof KeyPair$3) return pub2;
   return new KeyPair$3(ec2, {
     pub: pub2,
-    pubEnc: enc
+    pubEnc: enc,
   });
 };
 KeyPair$3.fromPrivate = function fromPrivate(ec2, priv2, enc) {
-  if (priv2 instanceof KeyPair$3)
-    return priv2;
+  if (priv2 instanceof KeyPair$3) return priv2;
   return new KeyPair$3(ec2, {
     priv: priv2,
-    privEnc: enc
+    privEnc: enc,
   });
 };
 KeyPair$3.prototype.validate = function validate6() {
   var pub2 = this.getPublic();
-  if (pub2.isInfinity())
-    return { result: false, reason: "Invalid public key" };
+  if (pub2.isInfinity()) return { result: false, reason: "Invalid public key" };
   if (!pub2.validate())
     return { result: false, reason: "Public key is not a point" };
   if (!pub2.mul(this.ec.curve.n).isInfinity())
@@ -14111,17 +13997,13 @@ KeyPair$3.prototype.getPublic = function getPublic(compact, enc) {
     enc = compact;
     compact = null;
   }
-  if (!this.pub)
-    this.pub = this.ec.g.mul(this.priv);
-  if (!enc)
-    return this.pub;
+  if (!this.pub) this.pub = this.ec.g.mul(this.priv);
+  if (!enc) return this.pub;
   return this.pub.encode(enc, compact);
 };
 KeyPair$3.prototype.getPrivate = function getPrivate(enc) {
-  if (enc === "hex")
-    return this.priv.toString(16, 2);
-  else
-    return this.priv;
+  if (enc === "hex") return this.priv.toString(16, 2);
+  else return this.priv;
 };
 KeyPair$3.prototype._importPrivate = function _importPrivate(key2, enc) {
   this.priv = new BN$4(key2, enc || 16);
@@ -14131,7 +14013,10 @@ KeyPair$3.prototype._importPublic = function _importPublic(key2, enc) {
   if (key2.x || key2.y) {
     if (this.ec.curve.type === "mont") {
       assert$5(key2.x, "Need x coordinate");
-    } else if (this.ec.curve.type === "short" || this.ec.curve.type === "edwards") {
+    } else if (
+      this.ec.curve.type === "short" ||
+      this.ec.curve.type === "edwards"
+    ) {
       assert$5(key2.x && key2.y, "Need both x and y coordinate");
     }
     this.pub = this.ec.curve.point(key2.x, key2.y);
@@ -14152,23 +14037,25 @@ KeyPair$3.prototype.verify = function verify(msg, signature2) {
   return this.ec.verify(msg, signature2, this);
 };
 KeyPair$3.prototype.inspect = function inspect5() {
-  return "<Key priv: " + (this.priv && this.priv.toString(16, 2)) + " pub: " + (this.pub && this.pub.inspect()) + " >";
+  return (
+    "<Key priv: " +
+    (this.priv && this.priv.toString(16, 2)) +
+    " pub: " +
+    (this.pub && this.pub.inspect()) +
+    " >"
+  );
 };
 var BN$3 = bnExports;
 var utils$4 = utils$m;
 var assert$4 = utils$4.assert;
 function Signature$4(options, enc) {
-  if (options instanceof Signature$4)
-    return options;
-  if (this._importDER(options, enc))
-    return;
+  if (options instanceof Signature$4) return options;
+  if (this._importDER(options, enc)) return;
   assert$4(options.r && options.s, "Signature without r or s");
   this.r = new BN$3(options.r, 16);
   this.s = new BN$3(options.s, 16);
-  if (options.recoveryParam === void 0)
-    this.recoveryParam = null;
-  else
-    this.recoveryParam = options.recoveryParam;
+  if (options.recoveryParam === void 0) this.recoveryParam = null;
+  else this.recoveryParam = options.recoveryParam;
 }
 var signature$1 = Signature$4;
 function Position() {
@@ -14263,20 +14150,18 @@ function constructLength(arr, len) {
     arr.push(len);
     return;
   }
-  var octets = 1 + (Math.log(len) / Math.LN2 >>> 3);
+  var octets = 1 + ((Math.log(len) / Math.LN2) >>> 3);
   arr.push(octets | 128);
   while (--octets) {
-    arr.push(len >>> (octets << 3) & 255);
+    arr.push((len >>> (octets << 3)) & 255);
   }
   arr.push(len);
 }
 Signature$4.prototype.toDER = function toDER(enc) {
   var r2 = this.r.toArray();
   var s2 = this.s.toArray();
-  if (r2[0] & 128)
-    r2 = [0].concat(r2);
-  if (s2[0] & 128)
-    s2 = [0].concat(s2);
+  if (r2[0] & 128) r2 = [0].concat(r2);
+  if (s2[0] & 128) s2 = [0].concat(s2);
   r2 = rmPadding(r2);
   s2 = rmPadding(s2);
   while (!s2[0] && !(s2[1] & 128)) {
@@ -14302,8 +14187,7 @@ var assert$3 = utils$3.assert;
 var KeyPair$2 = key$1;
 var Signature$3 = signature$1;
 function EC$1(options) {
-  if (!(this instanceof EC$1))
-    return new EC$1(options);
+  if (!(this instanceof EC$1)) return new EC$1(options);
   if (typeof options === "string") {
     assert$3(
       Object.prototype.hasOwnProperty.call(curves$1, options),
@@ -14311,8 +14195,7 @@ function EC$1(options) {
     );
     options = curves$1[options];
   }
-  if (options instanceof curves$1.PresetCurve)
-    options = { curve: options };
+  if (options instanceof curves$1.PresetCurve) options = { curve: options };
   this.curve = options.curve.curve;
   this.n = this.curve.n;
   this.nh = this.n.ushrn(1);
@@ -14332,42 +14215,36 @@ EC$1.prototype.keyFromPublic = function keyFromPublic(pub2, enc) {
   return KeyPair$2.fromPublic(this, pub2, enc);
 };
 EC$1.prototype.genKeyPair = function genKeyPair(options) {
-  if (!options)
-    options = {};
+  if (!options) options = {};
   var drbg = new HmacDRBG({
     hash: this.hash,
     pers: options.pers,
     persEnc: options.persEnc || "utf8",
     entropy: options.entropy || rand2(this.hash.hmacStrength),
-    entropyEnc: options.entropy && options.entropyEnc || "utf8",
-    nonce: this.n.toArray()
+    entropyEnc: (options.entropy && options.entropyEnc) || "utf8",
+    nonce: this.n.toArray(),
   });
   var bytes2 = this.n.byteLength();
   var ns2 = this.n.sub(new BN$2(2));
-  for (; ; ) {
+  for (;;) {
     var priv2 = new BN$2(drbg.generate(bytes2));
-    if (priv2.cmp(ns2) > 0)
-      continue;
+    if (priv2.cmp(ns2) > 0) continue;
     priv2.iaddn(1);
     return this.keyFromPrivate(priv2);
   }
 };
 EC$1.prototype._truncateToN = function _truncateToN(msg, truncOnly) {
   var delta = msg.byteLength() * 8 - this.n.bitLength();
-  if (delta > 0)
-    msg = msg.ushrn(delta);
-  if (!truncOnly && msg.cmp(this.n) >= 0)
-    return msg.sub(this.n);
-  else
-    return msg;
+  if (delta > 0) msg = msg.ushrn(delta);
+  if (!truncOnly && msg.cmp(this.n) >= 0) return msg.sub(this.n);
+  else return msg;
 };
 EC$1.prototype.sign = function sign3(msg, key2, enc, options) {
   if (typeof enc === "object") {
     options = enc;
     enc = null;
   }
-  if (!options)
-    options = {};
+  if (!options) options = {};
   key2 = this.keyFromPrivate(key2, enc);
   msg = this._truncateToN(new BN$2(msg, 16));
   var bytes2 = this.n.byteLength();
@@ -14378,26 +14255,25 @@ EC$1.prototype.sign = function sign3(msg, key2, enc, options) {
     entropy: bkey,
     nonce,
     pers: options.pers,
-    persEnc: options.persEnc || "utf8"
+    persEnc: options.persEnc || "utf8",
   });
   var ns1 = this.n.sub(new BN$2(1));
   for (var iter = 0; ; iter++) {
-    var k = options.k ? options.k(iter) : new BN$2(drbg.generate(this.n.byteLength()));
+    var k = options.k
+      ? options.k(iter)
+      : new BN$2(drbg.generate(this.n.byteLength()));
     k = this._truncateToN(k, true);
-    if (k.cmpn(1) <= 0 || k.cmp(ns1) >= 0)
-      continue;
+    if (k.cmpn(1) <= 0 || k.cmp(ns1) >= 0) continue;
     var kp = this.g.mul(k);
-    if (kp.isInfinity())
-      continue;
+    if (kp.isInfinity()) continue;
     var kpX = kp.getX();
     var r2 = kpX.umod(this.n);
-    if (r2.cmpn(0) === 0)
-      continue;
+    if (r2.cmpn(0) === 0) continue;
     var s2 = k.invm(this.n).mul(r2.mul(key2.getPrivate()).iadd(msg));
     s2 = s2.umod(this.n);
-    if (s2.cmpn(0) === 0)
-      continue;
-    var recoveryParam = (kp.getY().isOdd() ? 1 : 0) | (kpX.cmp(r2) !== 0 ? 2 : 0);
+    if (s2.cmpn(0) === 0) continue;
+    var recoveryParam =
+      (kp.getY().isOdd() ? 1 : 0) | (kpX.cmp(r2) !== 0 ? 2 : 0);
     if (options.canonical && s2.cmp(this.nh) > 0) {
       s2 = this.n.sub(s2);
       recoveryParam ^= 1;
@@ -14411,26 +14287,22 @@ EC$1.prototype.verify = function verify2(msg, signature2, key2, enc) {
   signature2 = new Signature$3(signature2, "hex");
   var r2 = signature2.r;
   var s2 = signature2.s;
-  if (r2.cmpn(1) < 0 || r2.cmp(this.n) >= 0)
-    return false;
-  if (s2.cmpn(1) < 0 || s2.cmp(this.n) >= 0)
-    return false;
+  if (r2.cmpn(1) < 0 || r2.cmp(this.n) >= 0) return false;
+  if (s2.cmpn(1) < 0 || s2.cmp(this.n) >= 0) return false;
   var sinv = s2.invm(this.n);
   var u1 = sinv.mul(msg).umod(this.n);
   var u2 = sinv.mul(r2).umod(this.n);
   var p;
   if (!this.curve._maxwellTrick) {
     p = this.g.mulAdd(u1, key2.getPublic(), u2);
-    if (p.isInfinity())
-      return false;
+    if (p.isInfinity()) return false;
     return p.getX().umod(this.n).cmp(r2) === 0;
   }
   p = this.g.jmulAdd(u1, key2.getPublic(), u2);
-  if (p.isInfinity())
-    return false;
+  if (p.isInfinity()) return false;
   return p.eqXToP(r2);
 };
-EC$1.prototype.recoverPubKey = function(msg, signature2, j, enc) {
+EC$1.prototype.recoverPubKey = function (msg, signature2, j, enc) {
   assert$3((3 & j) === j, "The recovery param is more than two bits");
   signature2 = new Signature$3(signature2, enc);
   var n = this.n;
@@ -14441,19 +14313,16 @@ EC$1.prototype.recoverPubKey = function(msg, signature2, j, enc) {
   var isSecondKey = j >> 1;
   if (r2.cmp(this.curve.p.umod(this.curve.n)) >= 0 && isSecondKey)
     throw new Error("Unable to find sencond key candinate");
-  if (isSecondKey)
-    r2 = this.curve.pointFromX(r2.add(this.curve.n), isYOdd);
-  else
-    r2 = this.curve.pointFromX(r2, isYOdd);
+  if (isSecondKey) r2 = this.curve.pointFromX(r2.add(this.curve.n), isYOdd);
+  else r2 = this.curve.pointFromX(r2, isYOdd);
   var rInv = signature2.r.invm(n);
   var s1 = n.sub(e).mul(rInv).umod(n);
   var s22 = s2.mul(rInv).umod(n);
   return this.g.mulAdd(s1, r2, s22);
 };
-EC$1.prototype.getKeyRecoveryParam = function(e, signature2, Q, enc) {
+EC$1.prototype.getKeyRecoveryParam = function (e, signature2, Q, enc) {
   signature2 = new Signature$3(signature2, enc);
-  if (signature2.recoveryParam !== null)
-    return signature2.recoveryParam;
+  if (signature2.recoveryParam !== null) return signature2.recoveryParam;
   for (var i = 0; i < 4; i++) {
     var Qprime;
     try {
@@ -14461,8 +14330,7 @@ EC$1.prototype.getKeyRecoveryParam = function(e, signature2, Q, enc) {
     } catch (e2) {
       continue;
     }
-    if (Qprime.eq(Q))
-      return i;
+    if (Qprime.eq(Q)) return i;
   }
   throw new Error("Unable to find valid recovery factor");
 };
@@ -14473,19 +14341,15 @@ var cachedProperty$1 = utils$2.cachedProperty;
 function KeyPair$1(eddsa2, params) {
   this.eddsa = eddsa2;
   this._secret = parseBytes$2(params.secret);
-  if (eddsa2.isPoint(params.pub))
-    this._pub = params.pub;
-  else
-    this._pubBytes = parseBytes$2(params.pub);
+  if (eddsa2.isPoint(params.pub)) this._pub = params.pub;
+  else this._pubBytes = parseBytes$2(params.pub);
 }
 KeyPair$1.fromPublic = function fromPublic2(eddsa2, pub2) {
-  if (pub2 instanceof KeyPair$1)
-    return pub2;
+  if (pub2 instanceof KeyPair$1) return pub2;
   return new KeyPair$1(eddsa2, { pub: pub2 });
 };
 KeyPair$1.fromSecret = function fromSecret(eddsa2, secret2) {
-  if (secret2 instanceof KeyPair$1)
-    return secret2;
+  if (secret2 instanceof KeyPair$1) return secret2;
   return new KeyPair$1(eddsa2, { secret: secret2 });
 };
 KeyPair$1.prototype.secret = function secret() {
@@ -14495,8 +14359,7 @@ cachedProperty$1(KeyPair$1, "pubBytes", function pubBytes() {
   return this.eddsa.encodePoint(this.pub());
 });
 cachedProperty$1(KeyPair$1, "pub", function pub() {
-  if (this._pubBytes)
-    return this.eddsa.decodePoint(this._pubBytes);
+  if (this._pubBytes) return this.eddsa.decodePoint(this._pubBytes);
   return this.eddsa.g.mul(this.priv());
 });
 cachedProperty$1(KeyPair$1, "privBytes", function privBytes() {
@@ -14540,19 +14403,16 @@ var cachedProperty = utils$1.cachedProperty;
 var parseBytes$1 = utils$1.parseBytes;
 function Signature$2(eddsa2, sig) {
   this.eddsa = eddsa2;
-  if (typeof sig !== "object")
-    sig = parseBytes$1(sig);
+  if (typeof sig !== "object") sig = parseBytes$1(sig);
   if (Array.isArray(sig)) {
     sig = {
       R: sig.slice(0, eddsa2.encodingLength),
-      S: sig.slice(eddsa2.encodingLength)
+      S: sig.slice(eddsa2.encodingLength),
     };
   }
   assert$1(sig.R && sig.S, "Signature without R or S");
-  if (eddsa2.isPoint(sig.R))
-    this._R = sig.R;
-  if (sig.S instanceof BN$1)
-    this._S = sig.S;
+  if (eddsa2.isPoint(sig.R)) this._R = sig.R;
+  if (sig.S instanceof BN$1) this._S = sig.S;
   this._Rencoded = Array.isArray(sig.R) ? sig.R : sig.Rencoded;
   this._Sencoded = Array.isArray(sig.S) ? sig.S : sig.Sencoded;
 }
@@ -14584,8 +14444,7 @@ var KeyPair = key;
 var Signature$1 = signature;
 function EDDSA(curve2) {
   assert(curve2 === "ed25519", "only tested with ed25519 so far");
-  if (!(this instanceof EDDSA))
-    return new EDDSA(curve2);
+  if (!(this instanceof EDDSA)) return new EDDSA(curve2);
   curve2 = curves[curve2].curve;
   this.curve = curve2;
   this.g = curve2.g;
@@ -14616,8 +14475,7 @@ EDDSA.prototype.verify = function verify4(message, sig, pub2) {
 };
 EDDSA.prototype.hashInt = function hashInt() {
   var hash3 = this.hash();
-  for (var i = 0; i < arguments.length; i++)
-    hash3.update(arguments[i]);
+  for (var i = 0; i < arguments.length; i++) hash3.update(arguments[i]);
   return utils.intFromLE(hash3.digest()).umod(this.curve.n);
 };
 EDDSA.prototype.keyFromPublic = function keyFromPublic2(pub2) {
@@ -14627,8 +14485,7 @@ EDDSA.prototype.keyFromSecret = function keyFromSecret(secret2) {
   return KeyPair.fromSecret(this, secret2);
 };
 EDDSA.prototype.makeSignature = function makeSignature(sig) {
-  if (sig instanceof Signature$1)
-    return sig;
+  if (sig instanceof Signature$1) return sig;
   return new Signature$1(this, sig);
 };
 EDDSA.prototype.encodePoint = function encodePoint(point5) {
@@ -14653,7 +14510,7 @@ EDDSA.prototype.decodeInt = function decodeInt(bytes2) {
 EDDSA.prototype.isPoint = function isPoint2(val) {
   return val instanceof this.pointClass;
 };
-(function(exports) {
+(function (exports) {
   var elliptic2 = exports;
   elliptic2.version = require$$0$1.version;
   elliptic2.utils = utils$m;
@@ -14669,26 +14526,21 @@ const ecparams = ec.curve;
 const BN = ecparams.n.constructor;
 function loadCompressedPublicKey(first, xbuf) {
   let x = new BN(xbuf);
-  if (x.cmp(ecparams.p) >= 0)
-    return null;
+  if (x.cmp(ecparams.p) >= 0) return null;
   x = x.toRed(ecparams.red);
   let y = x.redSqr().redIMul(x).redIAdd(ecparams.b).redSqrt();
-  if (first === 3 !== y.isOdd())
-    y = y.redNeg();
+  if ((first === 3) !== y.isOdd()) y = y.redNeg();
   return ec.keyPair({ pub: { x, y } });
 }
 function loadUncompressedPublicKey(first, xbuf, ybuf) {
   let x = new BN(xbuf);
   let y = new BN(ybuf);
-  if (x.cmp(ecparams.p) >= 0 || y.cmp(ecparams.p) >= 0)
-    return null;
+  if (x.cmp(ecparams.p) >= 0 || y.cmp(ecparams.p) >= 0) return null;
   x = x.toRed(ecparams.red);
   y = y.toRed(ecparams.red);
-  if ((first === 6 || first === 7) && y.isOdd() !== (first === 7))
-    return null;
+  if ((first === 6 || first === 7) && y.isOdd() !== (first === 7)) return null;
   const x3 = x.redSqr().redIMul(x);
-  if (!y.redSqr().redISub(x3.redIAdd(ecparams.b)).isZero())
-    return null;
+  if (!y.redSqr().redISub(x3.redIAdd(ecparams.b)).isZero()) return null;
   return ec.keyPair({ pub: { x, y } });
 }
 function loadPublicKey(pubkey) {
@@ -14696,23 +14548,24 @@ function loadPublicKey(pubkey) {
   switch (first) {
     case 2:
     case 3:
-      if (pubkey.length !== 33)
-        return null;
+      if (pubkey.length !== 33) return null;
       return loadCompressedPublicKey(first, pubkey.subarray(1, 33));
     case 4:
     case 6:
     case 7:
-      if (pubkey.length !== 65)
-        return null;
-      return loadUncompressedPublicKey(first, pubkey.subarray(1, 33), pubkey.subarray(33, 65));
+      if (pubkey.length !== 65) return null;
+      return loadUncompressedPublicKey(
+        first,
+        pubkey.subarray(1, 33),
+        pubkey.subarray(33, 65)
+      );
     default:
       return null;
   }
 }
 function savePublicKey(output2, point5) {
   const pubkey = point5.encode(null, output2.length === 33);
-  for (let i = 0; i < output2.length; ++i)
-    output2[i] = pubkey[i];
+  for (let i = 0; i < output2.length; ++i) output2[i] = pubkey[i];
 }
 var elliptic$1 = {
   contextRandomize() {
@@ -14724,30 +14577,28 @@ var elliptic$1 = {
   },
   privateKeyNegate(seckey) {
     const bn2 = new BN(seckey);
-    const negate = ecparams.n.sub(bn2).umod(ecparams.n).toArrayLike(Uint8Array, "be", 32);
+    const negate = ecparams.n
+      .sub(bn2)
+      .umod(ecparams.n)
+      .toArrayLike(Uint8Array, "be", 32);
     seckey.set(negate);
     return 0;
   },
   privateKeyTweakAdd(seckey, tweak) {
     const bn2 = new BN(tweak);
-    if (bn2.cmp(ecparams.n) >= 0)
-      return 1;
+    if (bn2.cmp(ecparams.n) >= 0) return 1;
     bn2.iadd(new BN(seckey));
-    if (bn2.cmp(ecparams.n) >= 0)
-      bn2.isub(ecparams.n);
-    if (bn2.isZero())
-      return 1;
+    if (bn2.cmp(ecparams.n) >= 0) bn2.isub(ecparams.n);
+    if (bn2.isZero()) return 1;
     const tweaked = bn2.toArrayLike(Uint8Array, "be", 32);
     seckey.set(tweaked);
     return 0;
   },
   privateKeyTweakMul(seckey, tweak) {
     let bn2 = new BN(tweak);
-    if (bn2.cmp(ecparams.n) >= 0 || bn2.isZero())
-      return 1;
+    if (bn2.cmp(ecparams.n) >= 0 || bn2.isZero()) return 1;
     bn2.imul(new BN(seckey));
-    if (bn2.cmp(ecparams.n) >= 0)
-      bn2 = bn2.umod(ecparams.n);
+    if (bn2.cmp(ecparams.n) >= 0) bn2 = bn2.umod(ecparams.n);
     const tweaked = bn2.toArrayLike(Uint8Array, "be", 32);
     seckey.set(tweaked);
     return 0;
@@ -14758,24 +14609,21 @@ var elliptic$1 = {
   },
   publicKeyCreate(output2, seckey) {
     const bn2 = new BN(seckey);
-    if (bn2.cmp(ecparams.n) >= 0 || bn2.isZero())
-      return 1;
+    if (bn2.cmp(ecparams.n) >= 0 || bn2.isZero()) return 1;
     const point5 = ec.keyFromPrivate(seckey).getPublic();
     savePublicKey(output2, point5);
     return 0;
   },
   publicKeyConvert(output2, pubkey) {
     const pair = loadPublicKey(pubkey);
-    if (pair === null)
-      return 1;
+    if (pair === null) return 1;
     const point5 = pair.getPublic();
     savePublicKey(output2, point5);
     return 0;
   },
   publicKeyNegate(output2, pubkey) {
     const pair = loadPublicKey(pubkey);
-    if (pair === null)
-      return 1;
+    if (pair === null) return 1;
     const point5 = pair.getPublic();
     point5.y = point5.y.redNeg();
     savePublicKey(output2, point5);
@@ -14785,37 +14633,29 @@ var elliptic$1 = {
     const pairs = new Array(pubkeys.length);
     for (let i = 0; i < pubkeys.length; ++i) {
       pairs[i] = loadPublicKey(pubkeys[i]);
-      if (pairs[i] === null)
-        return 1;
+      if (pairs[i] === null) return 1;
     }
     let point5 = pairs[0].getPublic();
-    for (let i = 1; i < pairs.length; ++i)
-      point5 = point5.add(pairs[i].pub);
-    if (point5.isInfinity())
-      return 2;
+    for (let i = 1; i < pairs.length; ++i) point5 = point5.add(pairs[i].pub);
+    if (point5.isInfinity()) return 2;
     savePublicKey(output2, point5);
     return 0;
   },
   publicKeyTweakAdd(output2, pubkey, tweak) {
     const pair = loadPublicKey(pubkey);
-    if (pair === null)
-      return 1;
+    if (pair === null) return 1;
     tweak = new BN(tweak);
-    if (tweak.cmp(ecparams.n) >= 0)
-      return 2;
+    if (tweak.cmp(ecparams.n) >= 0) return 2;
     const point5 = pair.getPublic().add(ecparams.g.mul(tweak));
-    if (point5.isInfinity())
-      return 2;
+    if (point5.isInfinity()) return 2;
     savePublicKey(output2, point5);
     return 0;
   },
   publicKeyTweakMul(output2, pubkey, tweak) {
     const pair = loadPublicKey(pubkey);
-    if (pair === null)
-      return 1;
+    if (pair === null) return 1;
     tweak = new BN(tweak);
-    if (tweak.cmp(ecparams.n) >= 0 || tweak.isZero())
-      return 2;
+    if (tweak.cmp(ecparams.n) >= 0 || tweak.isZero()) return 2;
     const point5 = pair.getPublic().mul(tweak);
     savePublicKey(output2, point5);
     return 0;
@@ -14823,8 +14663,7 @@ var elliptic$1 = {
   signatureNormalize(sig) {
     const r2 = new BN(sig.subarray(0, 32));
     const s2 = new BN(sig.subarray(32, 64));
-    if (r2.cmp(ecparams.n) >= 0 || s2.cmp(ecparams.n) >= 0)
-      return 1;
+    if (r2.cmp(ecparams.n) >= 0 || s2.cmp(ecparams.n) >= 0) return 1;
     if (s2.cmp(ec.nh) === 1) {
       sig.set(ecparams.n.sub(s2).toArrayLike(Uint8Array, "be", 32), 32);
     }
@@ -14835,35 +14674,27 @@ var elliptic$1 = {
   signatureExport(obj, sig) {
     const sigR = sig.subarray(0, 32);
     const sigS = sig.subarray(32, 64);
-    if (new BN(sigR).cmp(ecparams.n) >= 0)
-      return 1;
-    if (new BN(sigS).cmp(ecparams.n) >= 0)
-      return 1;
+    if (new BN(sigR).cmp(ecparams.n) >= 0) return 1;
+    if (new BN(sigS).cmp(ecparams.n) >= 0) return 1;
     const { output: output2 } = obj;
     let r2 = output2.subarray(4, 4 + 33);
     r2[0] = 0;
     r2.set(sigR, 1);
     let lenR = 33;
     let posR = 0;
-    for (; lenR > 1 && r2[posR] === 0 && !(r2[posR + 1] & 128); --lenR, ++posR)
-      ;
+    for (; lenR > 1 && r2[posR] === 0 && !(r2[posR + 1] & 128); --lenR, ++posR);
     r2 = r2.subarray(posR);
-    if (r2[0] & 128)
-      return 1;
-    if (lenR > 1 && r2[0] === 0 && !(r2[1] & 128))
-      return 1;
+    if (r2[0] & 128) return 1;
+    if (lenR > 1 && r2[0] === 0 && !(r2[1] & 128)) return 1;
     let s2 = output2.subarray(6 + 33, 6 + 33 + 33);
     s2[0] = 0;
     s2.set(sigS, 1);
     let lenS = 33;
     let posS = 0;
-    for (; lenS > 1 && s2[posS] === 0 && !(s2[posS + 1] & 128); --lenS, ++posS)
-      ;
+    for (; lenS > 1 && s2[posS] === 0 && !(s2[posS + 1] & 128); --lenS, ++posS);
     s2 = s2.subarray(posS);
-    if (s2[0] & 128)
-      return 1;
-    if (lenS > 1 && s2[0] === 0 && !(s2[1] & 128))
-      return 1;
+    if (s2[0] & 128) return 1;
+    if (lenS > 1 && s2[0] === 0 && !(s2[1] & 128)) return 1;
     obj.outputlen = 6 + lenR + lenS;
     output2[0] = 48;
     output2[1] = obj.outputlen - 2;
@@ -14878,52 +14709,32 @@ var elliptic$1 = {
   // Copied 1-to-1 from https://github.com/bitcoinjs/bip66/blob/master/index.js
   // Adapted for Uint8Array instead Buffer
   signatureImport(output2, sig) {
-    if (sig.length < 8)
-      return 1;
-    if (sig.length > 72)
-      return 1;
-    if (sig[0] !== 48)
-      return 1;
-    if (sig[1] !== sig.length - 2)
-      return 1;
-    if (sig[2] !== 2)
-      return 1;
+    if (sig.length < 8) return 1;
+    if (sig.length > 72) return 1;
+    if (sig[0] !== 48) return 1;
+    if (sig[1] !== sig.length - 2) return 1;
+    if (sig[2] !== 2) return 1;
     const lenR = sig[3];
-    if (lenR === 0)
-      return 1;
-    if (5 + lenR >= sig.length)
-      return 1;
-    if (sig[4 + lenR] !== 2)
-      return 1;
+    if (lenR === 0) return 1;
+    if (5 + lenR >= sig.length) return 1;
+    if (sig[4 + lenR] !== 2) return 1;
     const lenS = sig[5 + lenR];
-    if (lenS === 0)
-      return 1;
-    if (6 + lenR + lenS !== sig.length)
-      return 1;
-    if (sig[4] & 128)
-      return 1;
-    if (lenR > 1 && sig[4] === 0 && !(sig[5] & 128))
-      return 1;
-    if (sig[lenR + 6] & 128)
-      return 1;
-    if (lenS > 1 && sig[lenR + 6] === 0 && !(sig[lenR + 7] & 128))
-      return 1;
+    if (lenS === 0) return 1;
+    if (6 + lenR + lenS !== sig.length) return 1;
+    if (sig[4] & 128) return 1;
+    if (lenR > 1 && sig[4] === 0 && !(sig[5] & 128)) return 1;
+    if (sig[lenR + 6] & 128) return 1;
+    if (lenS > 1 && sig[lenR + 6] === 0 && !(sig[lenR + 7] & 128)) return 1;
     let sigR = sig.subarray(4, 4 + lenR);
-    if (sigR.length === 33 && sigR[0] === 0)
-      sigR = sigR.subarray(1);
-    if (sigR.length > 32)
-      return 1;
+    if (sigR.length === 33 && sigR[0] === 0) sigR = sigR.subarray(1);
+    if (sigR.length > 32) return 1;
     let sigS = sig.subarray(6 + lenR);
-    if (sigS.length === 33 && sigS[0] === 0)
-      sigS = sigS.slice(1);
-    if (sigS.length > 32)
-      throw new Error("S length is too long");
+    if (sigS.length === 33 && sigS[0] === 0) sigS = sigS.slice(1);
+    if (sigS.length > 32) throw new Error("S length is too long");
     let r2 = new BN(sigR);
-    if (r2.cmp(ecparams.n) >= 0)
-      r2 = new BN(0);
+    if (r2.cmp(ecparams.n) >= 0) r2 = new BN(0);
     let s2 = new BN(sig.subarray(6 + lenR));
-    if (s2.cmp(ecparams.n) >= 0)
-      s2 = new BN(0);
+    if (s2.cmp(ecparams.n) >= 0) s2 = new BN(0);
     output2.set(r2.toArrayLike(Uint8Array, "be", 32), 0);
     output2.set(s2.toArrayLike(Uint8Array, "be", 32), 32);
     return 0;
@@ -14934,17 +14745,19 @@ var elliptic$1 = {
       noncefn = (counter) => {
         const nonce = _noncefn(message, seckey, null, data, counter);
         const isValid = nonce instanceof Uint8Array && nonce.length === 32;
-        if (!isValid)
-          throw new Error("This is the way");
+        if (!isValid) throw new Error("This is the way");
         return new BN(nonce);
       };
     }
     const d = new BN(seckey);
-    if (d.cmp(ecparams.n) >= 0 || d.isZero())
-      return 1;
+    if (d.cmp(ecparams.n) >= 0 || d.isZero()) return 1;
     let sig;
     try {
-      sig = ec.sign(message, seckey, { canonical: true, k: noncefn, pers: data });
+      sig = ec.sign(message, seckey, {
+        canonical: true,
+        k: noncefn,
+        pers: data,
+      });
     } catch (err2) {
       return 1;
     }
@@ -14957,13 +14770,10 @@ var elliptic$1 = {
     const sigObj = { r: sig.subarray(0, 32), s: sig.subarray(32, 64) };
     const sigr = new BN(sigObj.r);
     const sigs = new BN(sigObj.s);
-    if (sigr.cmp(ecparams.n) >= 0 || sigs.cmp(ecparams.n) >= 0)
-      return 1;
-    if (sigs.cmp(ec.nh) === 1 || sigr.isZero() || sigs.isZero())
-      return 3;
+    if (sigr.cmp(ecparams.n) >= 0 || sigs.cmp(ecparams.n) >= 0) return 1;
+    if (sigs.cmp(ec.nh) === 1 || sigr.isZero() || sigs.isZero()) return 3;
     const pair = loadPublicKey(pubkey);
-    if (pair === null)
-      return 2;
+    if (pair === null) return 2;
     const point5 = pair.getPublic();
     const isValid = ec.verify(msg32, sigObj, point5);
     return isValid ? 0 : 3;
@@ -14972,10 +14782,8 @@ var elliptic$1 = {
     const sigObj = { r: sig.slice(0, 32), s: sig.slice(32, 64) };
     const sigr = new BN(sigObj.r);
     const sigs = new BN(sigObj.s);
-    if (sigr.cmp(ecparams.n) >= 0 || sigs.cmp(ecparams.n) >= 0)
-      return 1;
-    if (sigr.isZero() || sigs.isZero())
-      return 2;
+    if (sigr.cmp(ecparams.n) >= 0 || sigs.cmp(ecparams.n) >= 0) return 1;
+    if (sigr.isZero() || sigs.isZero()) return 2;
     let point5;
     try {
       point5 = ec.recoverPubKey(msg32, sigObj, recid);
@@ -14987,36 +14795,29 @@ var elliptic$1 = {
   },
   ecdh(output2, pubkey, seckey, data, hashfn, xbuf, ybuf) {
     const pair = loadPublicKey(pubkey);
-    if (pair === null)
-      return 1;
+    if (pair === null) return 1;
     const scalar = new BN(seckey);
-    if (scalar.cmp(ecparams.n) >= 0 || scalar.isZero())
-      return 2;
+    if (scalar.cmp(ecparams.n) >= 0 || scalar.isZero()) return 2;
     const point5 = pair.getPublic().mul(scalar);
     if (hashfn === void 0) {
       const data2 = point5.encode(null, true);
       const sha256 = ec.hash().update(data2).digest();
-      for (let i = 0; i < 32; ++i)
-        output2[i] = sha256[i];
+      for (let i = 0; i < 32; ++i) output2[i] = sha256[i];
     } else {
-      if (!xbuf)
-        xbuf = new Uint8Array(32);
+      if (!xbuf) xbuf = new Uint8Array(32);
       const x = point5.getX().toArray("be", 32);
-      for (let i = 0; i < 32; ++i)
-        xbuf[i] = x[i];
-      if (!ybuf)
-        ybuf = new Uint8Array(32);
+      for (let i = 0; i < 32; ++i) xbuf[i] = x[i];
+      if (!ybuf) ybuf = new Uint8Array(32);
       const y = point5.getY().toArray("be", 32);
-      for (let i = 0; i < 32; ++i)
-        ybuf[i] = y[i];
+      for (let i = 0; i < 32; ++i) ybuf[i] = y[i];
       const hash3 = hashfn(xbuf, ybuf, data);
-      const isValid = hash3 instanceof Uint8Array && hash3.length === output2.length;
-      if (!isValid)
-        return 2;
+      const isValid =
+        hash3 instanceof Uint8Array && hash3.length === output2.length;
+      if (!isValid) return 2;
       output2.set(hash3);
     }
     return 0;
-  }
+  },
 };
 var elliptic = lib(elliptic$1);
 const resolveBytes = (bytes2) => {
@@ -15047,83 +14848,96 @@ const _PrivateKey = class {
     return {
       curve: this.curve,
       signature: signature2,
-      publicKey
+      publicKey,
     };
   }
 };
 let PrivateKey = _PrivateKey;
-__publicField(PrivateKey, "Secp256k1", class extends _PrivateKey {
-  constructor(privateKey) {
-    super();
-    __publicField(this, "curve", "Secp256k1");
-    __publicField(this, "bytes");
-    this.bytes = resolveBytesAndCheckLength(
-      privateKey,
-      SECP256K1_PRIVATE_KEY_LENGTH
-    );
+__publicField(
+  PrivateKey,
+  "Secp256k1",
+  class extends _PrivateKey {
+    constructor(privateKey) {
+      super();
+      __publicField(this, "curve", "Secp256k1");
+      __publicField(this, "bytes");
+      this.bytes = resolveBytesAndCheckLength(
+        privateKey,
+        SECP256K1_PRIVATE_KEY_LENGTH
+      );
+    }
+    publicKey() {
+      return new PublicKey.Secp256k1(this.publicKeyBytes());
+    }
+    publicKeyBytes() {
+      return elliptic.publicKeyCreate(this.bytes, true);
+    }
+    publicKeyHex() {
+      return Convert.Uint8Array.toHexString(this.publicKeyBytes());
+    }
+    sign(messageHash) {
+      const { signature: signature2, recid } = elliptic.ecdsaSign(
+        messageHash,
+        this.bytes
+      );
+      return new Uint8Array([recid, ...signature2]);
+    }
+    signToSignature(messageHash) {
+      return new Signature.Secp256k1(this.sign(messageHash));
+    }
+    signToSignatureWithPublicKey(messageHash) {
+      return new SignatureWithPublicKey.Secp256k1(this.sign(messageHash));
+    }
+    produceSignature(messageHash) {
+      return super.produceSignature(messageHash);
+    }
   }
-  publicKey() {
-    return new PublicKey.Secp256k1(this.publicKeyBytes());
+);
+__publicField(
+  PrivateKey,
+  "Ed25519",
+  class extends _PrivateKey {
+    constructor(privateKey) {
+      super();
+      __publicField(this, "curve", "Ed25519");
+      __publicField(this, "bytes");
+      this.bytes = resolveBytesAndCheckLength(
+        privateKey,
+        ED25519_PRIVATE_KEY_LENGTH
+      );
+    }
+    publicKey() {
+      return new PublicKey.Ed25519(this.publicKeyBytes());
+    }
+    publicKeyBytes() {
+      return getPublicKey(this.bytes);
+    }
+    publicKeyHex() {
+      return Convert.Uint8Array.toHexString(this.publicKeyBytes());
+    }
+    sign(messageHash) {
+      return sign(messageHash, this.bytes);
+    }
+    signToSignature(messageHash) {
+      return new Signature.Ed25519(this.sign(messageHash));
+    }
+    signToSignatureWithPublicKey(messageHash) {
+      return new SignatureWithPublicKey.Ed25519(
+        this.sign(messageHash),
+        this.publicKeyBytes()
+      );
+    }
+    produceSignature(messageHash) {
+      return super.produceSignature(messageHash);
+    }
   }
-  publicKeyBytes() {
-    return elliptic.publicKeyCreate(this.bytes, true);
-  }
-  publicKeyHex() {
-    return Convert.Uint8Array.toHexString(this.publicKeyBytes());
-  }
-  sign(messageHash) {
-    const { signature: signature2, recid } = elliptic.ecdsaSign(messageHash, this.bytes);
-    return new Uint8Array([recid, ...signature2]);
-  }
-  signToSignature(messageHash) {
-    return new Signature.Secp256k1(this.sign(messageHash));
-  }
-  signToSignatureWithPublicKey(messageHash) {
-    return new SignatureWithPublicKey.Secp256k1(this.sign(messageHash));
-  }
-  produceSignature(messageHash) {
-    return super.produceSignature(messageHash);
-  }
-});
-__publicField(PrivateKey, "Ed25519", class extends _PrivateKey {
-  constructor(privateKey) {
-    super();
-    __publicField(this, "curve", "Ed25519");
-    __publicField(this, "bytes");
-    this.bytes = resolveBytesAndCheckLength(
-      privateKey,
-      ED25519_PRIVATE_KEY_LENGTH
-    );
-  }
-  publicKey() {
-    return new PublicKey.Ed25519(this.publicKeyBytes());
-  }
-  publicKeyBytes() {
-    return getPublicKey(this.bytes);
-  }
-  publicKeyHex() {
-    return Convert.Uint8Array.toHexString(this.publicKeyBytes());
-  }
-  sign(messageHash) {
-    return sign(messageHash, this.bytes);
-  }
-  signToSignature(messageHash) {
-    return new Signature.Ed25519(this.sign(messageHash));
-  }
-  signToSignatureWithPublicKey(messageHash) {
-    return new SignatureWithPublicKey.Ed25519(
-      this.sign(messageHash),
-      this.publicKeyBytes()
-    );
-  }
-  produceSignature(messageHash) {
-    return super.produceSignature(messageHash);
-  }
-});
+);
 const _PublicKey = class {
   constructor() {
     __publicField(this, "rawBytes", () => this.bytes);
-    __publicField(this, "hexString", () => Convert.Uint8Array.toHexString(this.bytes));
+    __publicField(this, "hexString", () =>
+      Convert.Uint8Array.toHexString(this.bytes)
+    );
     __publicField(this, "toString", this.hexString);
     __publicField(this, "hex", this.hexString);
   }
@@ -15132,29 +14946,42 @@ const _PublicKey = class {
   }
 };
 let PublicKey = _PublicKey;
-__publicField(PublicKey, "Secp256k1", class extends _PublicKey {
-  constructor(bytes2) {
-    super();
-    __publicField(this, "curve", "Secp256k1");
-    __publicField(this, "bytes");
-    this.bytes = resolveBytesAndCheckLength(
-      bytes2,
-      SECP256K1_PUBLIC_KEY_LENGTH
-    );
+__publicField(
+  PublicKey,
+  "Secp256k1",
+  class extends _PublicKey {
+    constructor(bytes2) {
+      super();
+      __publicField(this, "curve", "Secp256k1");
+      __publicField(this, "bytes");
+      this.bytes = resolveBytesAndCheckLength(
+        bytes2,
+        SECP256K1_PUBLIC_KEY_LENGTH
+      );
+    }
   }
-});
-__publicField(PublicKey, "Ed25519", class extends _PublicKey {
-  constructor(bytes2) {
-    super();
-    __publicField(this, "curve", "Ed25519");
-    __publicField(this, "bytes");
-    this.bytes = resolveBytesAndCheckLength(bytes2, ED25519_PUBLIC_KEY_LENGTH);
+);
+__publicField(
+  PublicKey,
+  "Ed25519",
+  class extends _PublicKey {
+    constructor(bytes2) {
+      super();
+      __publicField(this, "curve", "Ed25519");
+      __publicField(this, "bytes");
+      this.bytes = resolveBytesAndCheckLength(
+        bytes2,
+        ED25519_PUBLIC_KEY_LENGTH
+      );
+    }
   }
-});
+);
 const _Signature = class {
   constructor() {
     __publicField(this, "rawBytes", () => this.bytes);
-    __publicField(this, "hexString", () => Convert.Uint8Array.toHexString(this.bytes));
+    __publicField(this, "hexString", () =>
+      Convert.Uint8Array.toHexString(this.bytes)
+    );
     __publicField(this, "toString", this.hexString);
     __publicField(this, "hex", this.hexString);
   }
@@ -15163,63 +14990,80 @@ const _Signature = class {
   }
 };
 let Signature = _Signature;
-__publicField(Signature, "Secp256k1", class extends _Signature {
-  constructor(bytes2) {
-    super();
-    __publicField(this, "curve", "Secp256k1");
-    __publicField(this, "bytes");
-    this.bytes = resolveBytesAndCheckLength(
-      bytes2,
-      SECP256K1_SIGNATURE_LENGTH
-    );
+__publicField(
+  Signature,
+  "Secp256k1",
+  class extends _Signature {
+    constructor(bytes2) {
+      super();
+      __publicField(this, "curve", "Secp256k1");
+      __publicField(this, "bytes");
+      this.bytes = resolveBytesAndCheckLength(
+        bytes2,
+        SECP256K1_SIGNATURE_LENGTH
+      );
+    }
   }
-});
-__publicField(Signature, "Ed25519", class extends _Signature {
-  constructor(bytes2) {
-    super();
-    __publicField(this, "curve", "Ed25519");
-    __publicField(this, "bytes");
-    this.bytes = resolveBytesAndCheckLength(bytes2, ED25519_SIGNATURE_LENGTH);
+);
+__publicField(
+  Signature,
+  "Ed25519",
+  class extends _Signature {
+    constructor(bytes2) {
+      super();
+      __publicField(this, "curve", "Ed25519");
+      __publicField(this, "bytes");
+      this.bytes = resolveBytesAndCheckLength(bytes2, ED25519_SIGNATURE_LENGTH);
+    }
   }
-});
-const _SignatureWithPublicKey = class {
-};
+);
+const _SignatureWithPublicKey = class {};
 let SignatureWithPublicKey = _SignatureWithPublicKey;
-__publicField(SignatureWithPublicKey, "Secp256k1", class extends _SignatureWithPublicKey {
-  constructor(signature2) {
-    super();
-    __publicField(this, "curve", "Secp256k1");
-    __publicField(this, "signature");
-    __publicField(this, "publicKey");
-    this.signature = resolveBytesAndCheckLength(
-      signature2,
-      SECP256K1_SIGNATURE_LENGTH
-    );
+__publicField(
+  SignatureWithPublicKey,
+  "Secp256k1",
+  class extends _SignatureWithPublicKey {
+    constructor(signature2) {
+      super();
+      __publicField(this, "curve", "Secp256k1");
+      __publicField(this, "signature");
+      __publicField(this, "publicKey");
+      this.signature = resolveBytesAndCheckLength(
+        signature2,
+        SECP256K1_SIGNATURE_LENGTH
+      );
+    }
   }
-});
-__publicField(SignatureWithPublicKey, "Ed25519", class extends _SignatureWithPublicKey {
-  constructor(signature2, publicKey) {
-    super();
-    __publicField(this, "curve", "Ed25519");
-    __publicField(this, "signature");
-    __publicField(this, "publicKey");
-    this.signature = resolveBytesAndCheckLength(
-      signature2,
-      ED25519_SIGNATURE_LENGTH
-    );
-    this.publicKey = resolveBytesAndCheckLength(
-      publicKey,
-      ED25519_PUBLIC_KEY_LENGTH
-    );
+);
+__publicField(
+  SignatureWithPublicKey,
+  "Ed25519",
+  class extends _SignatureWithPublicKey {
+    constructor(signature2, publicKey) {
+      super();
+      __publicField(this, "curve", "Ed25519");
+      __publicField(this, "signature");
+      __publicField(this, "publicKey");
+      this.signature = resolveBytesAndCheckLength(
+        signature2,
+        ED25519_SIGNATURE_LENGTH
+      );
+      this.publicKey = resolveBytesAndCheckLength(
+        publicKey,
+        ED25519_PUBLIC_KEY_LENGTH
+      );
+    }
   }
-});
+);
 var SerializationMode = /* @__PURE__ */ ((SerializationMode2) => {
   SerializationMode2["Programmatic"] = "Programmatic";
   SerializationMode2["Model"] = "Model";
   SerializationMode2["Natural"] = "Natural";
   return SerializationMode2;
 })(SerializationMode || {});
-var ManifestSborStringRepresentation = /* @__PURE__ */ ((ManifestSborStringRepresentation2) => {
+var ManifestSborStringRepresentation = /* @__PURE__ */ ((
+  ManifestSborStringRepresentation2
+) => {
   ManifestSborStringRepresentation2["ManifestString"] = "ManifestString";
   ManifestSborStringRepresentation2["ProgrammaticJson"] = "ProgrammaticJson";
   ManifestSborStringRepresentation2["ModelJson"] = "ModelJson";
@@ -15272,8 +15116,8 @@ const defaultValidationConfig = (networkId) => {
       maxPlaintextMessageLength: BigInt(2048),
       maxEncryptedMessageLength: BigInt(2076),
       maxMimeTypeLength: BigInt(128),
-      maxDecryptors: BigInt(20)
-    }
+      maxDecryptors: BigInt(20),
+    },
   };
 };
 var ValueKind = /* @__PURE__ */ ((ValueKind2) => {
@@ -15344,9 +15188,11 @@ function normalizeInput(input) {
   return ret;
 }
 function toHex2(bytes2) {
-  return Array.prototype.map.call(bytes2, function(n) {
-    return (n < 16 ? "0" : "") + n.toString(16);
-  }).join("");
+  return Array.prototype.map
+    .call(bytes2, function (n) {
+      return (n < 16 ? "0" : "") + n.toString(16);
+    })
+    .join("");
 }
 function uint32ToHex(val) {
   return (4294967296 + val).toString(16).substring(1);
@@ -15361,8 +15207,7 @@ function debugPrint(label, arr, size) {
     } else if (size === 64) {
       msg += uint32ToHex(arr[i + 1]).toUpperCase();
       msg += uint32ToHex(arr[i]).toUpperCase();
-    } else
-      throw new Error("Invalid size " + size);
+    } else throw new Error("Invalid size " + size);
     if (i % 6 === 4) {
       msg += "\n" + new Array(label.length + 4).join(" ");
     } else if (i < arr.length - 2) {
@@ -15372,22 +15217,22 @@ function debugPrint(label, arr, size) {
   console.log(msg);
 }
 function testSpeed(hashFn, N2, M) {
-  let startMs = (/* @__PURE__ */ new Date()).getTime();
+  let startMs = /* @__PURE__ */ new Date().getTime();
   const input = new Uint8Array(N2);
   for (let i = 0; i < N2; i++) {
     input[i] = i % 256;
   }
-  const genMs = (/* @__PURE__ */ new Date()).getTime();
+  const genMs = /* @__PURE__ */ new Date().getTime();
   console.log("Generated random input in " + (genMs - startMs) + "ms");
   startMs = genMs;
   for (let i = 0; i < M; i++) {
     const hashHex = hashFn(input);
-    const hashMs = (/* @__PURE__ */ new Date()).getTime();
+    const hashMs = /* @__PURE__ */ new Date().getTime();
     const ms = hashMs - startMs;
     startMs = hashMs;
     console.log("Hashed in " + ms + "ms: " + hashHex.substring(0, 20) + "...");
     console.log(
-      Math.round(N2 / (1 << 20) / (ms / 1e3) * 100) / 100 + " MB PER SECOND"
+      Math.round((N2 / (1 << 20) / (ms / 1e3)) * 100) / 100 + " MB PER SECOND"
     );
   }
 }
@@ -15395,7 +15240,7 @@ var util$2 = {
   normalizeInput,
   toHex: toHex2,
   debugPrint,
-  testSpeed
+  testSpeed,
 };
 const util$1 = util$2;
 function ADD64AA(v2, a, b) {
@@ -15420,7 +15265,7 @@ function ADD64AC(v2, a, b0, b1) {
   v2[a + 1] = o1;
 }
 function B2B_GET32(arr, i) {
-  return arr[i] ^ arr[i + 1] << 8 ^ arr[i + 2] << 16 ^ arr[i + 3] << 24;
+  return arr[i] ^ (arr[i + 1] << 8) ^ (arr[i + 2] << 16) ^ (arr[i + 3] << 24);
 }
 function B2B_G(a, b, c, d, ix, iy) {
   const x0 = m$1[ix];
@@ -15436,234 +15281,38 @@ function B2B_G(a, b, c, d, ix, iy) {
   ADD64AA(v$1, c, d);
   xor0 = v$1[b] ^ v$1[c];
   xor1 = v$1[b + 1] ^ v$1[c + 1];
-  v$1[b] = xor0 >>> 24 ^ xor1 << 8;
-  v$1[b + 1] = xor1 >>> 24 ^ xor0 << 8;
+  v$1[b] = (xor0 >>> 24) ^ (xor1 << 8);
+  v$1[b + 1] = (xor1 >>> 24) ^ (xor0 << 8);
   ADD64AA(v$1, a, b);
   ADD64AC(v$1, a, y0, y1);
   xor0 = v$1[d] ^ v$1[a];
   xor1 = v$1[d + 1] ^ v$1[a + 1];
-  v$1[d] = xor0 >>> 16 ^ xor1 << 16;
-  v$1[d + 1] = xor1 >>> 16 ^ xor0 << 16;
+  v$1[d] = (xor0 >>> 16) ^ (xor1 << 16);
+  v$1[d + 1] = (xor1 >>> 16) ^ (xor0 << 16);
   ADD64AA(v$1, c, d);
   xor0 = v$1[b] ^ v$1[c];
   xor1 = v$1[b + 1] ^ v$1[c + 1];
-  v$1[b] = xor1 >>> 31 ^ xor0 << 1;
-  v$1[b + 1] = xor0 >>> 31 ^ xor1 << 1;
+  v$1[b] = (xor1 >>> 31) ^ (xor0 << 1);
+  v$1[b + 1] = (xor0 >>> 31) ^ (xor1 << 1);
 }
 const BLAKE2B_IV32 = new Uint32Array([
-  4089235720,
-  1779033703,
-  2227873595,
-  3144134277,
-  4271175723,
-  1013904242,
-  1595750129,
-  2773480762,
-  2917565137,
-  1359893119,
-  725511199,
-  2600822924,
-  4215389547,
-  528734635,
-  327033209,
-  1541459225
+  4089235720, 1779033703, 2227873595, 3144134277, 4271175723, 1013904242,
+  1595750129, 2773480762, 2917565137, 1359893119, 725511199, 2600822924,
+  4215389547, 528734635, 327033209, 1541459225,
 ]);
 const SIGMA8 = [
-  0,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  14,
-  10,
-  4,
-  8,
-  9,
-  15,
-  13,
-  6,
-  1,
-  12,
-  0,
-  2,
-  11,
-  7,
-  5,
-  3,
-  11,
-  8,
-  12,
-  0,
-  5,
-  2,
-  15,
-  13,
-  10,
-  14,
-  3,
-  6,
-  7,
-  1,
-  9,
-  4,
-  7,
-  9,
-  3,
-  1,
-  13,
-  12,
-  11,
-  14,
-  2,
-  6,
-  5,
-  10,
-  4,
-  0,
-  15,
-  8,
-  9,
-  0,
-  5,
-  7,
-  2,
-  4,
-  10,
-  15,
-  14,
-  1,
-  11,
-  12,
-  6,
-  8,
-  3,
-  13,
-  2,
-  12,
-  6,
-  10,
-  0,
-  11,
-  8,
-  3,
-  4,
-  13,
-  7,
-  5,
-  15,
-  14,
-  1,
-  9,
-  12,
-  5,
-  1,
-  15,
-  14,
-  13,
-  4,
-  10,
-  0,
-  7,
-  6,
-  3,
-  9,
-  2,
-  8,
-  11,
-  13,
-  11,
-  7,
-  14,
-  12,
-  1,
-  3,
-  9,
-  5,
-  0,
-  15,
-  4,
-  8,
-  6,
-  2,
-  10,
-  6,
-  15,
-  14,
-  9,
-  11,
-  3,
-  0,
-  8,
-  12,
-  2,
-  13,
-  7,
-  1,
-  4,
-  10,
-  5,
-  10,
-  2,
-  8,
-  4,
-  7,
-  6,
-  1,
-  5,
-  15,
-  11,
-  9,
-  14,
-  3,
-  12,
-  13,
-  0,
-  0,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  14,
-  10,
-  4,
-  8,
-  9,
-  15,
-  13,
-  6,
-  1,
-  12,
-  0,
-  2,
-  11,
-  7,
-  5,
-  3
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 14, 10, 4, 8, 9, 15, 13,
+  6, 1, 12, 0, 2, 11, 7, 5, 3, 11, 8, 12, 0, 5, 2, 15, 13, 10, 14, 3, 6, 7, 1,
+  9, 4, 7, 9, 3, 1, 13, 12, 11, 14, 2, 6, 5, 10, 4, 0, 15, 8, 9, 0, 5, 7, 2, 4,
+  10, 15, 14, 1, 11, 12, 6, 8, 3, 13, 2, 12, 6, 10, 0, 11, 8, 3, 4, 13, 7, 5,
+  15, 14, 1, 9, 12, 5, 1, 15, 14, 13, 4, 10, 0, 7, 6, 3, 9, 2, 8, 11, 13, 11, 7,
+  14, 12, 1, 3, 9, 5, 0, 15, 4, 8, 6, 2, 10, 6, 15, 14, 9, 11, 3, 0, 8, 12, 2,
+  13, 7, 1, 4, 10, 5, 10, 2, 8, 4, 7, 6, 1, 5, 15, 11, 9, 14, 3, 12, 13, 0, 0,
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 14, 10, 4, 8, 9, 15, 13, 6,
+  1, 12, 0, 2, 11, 7, 5, 3,
 ];
 const SIGMA82 = new Uint8Array(
-  SIGMA8.map(function(x) {
+  SIGMA8.map(function (x) {
     return x * 2;
   })
 );
@@ -15676,7 +15325,7 @@ function blake2bCompress(ctx, last) {
     v$1[i + 16] = BLAKE2B_IV32[i];
   }
   v$1[24] = v$1[24] ^ ctx.t;
-  v$1[25] = v$1[25] ^ ctx.t / 4294967296;
+  v$1[25] = v$1[25] ^ (ctx.t / 4294967296);
   if (last) {
     v$1[28] = ~v$1[28];
     v$1[29] = ~v$1[29];
@@ -15699,85 +15348,37 @@ function blake2bCompress(ctx, last) {
   }
 }
 const parameterBlock = new Uint8Array([
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   //  0: outlen, keylen, fanout, depth
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   //  4: leaf length, sequential mode
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   //  8: node offset
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 12: node offset
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 16: node depth, inner length, rfu
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 20: rfu
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 24: rfu
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 28: rfu
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 32: salt
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 36: salt
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 40: salt
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 44: salt
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 48: personal
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 52: personal
-  0,
-  0,
-  0,
-  0,
+  0, 0, 0, 0,
   // 56: personal
-  0,
-  0,
-  0,
-  0
+  0, 0, 0, 0,
   // 60: personal
 ]);
 function blake2bInit(outlen, key2, salt, personal) {
@@ -15800,19 +15401,16 @@ function blake2bInit(outlen, key2, salt, personal) {
     // input count
     c: 0,
     // pointer within buffer
-    outlen
+    outlen,
     // output length in bytes
   };
   parameterBlock.fill(0);
   parameterBlock[0] = outlen;
-  if (key2)
-    parameterBlock[1] = key2.length;
+  if (key2) parameterBlock[1] = key2.length;
   parameterBlock[2] = 1;
   parameterBlock[3] = 1;
-  if (salt)
-    parameterBlock.set(salt, 32);
-  if (personal)
-    parameterBlock.set(personal, 48);
+  if (salt) parameterBlock.set(salt, 32);
+  if (personal) parameterBlock.set(personal, 48);
   for (let i = 0; i < 16; i++) {
     ctx.h[i] = BLAKE2B_IV32[i] ^ B2B_GET32(parameterBlock, i * 4);
   }
@@ -15840,7 +15438,7 @@ function blake2bFinal(ctx) {
   blake2bCompress(ctx, true);
   const out = new Uint8Array(ctx.outlen);
   for (let i = 0; i < ctx.outlen; i++) {
-    out[i] = ctx.h[i >> 2] >> 8 * (i & 3);
+    out[i] = ctx.h[i >> 2] >> (8 * (i & 3));
   }
   return out;
 }
@@ -15866,11 +15464,11 @@ var blake2b_1 = {
   blake2bHex,
   blake2bInit,
   blake2bUpdate,
-  blake2bFinal
+  blake2bFinal,
 };
 const util = util$2;
 function B2S_GET32(v2, i) {
-  return v2[i] ^ v2[i + 1] << 8 ^ v2[i + 2] << 16 ^ v2[i + 3] << 24;
+  return v2[i] ^ (v2[i + 1] << 8) ^ (v2[i + 2] << 16) ^ (v2[i + 3] << 24);
 }
 function B2S_G(a, b, c, d, x, y) {
   v[a] = v[a] + v[b] + x;
@@ -15883,179 +15481,20 @@ function B2S_G(a, b, c, d, x, y) {
   v[b] = ROTR32(v[b] ^ v[c], 7);
 }
 function ROTR32(x, y) {
-  return x >>> y ^ x << 32 - y;
+  return (x >>> y) ^ (x << (32 - y));
 }
 const BLAKE2S_IV = new Uint32Array([
-  1779033703,
-  3144134277,
-  1013904242,
-  2773480762,
-  1359893119,
-  2600822924,
-  528734635,
-  1541459225
+  1779033703, 3144134277, 1013904242, 2773480762, 1359893119, 2600822924,
+  528734635, 1541459225,
 ]);
 const SIGMA = new Uint8Array([
-  0,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  14,
-  10,
-  4,
-  8,
-  9,
-  15,
-  13,
-  6,
-  1,
-  12,
-  0,
-  2,
-  11,
-  7,
-  5,
-  3,
-  11,
-  8,
-  12,
-  0,
-  5,
-  2,
-  15,
-  13,
-  10,
-  14,
-  3,
-  6,
-  7,
-  1,
-  9,
-  4,
-  7,
-  9,
-  3,
-  1,
-  13,
-  12,
-  11,
-  14,
-  2,
-  6,
-  5,
-  10,
-  4,
-  0,
-  15,
-  8,
-  9,
-  0,
-  5,
-  7,
-  2,
-  4,
-  10,
-  15,
-  14,
-  1,
-  11,
-  12,
-  6,
-  8,
-  3,
-  13,
-  2,
-  12,
-  6,
-  10,
-  0,
-  11,
-  8,
-  3,
-  4,
-  13,
-  7,
-  5,
-  15,
-  14,
-  1,
-  9,
-  12,
-  5,
-  1,
-  15,
-  14,
-  13,
-  4,
-  10,
-  0,
-  7,
-  6,
-  3,
-  9,
-  2,
-  8,
-  11,
-  13,
-  11,
-  7,
-  14,
-  12,
-  1,
-  3,
-  9,
-  5,
-  0,
-  15,
-  4,
-  8,
-  6,
-  2,
-  10,
-  6,
-  15,
-  14,
-  9,
-  11,
-  3,
-  0,
-  8,
-  12,
-  2,
-  13,
-  7,
-  1,
-  4,
-  10,
-  5,
-  10,
-  2,
-  8,
-  4,
-  7,
-  6,
-  1,
-  5,
-  15,
-  11,
-  9,
-  14,
-  3,
-  12,
-  13,
-  0
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 14, 10, 4, 8, 9, 15, 13,
+  6, 1, 12, 0, 2, 11, 7, 5, 3, 11, 8, 12, 0, 5, 2, 15, 13, 10, 14, 3, 6, 7, 1,
+  9, 4, 7, 9, 3, 1, 13, 12, 11, 14, 2, 6, 5, 10, 4, 0, 15, 8, 9, 0, 5, 7, 2, 4,
+  10, 15, 14, 1, 11, 12, 6, 8, 3, 13, 2, 12, 6, 10, 0, 11, 8, 3, 4, 13, 7, 5,
+  15, 14, 1, 9, 12, 5, 1, 15, 14, 13, 4, 10, 0, 7, 6, 3, 9, 2, 8, 11, 13, 11, 7,
+  14, 12, 1, 3, 9, 5, 0, 15, 4, 8, 6, 2, 10, 6, 15, 14, 9, 11, 3, 0, 8, 12, 2,
+  13, 7, 1, 4, 10, 5, 10, 2, 8, 4, 7, 6, 1, 5, 15, 11, 9, 14, 3, 12, 13, 0,
 ]);
 const v = new Uint32Array(16);
 const m = new Uint32Array(16);
@@ -16104,10 +15543,10 @@ function blake2sInit(outlen, key2) {
     // pointer within block
     t: 0,
     // input count
-    outlen
+    outlen,
     // output length in bytes
   };
-  ctx.h[0] ^= 16842752 ^ keylen << 8 ^ outlen;
+  ctx.h[0] ^= 16842752 ^ (keylen << 8) ^ outlen;
   if (keylen > 0) {
     blake2sUpdate(ctx, key2);
     ctx.c = 64;
@@ -16132,7 +15571,7 @@ function blake2sFinal(ctx) {
   blake2sCompress(ctx, true);
   const out = new Uint8Array(ctx.outlen);
   for (let i = 0; i < ctx.outlen; i++) {
-    out[i] = ctx.h[i >> 2] >> 8 * (i & 3) & 255;
+    out[i] = (ctx.h[i >> 2] >> (8 * (i & 3))) & 255;
   }
   return out;
 }
@@ -16152,7 +15591,7 @@ var blake2s_1 = {
   blake2sHex,
   blake2sInit,
   blake2sUpdate,
-  blake2sFinal
+  blake2sFinal,
 };
 const b2b = blake2b_1;
 const b2s = blake2s_1;
@@ -16166,484 +15605,566 @@ var blakejs = {
   blake2sHex: b2s.blake2sHex,
   blake2sInit: b2s.blake2sInit,
   blake2sUpdate: b2s.blake2sUpdate,
-  blake2sFinal: b2s.blake2sFinal
+  blake2sFinal: b2s.blake2sFinal,
 };
 const hash2 = (data) => blakejs.blake2b(data, void 0, 32);
 const generateRandomNonce = () => Math.floor(Math.random() * 4294967295);
 const wasmBindgenImports = {
   __wbindgen_placeholder__: {
-    __wbindgen_describe: () => {
-    },
-    __wbindgen_throw: () => {
-    }
+    __wbindgen_describe: () => {},
+    __wbindgen_throw: () => {},
   },
   __wbindgen_externref_xform__: {
-    __wbindgen_externref_table_grow: () => {
-    },
-    __wbindgen_externref_table_set_null: () => {
-    }
-  }
+    __wbindgen_externref_table_grow: () => {},
+    __wbindgen_externref_table_set_null: () => {},
+  },
 };
-const _RadixEngineToolkit = class {
-};
+const _RadixEngineToolkit = class {};
 let RadixEngineToolkit = _RadixEngineToolkit;
 /* Build Module */
 /**
  * A module of the Radix Engine Toolkit which exposes information relating to the build of the
  * toolkit in use.
  */
-__publicField(RadixEngineToolkit, "Build", class {
-  /**
-   * Returns information on the core Radix Engine Toolkit WASM such as it's version and the
-   * version of the Scrypto dependency in it.
-   * @returns Information on the version of the Radix Engine Toolkit's WASM and information on the
-   * Scrypto dependency that was used to build the toolkit.
-   */
-  static async information() {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.buildInformation({});
-    return {
-      version: output2.version,
-      scryptoDependency: output2.scrypto_dependency
-    };
+__publicField(
+  RadixEngineToolkit,
+  "Build",
+  class {
+    /**
+     * Returns information on the core Radix Engine Toolkit WASM such as it's version and the
+     * version of the Scrypto dependency in it.
+     * @returns Information on the version of the Radix Engine Toolkit's WASM and information on the
+     * Scrypto dependency that was used to build the toolkit.
+     */
+    static async information() {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.buildInformation({});
+      return {
+        version: output2.version,
+        scryptoDependency: output2.scrypto_dependency,
+      };
+    }
   }
-});
+);
 /**
  * A module of the Radix Engine Toolkit concerned with performing derivations.
  */
-__publicField(RadixEngineToolkit, "Derive", class {
-  /**
-   * Derives the virtual account address associated with the provided public key on the given
-   * network.
-   * @param publicKey The public key to derive virtual account address for.
-   * @param networkId The id of the network that this address is to be used for. This is an 8-bit
-   * unsigned integer in the range [0x00, 0xFF]
-   * @returns A string of the bech32m encoded address of the virtual account address derived from
-   * the public key.
-   */
-  static async virtualAccountAddressFromPublicKey(publicKey, networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    const input = {
-      network_id: Convert.Number.toString(networkId),
-      public_key: GeneratedConverter.PublicKey.toGenerated(publicKey)
-    };
-    const output2 = rawRet.deriveVirtualAccountAddressFromPublicKey(input);
-    return output2;
+__publicField(
+  RadixEngineToolkit,
+  "Derive",
+  class {
+    /**
+     * Derives the virtual account address associated with the provided public key on the given
+     * network.
+     * @param publicKey The public key to derive virtual account address for.
+     * @param networkId The id of the network that this address is to be used for. This is an 8-bit
+     * unsigned integer in the range [0x00, 0xFF]
+     * @returns A string of the bech32m encoded address of the virtual account address derived from
+     * the public key.
+     */
+    static async virtualAccountAddressFromPublicKey(publicKey, networkId) {
+      const rawRet = await rawRadixEngineToolkit;
+      const input = {
+        network_id: Convert.Number.toString(networkId),
+        public_key: GeneratedConverter.PublicKey.toGenerated(publicKey),
+      };
+      const output2 = rawRet.deriveVirtualAccountAddressFromPublicKey(input);
+      return output2;
+    }
+    /**
+     * Derives the virtual identity address associated with the provided public key on the given
+     * network.
+     * @param publicKey The public key to derive virtual identity address for.
+     * @param networkId The id of the network that this address is to be used for. This is an 8-bit
+     * unsigned integer in the range [0x00, 0xFF]
+     * @returns A string of the bech32m encoded address of the virtual identity address derived from
+     * the public key.
+     */
+    static async virtualIdentityAddressFromPublicKey(publicKey, networkId) {
+      const rawRet = await rawRadixEngineToolkit;
+      const input = {
+        network_id: Convert.Number.toString(networkId),
+        public_key: GeneratedConverter.PublicKey.toGenerated(publicKey),
+      };
+      const output2 = rawRet.deriveVirtualIdentityAddressFromPublicKey(input);
+      return output2;
+    }
+    /**
+     * Derives the address of the account on the Babylon network associated with an account on the
+     * Olympia network.
+     * @param olympiaAccountAddress The address of the account on the Olympia network.
+     * @param networkId The id of the network that this address is to be used for. This is an 8-bit
+     * unsigned integer in the range [0x00, 0xFF].
+     * @returns A string of the bech32m encoded address of the virtual account address derived from
+     * the olympia account address.
+     */
+    static async virtualAccountAddressFromOlympiaAccountAddress(
+      olympiaAccountAddress,
+      networkId
+    ) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 =
+        rawRet.deriveVirtualAccountAddressFromOlympiaAccountAddress({
+          olympia_account_address: olympiaAccountAddress,
+          network_id: Convert.Number.toString(networkId),
+        });
+      return output2;
+    }
+    /**
+     * Derives the resource address on the Babylon network associated with a resource from the
+     * Olympia network.
+     * @param olympiaResourceAddress The address of the resource on the Olympia network.
+     * @param networkId The id of the network that this address is to be used for. This is an 8-bit
+     * unsigned integer in the range [0x00, 0xFF].
+     * @returns A string of the bech32m encoded address of the resource address on the Babylon
+     * network derived from the resource address form the Olympia network.
+     */
+    static async resourceAddressFromOlympiaResourceAddress(
+      olympiaResourceAddress,
+      networkId
+    ) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.deriveResourceAddressFromOlympiaResourceAddress({
+        network_id: Convert.Number.toString(networkId),
+        olympia_resource_address: olympiaResourceAddress,
+      });
+      return output2;
+    }
+    /**
+     * Derives the public key of an Olympia account.
+     * @param olympiaAccountAddress The address of the account on the Olympia network.
+     * @returns A byte array of the Ecdsa Secp256k1 public key associated with the Olympia account.
+     */
+    static async publicKeyFromOlympiaAccountAddress(olympiaAccountAddress) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.derivePublicKeyFromOlympiaAccountAddress(
+        olympiaAccountAddress
+      );
+      return Convert.HexString.toUint8Array(output2);
+    }
+    /**
+     * Derives the Olympia account address associated with a public key.
+     * @param publicKey The Ecdsa Secp256k1 public key to derive the Olympia account address for.
+     * @param olympiaNetwork The Olympia network to derive the account address for.
+     * @returns The derived Olympia account address.
+     */
+    static async olympiaAccountAddressFromPublicKey(publicKey, olympiaNetwork) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.deriveOlympiaAccountAddressFromPublicKey({
+        olympia_network:
+          GeneratedConverter.OlympiaNetwork.toGenerated(olympiaNetwork),
+        public_key: Convert.Uint8Array.toHexString(publicKey),
+      });
+      return output2;
+    }
+    /**
+     * Derives the node address from an Ecdsa Secp256k1 public key.
+     * @param publicKey The Ecdsa Secp256k1 public key to derive the node address for.
+     * @param networkId The network id of the node.
+     * @returns The derived node address.
+     */
+    static async nodeAddressFromPublicKey(publicKey, networkId) {
+      const rawRet = await rawRadixEngineToolkit;
+      return rawRet.deriveNodeAddressFromPublicKey({
+        network_id: Convert.Number.toString(networkId),
+        public_key: Convert.Uint8Array.toHexString(publicKey),
+      });
+    }
+    static async bech32mTransactionIdentifierFromIntentHash(
+      transactionHash,
+      networkId
+    ) {
+      const rawRet = await rawRadixEngineToolkit;
+      return rawRet.deriveBech32mTransactionIdentifierFromIntentHash({
+        network_id: Convert.Number.toString(networkId),
+        hash: Convert.Uint8Array.toHexString(transactionHash),
+      });
+    }
   }
-  /**
-   * Derives the virtual identity address associated with the provided public key on the given
-   * network.
-   * @param publicKey The public key to derive virtual identity address for.
-   * @param networkId The id of the network that this address is to be used for. This is an 8-bit
-   * unsigned integer in the range [0x00, 0xFF]
-   * @returns A string of the bech32m encoded address of the virtual identity address derived from
-   * the public key.
-   */
-  static async virtualIdentityAddressFromPublicKey(publicKey, networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    const input = {
-      network_id: Convert.Number.toString(networkId),
-      public_key: GeneratedConverter.PublicKey.toGenerated(publicKey)
-    };
-    const output2 = rawRet.deriveVirtualIdentityAddressFromPublicKey(input);
-    return output2;
-  }
-  /**
-   * Derives the address of the account on the Babylon network associated with an account on the
-   * Olympia network.
-   * @param olympiaAccountAddress The address of the account on the Olympia network.
-   * @param networkId The id of the network that this address is to be used for. This is an 8-bit
-   * unsigned integer in the range [0x00, 0xFF].
-   * @returns A string of the bech32m encoded address of the virtual account address derived from
-   * the olympia account address.
-   */
-  static async virtualAccountAddressFromOlympiaAccountAddress(olympiaAccountAddress, networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.deriveVirtualAccountAddressFromOlympiaAccountAddress({
-      olympia_account_address: olympiaAccountAddress,
-      network_id: Convert.Number.toString(networkId)
-    });
-    return output2;
-  }
-  /**
-   * Derives the resource address on the Babylon network associated with a resource from the
-   * Olympia network.
-   * @param olympiaResourceAddress The address of the resource on the Olympia network.
-   * @param networkId The id of the network that this address is to be used for. This is an 8-bit
-   * unsigned integer in the range [0x00, 0xFF].
-   * @returns A string of the bech32m encoded address of the resource address on the Babylon
-   * network derived from the resource address form the Olympia network.
-   */
-  static async resourceAddressFromOlympiaResourceAddress(olympiaResourceAddress, networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.deriveResourceAddressFromOlympiaResourceAddress({
-      network_id: Convert.Number.toString(networkId),
-      olympia_resource_address: olympiaResourceAddress
-    });
-    return output2;
-  }
-  /**
-   * Derives the public key of an Olympia account.
-   * @param olympiaAccountAddress The address of the account on the Olympia network.
-   * @returns A byte array of the Ecdsa Secp256k1 public key associated with the Olympia account.
-   */
-  static async publicKeyFromOlympiaAccountAddress(olympiaAccountAddress) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.derivePublicKeyFromOlympiaAccountAddress(
-      olympiaAccountAddress
-    );
-    return Convert.HexString.toUint8Array(output2);
-  }
-  /**
-   * Derives the Olympia account address associated with a public key.
-   * @param publicKey The Ecdsa Secp256k1 public key to derive the Olympia account address for.
-   * @param olympiaNetwork The Olympia network to derive the account address for.
-   * @returns The derived Olympia account address.
-   */
-  static async olympiaAccountAddressFromPublicKey(publicKey, olympiaNetwork) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.deriveOlympiaAccountAddressFromPublicKey({
-      olympia_network: GeneratedConverter.OlympiaNetwork.toGenerated(olympiaNetwork),
-      public_key: Convert.Uint8Array.toHexString(publicKey)
-    });
-    return output2;
-  }
-  /**
-   * Derives the node address from an Ecdsa Secp256k1 public key.
-   * @param publicKey The Ecdsa Secp256k1 public key to derive the node address for.
-   * @param networkId The network id of the node.
-   * @returns The derived node address.
-   */
-  static async nodeAddressFromPublicKey(publicKey, networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    return rawRet.deriveNodeAddressFromPublicKey({
-      network_id: Convert.Number.toString(networkId),
-      public_key: Convert.Uint8Array.toHexString(publicKey)
-    });
-  }
-  static async bech32mTransactionIdentifierFromIntentHash(transactionHash, networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    return rawRet.deriveBech32mTransactionIdentifierFromIntentHash({
-      network_id: Convert.Number.toString(networkId),
-      hash: Convert.Uint8Array.toHexString(transactionHash)
-    });
-  }
-});
+);
 /**
  * A module of the Radix Engine Toolkit concerned with functions that can be applied to
  * instructions.
  */
-__publicField(RadixEngineToolkit, "Instructions", class {
-  /**
-   * Converts {@link Instructions} from one format to another. Currently, the supported formats
-   * are `String` and `Parsed`.
-   * @param instructions The instructions the format should be changed for.
-   * @param networkId The id of the network that the instructions are meant for.
-   * @param instructionsKind The kind of instructions to get out.
-   * @returns The converted instructions.
-   */
-  static async convert(instructions, networkId, instructionsKind) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.instructionsConvert({
-      instructions: GeneratedConverter.Instructions.toGenerated(instructions),
-      network_id: Convert.Number.toString(networkId),
-      instructions_kind: SerializableInstructionsKind[instructionsKind]
-    });
-    return GeneratedConverter.Instructions.fromGenerated(output2);
+__publicField(
+  RadixEngineToolkit,
+  "Instructions",
+  class {
+    /**
+     * Converts {@link Instructions} from one format to another. Currently, the supported formats
+     * are `String` and `Parsed`.
+     * @param instructions The instructions the format should be changed for.
+     * @param networkId The id of the network that the instructions are meant for.
+     * @param instructionsKind The kind of instructions to get out.
+     * @returns The converted instructions.
+     */
+    static async convert(instructions, networkId, instructionsKind) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.instructionsConvert({
+        instructions: GeneratedConverter.Instructions.toGenerated(instructions),
+        network_id: Convert.Number.toString(networkId),
+        instructions_kind: SerializableInstructionsKind[instructionsKind],
+      });
+      return GeneratedConverter.Instructions.fromGenerated(output2);
+    }
+    static async compile(instructions, networkId) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.instructionsCompile({
+        instructions: GeneratedConverter.Instructions.toGenerated(instructions),
+        network_id: Convert.Number.toString(networkId),
+      });
+      return Convert.HexString.toUint8Array(output2);
+    }
+    static async decompile(
+      compiledInstructions,
+      networkId,
+      instructionsKind = "Parsed"
+    ) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.instructionsDecompile({
+        compiled: Convert.Uint8Array.toHexString(compiledInstructions),
+        network_id: Convert.Number.toString(networkId),
+        instructions_kind: SerializableInstructionsKind[instructionsKind],
+      });
+      return GeneratedConverter.Instructions.fromGenerated(output2);
+    }
+    static async extractAddresses(instructions, networkId) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.instructionsExtractAddresses({
+        instructions: GeneratedConverter.Instructions.toGenerated(instructions),
+        network_id: Convert.Number.toString(networkId),
+      });
+      return output2.addresses;
+    }
+    static async staticallyValidate(instructions, networkId) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.instructionsStaticallyValidate({
+        instructions: GeneratedConverter.Instructions.toGenerated(instructions),
+        network_id: Convert.Number.toString(networkId),
+      });
+      return toStaticValidationResult(output2);
+    }
   }
-  static async compile(instructions, networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.instructionsCompile({
-      instructions: GeneratedConverter.Instructions.toGenerated(instructions),
-      network_id: Convert.Number.toString(networkId)
-    });
-    return Convert.HexString.toUint8Array(output2);
+);
+__publicField(
+  RadixEngineToolkit,
+  "TransactionManifest",
+  class {
+    static async compile(transactionManifest, networkId) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.manifestCompile({
+        manifest:
+          GeneratedConverter.TransactionManifest.toGenerated(
+            transactionManifest
+          ),
+        network_id: Convert.Number.toString(networkId),
+      });
+      return Convert.HexString.toUint8Array(output2);
+    }
+    static async decompile(
+      compiledTransactionManifest,
+      networkId,
+      instructionsKind = "Parsed"
+    ) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.manifestDecompile({
+        compiled: Convert.Uint8Array.toHexString(compiledTransactionManifest),
+        network_id: Convert.Number.toString(networkId),
+        instructions_kind: SerializableInstructionsKind[instructionsKind],
+      });
+      return GeneratedConverter.TransactionManifest.fromGenerated(output2);
+    }
+    static async staticallyValidate(transactionManifest, networkId) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.manifestStaticallyValidate({
+        manifest:
+          GeneratedConverter.TransactionManifest.toGenerated(
+            transactionManifest
+          ),
+        network_id: Convert.Number.toString(networkId),
+      });
+      return toStaticValidationResult(output2);
+    }
   }
-  static async decompile(compiledInstructions, networkId, instructionsKind = "Parsed") {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.instructionsDecompile({
-      compiled: Convert.Uint8Array.toHexString(compiledInstructions),
-      network_id: Convert.Number.toString(networkId),
-      instructions_kind: SerializableInstructionsKind[instructionsKind]
-    });
-    return GeneratedConverter.Instructions.fromGenerated(output2);
+);
+__publicField(
+  RadixEngineToolkit,
+  "Intent",
+  class {
+    static async intentHash(intent) {
+      return this.hash(intent);
+    }
+    static async hash(intent) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.intentHash(
+        GeneratedConverter.Intent.toGenerated(intent)
+      );
+      return GeneratedConverter.TransactionHash.fromGenerated(output2);
+    }
+    static async compile(intent) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.intentCompile(
+        GeneratedConverter.Intent.toGenerated(intent)
+      );
+      return Convert.HexString.toUint8Array(output2);
+    }
+    static async decompile(compiledIntent, instructionsKind = "Parsed") {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.intentDecompile({
+        compiled: Convert.Uint8Array.toHexString(compiledIntent),
+        instructions_kind: SerializableInstructionsKind[instructionsKind],
+      });
+      return GeneratedConverter.Intent.fromGenerated(output2);
+    }
+    static async staticallyValidate(intent, validationConfig) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.intentStaticallyValidate({
+        intent: GeneratedConverter.Intent.toGenerated(intent),
+        validation_config:
+          GeneratedConverter.ValidationConfig.toGenerated(validationConfig),
+      });
+      return toStaticValidationResult(output2);
+    }
   }
-  static async extractAddresses(instructions, networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.instructionsExtractAddresses({
-      instructions: GeneratedConverter.Instructions.toGenerated(instructions),
-      network_id: Convert.Number.toString(networkId)
-    });
-    return output2.addresses;
+);
+__publicField(
+  RadixEngineToolkit,
+  "SignedIntent",
+  class {
+    static async hash(signedIntent) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.signedIntentHash(
+        GeneratedConverter.SignedIntent.toGenerated(signedIntent)
+      );
+      return GeneratedConverter.TransactionHash.fromGenerated(output2);
+    }
+    static async signedIntentHash(signedIntent) {
+      return this.hash(signedIntent);
+    }
+    static async intentHash(signedIntent) {
+      return _RadixEngineToolkit.Intent.hash(signedIntent.intent);
+    }
+    static async compile(signedIntent) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.signedIntentCompile(
+        GeneratedConverter.SignedIntent.toGenerated(signedIntent)
+      );
+      return Convert.HexString.toUint8Array(output2);
+    }
+    static async decompile(compiledSignedIntent, instructionsKind = "Parsed") {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.signedIntentDecompile({
+        compiled: Convert.Uint8Array.toHexString(compiledSignedIntent),
+        instructions_kind: SerializableInstructionsKind[instructionsKind],
+      });
+      return GeneratedConverter.SignedIntent.fromGenerated(output2);
+    }
+    static async staticallyValidate(signedIntent, validationConfig) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.signedIntentStaticallyValidate({
+        signed_intent:
+          GeneratedConverter.SignedIntent.toGenerated(signedIntent),
+        validation_config:
+          GeneratedConverter.ValidationConfig.toGenerated(validationConfig),
+      });
+      return toStaticValidationResult(output2);
+    }
   }
-  static async staticallyValidate(instructions, networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.instructionsStaticallyValidate({
-      instructions: GeneratedConverter.Instructions.toGenerated(instructions),
-      network_id: Convert.Number.toString(networkId)
-    });
-    return toStaticValidationResult(output2);
+);
+__publicField(
+  RadixEngineToolkit,
+  "NotarizedTransaction",
+  class {
+    static async hash(notarizedTransaction) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.notarizedTransactionHash(
+        GeneratedConverter.NotarizedTransaction.toGenerated(
+          notarizedTransaction
+        )
+      );
+      return GeneratedConverter.TransactionHash.fromGenerated(output2);
+    }
+    static async notarizedTransactionHash(notarizedTransaction) {
+      return this.hash(notarizedTransaction);
+    }
+    static async signedIntentHash(notarizedTransaction) {
+      return _RadixEngineToolkit.SignedIntent.hash(
+        notarizedTransaction.signedIntent
+      );
+    }
+    static async intentHash(notarizedTransaction) {
+      return _RadixEngineToolkit.Intent.hash(
+        notarizedTransaction.signedIntent.intent
+      );
+    }
+    static async compile(notarizedTransaction) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.notarizedTransactionCompile(
+        GeneratedConverter.NotarizedTransaction.toGenerated(
+          notarizedTransaction
+        )
+      );
+      return Convert.HexString.toUint8Array(output2);
+    }
+    static async decompile(
+      compiledNotarizedTransaction,
+      instructionsKind = "Parsed"
+    ) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.notarizedTransactionDecompile({
+        compiled: Convert.Uint8Array.toHexString(compiledNotarizedTransaction),
+        instructions_kind: SerializableInstructionsKind[instructionsKind],
+      });
+      return GeneratedConverter.NotarizedTransaction.fromGenerated(output2);
+    }
+    static async staticallyValidate(notarizedTransaction, validationConfig) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.notarizedTransactionStaticallyValidate({
+        notarized_transaction:
+          GeneratedConverter.NotarizedTransaction.toGenerated(
+            notarizedTransaction
+          ),
+        validation_config:
+          GeneratedConverter.ValidationConfig.toGenerated(validationConfig),
+      });
+      return toStaticValidationResult(output2);
+    }
   }
-});
-__publicField(RadixEngineToolkit, "TransactionManifest", class {
-  static async compile(transactionManifest, networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.manifestCompile({
-      manifest: GeneratedConverter.TransactionManifest.toGenerated(
-        transactionManifest
-      ),
-      network_id: Convert.Number.toString(networkId)
-    });
-    return Convert.HexString.toUint8Array(output2);
+);
+__publicField(
+  RadixEngineToolkit,
+  "ManifestSbor",
+  class {
+    static async decodeToString(payload, networkId, representation) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.manifestSborDecodeToString({
+        encoded_payload: Convert.Uint8Array.toHexString(payload),
+        network_id: Convert.Number.toString(networkId),
+        representation:
+          GeneratedConverter.ManifestSborStringRepresentation.toGenerated(
+            representation
+          ),
+      });
+      return output2;
+    }
   }
-  static async decompile(compiledTransactionManifest, networkId, instructionsKind = "Parsed") {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.manifestDecompile({
-      compiled: Convert.Uint8Array.toHexString(compiledTransactionManifest),
-      network_id: Convert.Number.toString(networkId),
-      instructions_kind: SerializableInstructionsKind[instructionsKind]
-    });
-    return GeneratedConverter.TransactionManifest.fromGenerated(output2);
+);
+__publicField(
+  RadixEngineToolkit,
+  "ScryptoSbor",
+  class {
+    static async decodeToString(payload, networkId, representation) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.scryptoSborDecodeToString({
+        encoded_payload: Convert.Uint8Array.toHexString(payload),
+        network_id: Convert.Number.toString(networkId),
+        representation:
+          GeneratedConverter.SerializationMode.toGenerated(representation),
+      });
+      return output2;
+    }
+    static async encodeProgrammaticJson(object) {
+      const encoded = JSON.stringify(object);
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.scryptoSborEncodeStringRepresentation({
+        kind: "ProgrammaticJson",
+        value: encoded,
+      });
+      return Convert.HexString.toUint8Array(output2);
+    }
   }
-  static async staticallyValidate(transactionManifest, networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.manifestStaticallyValidate({
-      manifest: GeneratedConverter.TransactionManifest.toGenerated(
-        transactionManifest
-      ),
-      network_id: Convert.Number.toString(networkId)
-    });
-    return toStaticValidationResult(output2);
+);
+__publicField(
+  RadixEngineToolkit,
+  "Address",
+  class {
+    static async entityType(address2) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.addressEntityType(address2);
+      return GeneratedConverter.EntityType.fromGenerated(output2);
+    }
+    static async decode(address2) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.addressDecode(address2);
+      return {
+        networkId: Convert.String.toNumber(output2.network_id),
+        entityType: GeneratedConverter.EntityType.fromGenerated(
+          output2.entity_type
+        ),
+        hrp: output2.hrp,
+        data: Convert.HexString.toUint8Array(output2.data),
+      };
+    }
   }
-});
-__publicField(RadixEngineToolkit, "Intent", class {
-  static async intentHash(intent) {
-    return this.hash(intent);
+);
+__publicField(
+  RadixEngineToolkit,
+  "Utils",
+  class {
+    static async knownAddresses(networkId) {
+      const rawRet = await rawRadixEngineToolkit;
+      const output2 = rawRet.utilsKnownAddresses(
+        Convert.Number.toString(networkId)
+      );
+      return {
+        resourceAddresses: {
+          xrd: output2.resource_addresses.xrd,
+          secp256k1SignatureVirtualBadge:
+            output2.resource_addresses.secp256k1_signature_virtual_badge,
+          ed25519SignatureVirtualBadge:
+            output2.resource_addresses.ed25519_signature_virtual_badge,
+          packageOfDirectCallerVirtualBadge:
+            output2.resource_addresses.package_of_direct_caller_virtual_badge,
+          globalCallerVirtualBadge:
+            output2.resource_addresses.global_caller_virtual_badge,
+          systemTransactionBadge:
+            output2.resource_addresses.system_transaction_badge,
+          packageOwnerBadge: output2.resource_addresses.package_owner_badge,
+          validatorOwnerBadge: output2.resource_addresses.validator_owner_badge,
+          accountOwnerBadge: output2.resource_addresses.account_owner_badge,
+          identityOwnerBadge: output2.resource_addresses.identity_owner_badge,
+        },
+        packageAddresses: {
+          packagePackage: output2.package_addresses.package_package,
+          resourcePackage: output2.package_addresses.resource_package,
+          accountPackage: output2.package_addresses.account_package,
+          identityPackage: output2.package_addresses.identity_package,
+          consensusManagerPackage:
+            output2.package_addresses.consensus_manager_package,
+          accessControllerPackage:
+            output2.package_addresses.access_controller_package,
+          poolPackage: output2.package_addresses.pool_package,
+          transactionProcessorPackage:
+            output2.package_addresses.transaction_processor_package,
+          metadataModulePackage:
+            output2.package_addresses.metadata_module_package,
+          royaltyModulePackage:
+            output2.package_addresses.royalty_module_package,
+          roleAssignmentModulePackage:
+            output2.package_addresses.role_assignment_module_package,
+          genesisHelperPackage:
+            output2.package_addresses.genesis_helper_package,
+          faucetPackage: output2.package_addresses.faucet_package,
+        },
+        componentAddresses: {
+          consensusManager: output2.component_addresses.consensus_manager,
+          genesisHelper: output2.component_addresses.genesis_helper,
+          faucet: output2.component_addresses.faucet,
+        },
+      };
+    }
   }
-  static async hash(intent) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.intentHash(
-      GeneratedConverter.Intent.toGenerated(intent)
-    );
-    return GeneratedConverter.TransactionHash.fromGenerated(output2);
-  }
-  static async compile(intent) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.intentCompile(
-      GeneratedConverter.Intent.toGenerated(intent)
-    );
-    return Convert.HexString.toUint8Array(output2);
-  }
-  static async decompile(compiledIntent, instructionsKind = "Parsed") {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.intentDecompile({
-      compiled: Convert.Uint8Array.toHexString(compiledIntent),
-      instructions_kind: SerializableInstructionsKind[instructionsKind]
-    });
-    return GeneratedConverter.Intent.fromGenerated(output2);
-  }
-  static async staticallyValidate(intent, validationConfig) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.intentStaticallyValidate({
-      intent: GeneratedConverter.Intent.toGenerated(intent),
-      validation_config: GeneratedConverter.ValidationConfig.toGenerated(validationConfig)
-    });
-    return toStaticValidationResult(output2);
-  }
-});
-__publicField(RadixEngineToolkit, "SignedIntent", class {
-  static async hash(signedIntent) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.signedIntentHash(
-      GeneratedConverter.SignedIntent.toGenerated(signedIntent)
-    );
-    return GeneratedConverter.TransactionHash.fromGenerated(output2);
-  }
-  static async signedIntentHash(signedIntent) {
-    return this.hash(signedIntent);
-  }
-  static async intentHash(signedIntent) {
-    return _RadixEngineToolkit.Intent.hash(signedIntent.intent);
-  }
-  static async compile(signedIntent) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.signedIntentCompile(
-      GeneratedConverter.SignedIntent.toGenerated(signedIntent)
-    );
-    return Convert.HexString.toUint8Array(output2);
-  }
-  static async decompile(compiledSignedIntent, instructionsKind = "Parsed") {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.signedIntentDecompile({
-      compiled: Convert.Uint8Array.toHexString(compiledSignedIntent),
-      instructions_kind: SerializableInstructionsKind[instructionsKind]
-    });
-    return GeneratedConverter.SignedIntent.fromGenerated(output2);
-  }
-  static async staticallyValidate(signedIntent, validationConfig) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.signedIntentStaticallyValidate({
-      signed_intent: GeneratedConverter.SignedIntent.toGenerated(signedIntent),
-      validation_config: GeneratedConverter.ValidationConfig.toGenerated(validationConfig)
-    });
-    return toStaticValidationResult(output2);
-  }
-});
-__publicField(RadixEngineToolkit, "NotarizedTransaction", class {
-  static async hash(notarizedTransaction) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.notarizedTransactionHash(
-      GeneratedConverter.NotarizedTransaction.toGenerated(
-        notarizedTransaction
-      )
-    );
-    return GeneratedConverter.TransactionHash.fromGenerated(output2);
-  }
-  static async notarizedTransactionHash(notarizedTransaction) {
-    return this.hash(notarizedTransaction);
-  }
-  static async signedIntentHash(notarizedTransaction) {
-    return _RadixEngineToolkit.SignedIntent.hash(
-      notarizedTransaction.signedIntent
-    );
-  }
-  static async intentHash(notarizedTransaction) {
-    return _RadixEngineToolkit.Intent.hash(
-      notarizedTransaction.signedIntent.intent
-    );
-  }
-  static async compile(notarizedTransaction) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.notarizedTransactionCompile(
-      GeneratedConverter.NotarizedTransaction.toGenerated(
-        notarizedTransaction
-      )
-    );
-    return Convert.HexString.toUint8Array(output2);
-  }
-  static async decompile(compiledNotarizedTransaction, instructionsKind = "Parsed") {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.notarizedTransactionDecompile({
-      compiled: Convert.Uint8Array.toHexString(compiledNotarizedTransaction),
-      instructions_kind: SerializableInstructionsKind[instructionsKind]
-    });
-    return GeneratedConverter.NotarizedTransaction.fromGenerated(output2);
-  }
-  static async staticallyValidate(notarizedTransaction, validationConfig) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.notarizedTransactionStaticallyValidate({
-      notarized_transaction: GeneratedConverter.NotarizedTransaction.toGenerated(
-        notarizedTransaction
-      ),
-      validation_config: GeneratedConverter.ValidationConfig.toGenerated(validationConfig)
-    });
-    return toStaticValidationResult(output2);
-  }
-});
-__publicField(RadixEngineToolkit, "ManifestSbor", class {
-  static async decodeToString(payload, networkId, representation) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.manifestSborDecodeToString({
-      encoded_payload: Convert.Uint8Array.toHexString(payload),
-      network_id: Convert.Number.toString(networkId),
-      representation: GeneratedConverter.ManifestSborStringRepresentation.toGenerated(
-        representation
-      )
-    });
-    return output2;
-  }
-});
-__publicField(RadixEngineToolkit, "ScryptoSbor", class {
-  static async decodeToString(payload, networkId, representation) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.scryptoSborDecodeToString({
-      encoded_payload: Convert.Uint8Array.toHexString(payload),
-      network_id: Convert.Number.toString(networkId),
-      representation: GeneratedConverter.SerializationMode.toGenerated(representation)
-    });
-    return output2;
-  }
-  static async encodeProgrammaticJson(object) {
-    const encoded = JSON.stringify(object);
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.scryptoSborEncodeStringRepresentation({
-      kind: "ProgrammaticJson",
-      value: encoded
-    });
-    return Convert.HexString.toUint8Array(output2);
-  }
-});
-__publicField(RadixEngineToolkit, "Address", class {
-  static async entityType(address2) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.addressEntityType(address2);
-    return GeneratedConverter.EntityType.fromGenerated(output2);
-  }
-  static async decode(address2) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.addressDecode(address2);
-    return {
-      networkId: Convert.String.toNumber(output2.network_id),
-      entityType: GeneratedConverter.EntityType.fromGenerated(
-        output2.entity_type
-      ),
-      hrp: output2.hrp,
-      data: Convert.HexString.toUint8Array(output2.data)
-    };
-  }
-});
-__publicField(RadixEngineToolkit, "Utils", class {
-  static async knownAddresses(networkId) {
-    const rawRet = await rawRadixEngineToolkit;
-    const output2 = rawRet.utilsKnownAddresses(
-      Convert.Number.toString(networkId)
-    );
-    return {
-      resourceAddresses: {
-        xrd: output2.resource_addresses.xrd,
-        secp256k1SignatureVirtualBadge: output2.resource_addresses.secp256k1_signature_virtual_badge,
-        ed25519SignatureVirtualBadge: output2.resource_addresses.ed25519_signature_virtual_badge,
-        packageOfDirectCallerVirtualBadge: output2.resource_addresses.package_of_direct_caller_virtual_badge,
-        globalCallerVirtualBadge: output2.resource_addresses.global_caller_virtual_badge,
-        systemTransactionBadge: output2.resource_addresses.system_transaction_badge,
-        packageOwnerBadge: output2.resource_addresses.package_owner_badge,
-        validatorOwnerBadge: output2.resource_addresses.validator_owner_badge,
-        accountOwnerBadge: output2.resource_addresses.account_owner_badge,
-        identityOwnerBadge: output2.resource_addresses.identity_owner_badge
-      },
-      packageAddresses: {
-        packagePackage: output2.package_addresses.package_package,
-        resourcePackage: output2.package_addresses.resource_package,
-        accountPackage: output2.package_addresses.account_package,
-        identityPackage: output2.package_addresses.identity_package,
-        consensusManagerPackage: output2.package_addresses.consensus_manager_package,
-        accessControllerPackage: output2.package_addresses.access_controller_package,
-        poolPackage: output2.package_addresses.pool_package,
-        transactionProcessorPackage: output2.package_addresses.transaction_processor_package,
-        metadataModulePackage: output2.package_addresses.metadata_module_package,
-        royaltyModulePackage: output2.package_addresses.royalty_module_package,
-        roleAssignmentModulePackage: output2.package_addresses.role_assignment_module_package,
-        genesisHelperPackage: output2.package_addresses.genesis_helper_package,
-        faucetPackage: output2.package_addresses.faucet_package
-      },
-      componentAddresses: {
-        consensusManager: output2.component_addresses.consensus_manager,
-        genesisHelper: output2.component_addresses.genesis_helper,
-        faucet: output2.component_addresses.faucet
-      }
-    };
-  }
-});
+);
 const toStaticValidationResult = (input) => {
   switch (input.kind) {
     case "Valid":
       return {
-        kind: "Valid"
+        kind: "Valid",
       };
     case "Invalid":
       return {
         kind: "Invalid",
-        error: input.value
+        error: input.value,
       };
   }
 };
@@ -16697,10 +16218,7 @@ class Host {
     const nullTerminatedEncodedObject = new Uint8Array([...encodedObject, 0]);
     const requiredCapacity = nullTerminatedEncodedObject.length;
     const memoryPointer = this.allocateMemory(requiredCapacity);
-    const view = new Uint8Array(
-      this.memory().buffer,
-      memoryPointer
-    );
+    const view = new Uint8Array(this.memory().buffer, memoryPointer);
     view.set(nullTerminatedEncodedObject);
     return memoryPointer;
   }
@@ -16752,9 +16270,15 @@ class Host {
   }
 }
 function _loadWasmModule(sync, filepath, src, imports) {
+  // console.log("_loadWasmModule", WebAssembly);
+
   function _instantiateOrCompile(source, imports2, stream) {
-    var instantiateFunc = stream ? WebAssembly.instantiateStreaming : WebAssembly.instantiate;
-    var compileFunc = stream ? WebAssembly.compileStreaming : WebAssembly.compile;
+    var instantiateFunc = stream
+      ? WebAssembly.instantiateStreaming
+      : WebAssembly.instantiate;
+    var compileFunc = stream
+      ? WebAssembly.compileStreaming
+      : WebAssembly.compile;
     if (imports2) {
       return instantiateFunc(source, imports2);
     } else {
@@ -16763,8 +16287,9 @@ function _loadWasmModule(sync, filepath, src, imports) {
   }
   var buf = null;
   if (filepath) {
+    // return fetch(filepath).then((r) => r.arrayBuffer()).then((bytes) => WebAssembly.instantiate(bytes, imports));
     // return _instantiateOrCompile(fetch(filepath), imports, true);
-    return WebAssembly.instantiate(wasMod, imports);
+    return new WebAssembly.Instance(wasmFile, imports);
   }
   var raw = globalThis.atob(src);
   var rawLength = raw.length;
@@ -16982,18 +16507,24 @@ class RawRadixEngineToolkit extends Host {
   isErrorResponse(output2) {
     const topLevelErrors = [
       "InvocationHandlingError",
-      "InvocationInterpretationError"
+      "InvocationInterpretationError",
     ];
-    return output2 === void 0 ? false : topLevelErrors.includes(output2 == null ? void 0 : output2["kind"]);
+    return output2 === void 0
+      ? false
+      : topLevelErrors.includes(output2 == null ? void 0 : output2["kind"]);
   }
 }
-const rawRadixEngineToolkit = wasmModule(
-  wasmBindgenImports
-).then((instance) => {
-  console.log(instance)
-  const exports = instance.exports;
-  return new RawRadixEngineToolkit(exports);
-});
+const instance = wasmModule(wasmBindgenImports)
+// console.log("instance", instance)
+const rExports = instance.exports;
+const rawRadixEngineToolkit = new RawRadixEngineToolkit(rExports);
+  
+// const rawRadixEngineToolkit = wasmModule(wasmBindgenImports).then(
+//   (instance) => {
+//     const exports = instance.instance.exports;
+//     return new RawRadixEngineToolkit(exports);
+//   }
+// );
 Decimal.config({ precision: 64 });
 export {
   CompiledNotarizedTransaction,
@@ -17072,5 +16603,5 @@ export {
   u32,
   u64$1 as u64,
   u8,
-  wasmBindgenImports
+  wasmBindgenImports,
 };
